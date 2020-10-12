@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "smithee",
+  "version": "${version}",
+
+  "name": "Smithee",
+  "description": "Combine all the tools!",
+  "authors": [
+    "LordDeatHunter"
+  ],
+  "contact": {
+    "homepage": "",
+    "sources": ""
+  },
+
+  "license": "CC0-1.0",
+  "icon": "assets/smithee/Smithee.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "wraith.smithee.Smithee"
+    ],
+    "client": [
+    ]
+  },
+  "mixins": [
+    "smithee.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.7.4",
+    "fabric": "*",
+    "minecraft": "1.16.x"
+  },
+  "suggests": {
+    "flamingo": "*"
+  }
+}
