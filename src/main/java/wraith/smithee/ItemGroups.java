@@ -7,6 +7,6 @@ import wraith.smithee.registry.ItemRegistry;
 
 public class ItemGroups {
 
-    public static final ItemGroup SMITHEE_PARTS = FabricItemGroupBuilder.create(Utils.ID("parts")).icon(() -> new ItemStack(ItemRegistry.ITEM_REGISTRY.get("diamond_pickaxe_head"))).build();
+    public static final ItemGroup SMITHEE_PARTS = FabricItemGroupBuilder.create(Utils.ID("parts")).icon(() -> new ItemStack(ItemRegistry.ITEMS.get("diamond_pickaxe_head"))).build();
 
 }
