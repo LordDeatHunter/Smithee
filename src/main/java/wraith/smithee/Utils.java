@@ -7,6 +7,7 @@ import net.minecraft.util.Identifier;
 import wraith.smithee.parts.BindingPart;
 import wraith.smithee.parts.HandlePart;
 import wraith.smithee.parts.HeadPart;
+import wraith.smithee.registry.ItemRegistry;
 
 public class Utils {
 
@@ -35,8 +36,18 @@ public class Utils {
         return (int)(head.material.getAttackDamage() + binding.material.getAttackDamage() + handle.material.getAttackDamage()) / 3;
     }
 
-    public static int damageModifier(HeadPart head, BindingPart binding, HandlePart handle) {
-        return (int)(head.material.() + binding.material.getAttackDamage() + handle.material.getAttackDamage()) / 3;
+    public static String createModelJson(Identifier id) {
+        String[] split = id.getPath().split("_");
+        String json = "";
+        String[] split2 = split[0].split("/");
+        if (id.getNamespace().equals(Smithee.MOD_ID) && split.length == 3 && ItemRegistry.MATERIALS.containsKey(split2[split2.length - 1]) && ItemRegistry.TOOL_TYPES.contains(split[1])) {
+            json += "{\n" +
+                    "  \"parent\": \"item/generated\",\n" +
+                    "  \"textures\": {\n" +
+                    "    \"layer0\": \"" + id + "\"\n" +
+                    "  }\n" +
+                    "}";
+        }
+        return json;
     }
-
 }

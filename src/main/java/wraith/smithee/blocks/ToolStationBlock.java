@@ -50,7 +50,7 @@ public class ToolStationBlock extends BlockWithEntity {
 
     @Override
     public NamedScreenHandlerFactory createScreenHandlerFactory(BlockState state, World world, BlockPos pos) {
-        return new SimpleNamedScreenHandlerFactory((i, playerInventory, playerEntity) -> new ToolStationScreenHandler(i, playerInventory, ScreenHandlerContext.create(world, pos), (ToolStationBlockEntity)world.getBlockEntity(pos)), TITLE);
+        return new SimpleNamedScreenHandlerFactory((i, playerInventory, playerEntity) -> new ToolStationScreenHandler(i, playerInventory, (ToolStationBlockEntity)world.getBlockEntity(pos), ScreenHandlerContext.create(world, pos)), TITLE);
     }
 
     @Override

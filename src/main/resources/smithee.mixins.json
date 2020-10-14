@@ -5,7 +5,7 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "ItemRendererMixin",
-    "TextureManagerMixin"
+    "TestMixin"
   ],
   "client": [
   ],

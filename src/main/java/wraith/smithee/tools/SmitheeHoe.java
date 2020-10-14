@@ -19,7 +19,7 @@ public class SmitheeHoe extends AxeItem implements SmitheeTool {
     protected BindingPart binding;
     protected HandlePart handle;
 
-    protected SmitheeHoe(ToolMaterial material, int attackDamage, float attackSpeed, Settings settings) {
+    public SmitheeHoe(ToolMaterial material, int attackDamage, float attackSpeed, Settings settings) {
         super(material, attackDamage, attackSpeed, settings);
     }
 
@@ -33,9 +33,9 @@ public class SmitheeHoe extends AxeItem implements SmitheeTool {
         BufferedImage handleImage = null;
 
         try {
-            headImage = ImageIO.read(MinecraftClient.getInstance().getResourceManager().getResource(Utils.ID("textures/tools/" + head.materialName + "/" + head.materialName + "_hoe_head")).getInputStream());
-            bindingImage = ImageIO.read(MinecraftClient.getInstance().getResourceManager().getResource(Utils.ID("textures/tools/" + binding.materialName + "/" + binding.materialName + "_hoe_binding")).getInputStream());
-            handleImage = ImageIO.read(MinecraftClient.getInstance().getResourceManager().getResource(Utils.ID("textures/tools/" + handle.materialName + "/" + handle.materialName + "_hoe_handle")).getInputStream());
+            headImage = ImageIO.read(MinecraftClient.getInstance().getResourceManager().getResource(Utils.ID("textures/tools/" + head.materialName + "_hoe_head")).getInputStream());
+            bindingImage = ImageIO.read(MinecraftClient.getInstance().getResourceManager().getResource(Utils.ID("textures/tools/" + binding.materialName + "_hoe_binding")).getInputStream());
+            handleImage = ImageIO.read(MinecraftClient.getInstance().getResourceManager().getResource(Utils.ID("textures/tools/" + handle.materialName + "_hoe_handle")).getInputStream());
         } catch (IOException e) {
             e.printStackTrace();
         }

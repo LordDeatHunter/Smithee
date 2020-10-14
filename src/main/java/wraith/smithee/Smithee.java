@@ -28,6 +28,7 @@ public class Smithee implements ModInitializer {
 
         ItemRegistry.registerItems();
         BlockRegistry.registerBlocks();
+        BlockEntityRegistry.addBlockEntities();
         BlockEntityRegistry.registerBlockEntities();
         ScreenHandlerRegistry.registerScreenHandlers();
 

@@ -1,5 +1,6 @@
 package wraith.smithee.registry;
 
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.item.ToolMaterials;
@@ -44,6 +45,11 @@ public class ItemRegistry {
                 ITEMS.put(material + "_" + tool + "_handle", new HandleItem(new HandlePart(material, tool, MATERIALS.get(material)), new Item.Settings().group(ItemGroups.SMITHEE_PARTS)));
             }
         }
+        ITEMS.put("oak_tool_station", new BlockItem(BlockRegistry.BLOCKS.get("oak_tool_station"), new Item.Settings().group(ItemGroups.SMITHEE_BLOCKS)));
+        ITEMS.put("dark_oak_tool_station", new BlockItem(BlockRegistry.BLOCKS.get("dark_oak_tool_station"), new Item.Settings().group(ItemGroups.SMITHEE_BLOCKS)));
+        ITEMS.put("spruce_tool_station", new BlockItem(BlockRegistry.BLOCKS.get("spruce_tool_station"), new Item.Settings().group(ItemGroups.SMITHEE_BLOCKS)));
+        ITEMS.put("birch_tool_station", new BlockItem(BlockRegistry.BLOCKS.get("birch_tool_station"), new Item.Settings().group(ItemGroups.SMITHEE_BLOCKS)));
+        ITEMS.put("jungle_tool_station", new BlockItem(BlockRegistry.BLOCKS.get("jungle_tool_station"), new Item.Settings().group(ItemGroups.SMITHEE_BLOCKS)));
     }
 
     public static void registerItems() {

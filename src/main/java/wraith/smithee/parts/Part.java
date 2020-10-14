@@ -11,6 +11,7 @@ public abstract class Part {
     public Part(String materialName, String type, ToolMaterial material) {
         this.material = material;
         this.materialName = materialName;
+        this.type = type;
     }
 
 }

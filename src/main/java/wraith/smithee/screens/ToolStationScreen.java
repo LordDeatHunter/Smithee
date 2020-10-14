@@ -11,7 +11,7 @@ import wraith.smithee.Utils;
 
 public class ToolStationScreen extends HandledScreen<ScreenHandler> {
 
-    private static final Identifier TEXTURE = Utils.ID("textures/gui/tool_station");
+    private static final Identifier TEXTURE = Utils.ID("textures/gui/tool_station.png");
     public final ToolStationScreenHandler handler;
 
     public ToolStationScreen(ScreenHandler handler, PlayerInventory inventory, Text title) {
@@ -23,12 +23,31 @@ public class ToolStationScreen extends HandledScreen<ScreenHandler> {
     }
 
     @Override
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        this.renderBackground(matrices);
+        super.render(matrices, mouseX, mouseY, delta);
+        this.drawMouseoverTooltip(matrices, mouseX, mouseY);
+    }
+
+
+    @Override
     protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.client.getTextureManager().bindTexture(TEXTURE);
         int x = this.x;
         int y = this.y;
         this.drawTexture(matrices, x, y, 0, 0, this.backgroundWidth, this.backgroundHeight);
+
+        if (this.handler.slots.get(0).getStack().isEmpty()) {
+            this.drawTexture(matrices, x + 26, y + 57, 176, 0, 16, 16);
+        }
+        if (this.handler.slots.get(1).getStack().isEmpty()) {
+            this.drawTexture(matrices, x + 48, y + 35, 176 + 16, 0, 16, 16);
+        }
+        if (this.handler.slots.get(2).getStack().isEmpty()) {
+            this.drawTexture(matrices, x + 70, y + 13, 176 + 32, 0, 16, 16);
+        }
+
     }
 
 }

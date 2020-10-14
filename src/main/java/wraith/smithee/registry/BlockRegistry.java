@@ -14,6 +14,10 @@ public class BlockRegistry {
 
     public static HashMap<String, Block> BLOCKS = new HashMap<String, Block>() {{
         put("oak_tool_station", new ToolStationBlock(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));
+        put("dark_oak_tool_station", new ToolStationBlock(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));
+        put("spruce_tool_station", new ToolStationBlock(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));
+        put("birch_tool_station", new ToolStationBlock(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));
+        put("jungle_tool_station", new ToolStationBlock(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));
     }};
 
     public static void registerBlocks() {

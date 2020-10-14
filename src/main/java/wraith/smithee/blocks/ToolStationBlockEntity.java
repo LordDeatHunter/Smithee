@@ -19,7 +19,8 @@ import wraith.smithee.screens.ToolStationScreenHandler;
 
 public class ToolStationBlockEntity extends LockableContainerBlockEntity implements NamedScreenHandlerFactory, ImplementedInventory {
 
-    private DefaultedList<ItemStack> inventory = DefaultedList.ofSize(4, ItemStack.EMPTY);
+    private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(4, ItemStack.EMPTY);
+    private ToolStationScreenHandler handler;
 
     public ToolStationBlockEntity() {
         super(BlockEntityRegistry.BLOCK_ENTITIES.get("tool_station"));
@@ -37,7 +38,8 @@ public class ToolStationBlockEntity extends LockableContainerBlockEntity impleme
 
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
-        return new ToolStationScreenHandler(syncId, playerInventory, this, ScreenHandlerContext.EMPTY);
+        this.handler = new ToolStationScreenHandler(syncId, playerInventory, this, ScreenHandlerContext.EMPTY);
+        return handler;
     }
 
     @Override
@@ -71,4 +73,29 @@ public class ToolStationBlockEntity extends LockableContainerBlockEntity impleme
         }
     }
 
+    @Override
+    public ItemStack removeStack(int slot, int count) {
+        ItemStack result = Inventories.splitStack(getItems(), slot, count);
+        if (!result.isEmpty()) {
+            markDirty();
+        }
+        handler.onContentChanged(this);
+        return result;
+    }
+
+    @Override
+    public void setStack(int slot, ItemStack stack) {
+        getItems().set(slot, stack);
+        if (stack.getCount() > getMaxCountPerStack()) {
+            stack.setCount(getMaxCountPerStack());
+        }
+        if (slot != 3) {
+            handler.onContentChanged(this);
+        }
+        markDirty();
+    }
+
+    public void setHandler(ToolStationScreenHandler handler) {
+        this.handler = handler;
+    }
 }
