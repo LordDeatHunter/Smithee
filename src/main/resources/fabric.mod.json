@@ -22,6 +22,7 @@
       "wraith.smithee.Smithee"
     ],
     "client": [
+      "wraith.smithee.SmitheeClient"
     ]
   },
   "mixins": [

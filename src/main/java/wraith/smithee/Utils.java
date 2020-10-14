@@ -25,10 +25,18 @@ public class Utils {
     //  20% original = BINDING
     //  30% original = HANDLE
     //-=-=-=-=-=-=-=-=-=-=-=-=-
-    public ToolMaterial createToolMaterial(HeadPart head, BindingPart binding, HandlePart handle) {
+    public static ToolMaterial createToolMaterial(HeadPart head, BindingPart binding, HandlePart handle) {
         int durability = (int) (Math.floor(head.material.getDurability() * 0.3F) + Math.floor(binding.material.getDurability() * 0.2F) + Math.floor(handle.material.getDurability() * 0.5F));
         int mineSpeed = (int) (Math.floor(head.material.getMiningSpeedMultiplier() * 0.5F) + Math.floor(binding.material.getMiningSpeedMultiplier() * 0.2F) + Math.floor(handle.material.getMiningSpeedMultiplier() * 0.3F));
         return new CustomToolMaterial(head.material.getMiningLevel(), durability, mineSpeed, head.material.getAttackDamage(), 0, () -> head.material.getRepairIngredient());
+    }
+
+    public static int getDamageModifier(HeadPart head, BindingPart binding, HandlePart handle) {
+        return (int)(head.material.getAttackDamage() + binding.material.getAttackDamage() + handle.material.getAttackDamage()) / 3;
+    }
+
+    public static int damageModifier(HeadPart head, BindingPart binding, HandlePart handle) {
+        return (int)(head.material.() + binding.material.getAttackDamage() + handle.material.getAttackDamage()) / 3;
     }
 
 }

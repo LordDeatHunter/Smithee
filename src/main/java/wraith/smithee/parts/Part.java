@@ -6,8 +6,9 @@ public abstract class Part {
 
     public ToolMaterial material;
     public String materialName;
+    public String type;
 
-    public Part(String materialName, ToolMaterial material) {
+    public Part(String materialName, String type, ToolMaterial material) {
         this.material = material;
         this.materialName = materialName;
     }

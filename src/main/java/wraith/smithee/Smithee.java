@@ -6,7 +6,10 @@ import net.fabricmc.loader.api.FabricLoader;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import wraith.smithee.mod_support.AstromineSupport;
+import wraith.smithee.registry.BlockEntityRegistry;
+import wraith.smithee.registry.BlockRegistry;
 import wraith.smithee.registry.ItemRegistry;
+import wraith.smithee.registry.ScreenHandlerRegistry;
 
 public class Smithee implements ModInitializer {
 
@@ -24,6 +27,9 @@ public class Smithee implements ModInitializer {
         }
 
         ItemRegistry.registerItems();
+        BlockRegistry.registerBlocks();
+        BlockEntityRegistry.registerBlockEntities();
+        ScreenHandlerRegistry.registerScreenHandlers();
 
         LOGGER.info("[Smithee] has successfully been loaded.");
     }

@@ -4,8 +4,8 @@ import net.minecraft.item.ToolMaterial;
 
 public class HandlePart extends Part {
 
-    public HandlePart(String materialName, ToolMaterial material) {
-        super(materialName, material);
+    public HandlePart(String materialName, String type, ToolMaterial material) {
+        super(materialName, type, material);
     }
 
 }
