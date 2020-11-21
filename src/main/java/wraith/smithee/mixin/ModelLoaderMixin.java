@@ -12,10 +12,10 @@ import wraith.smithee.Utils;
 //ItemModels
 
 @Mixin(ModelLoader.class)
-public abstract class TestMixin {
+public class ModelLoaderMixin {
 
     @Inject(method = "loadModelFromJson", at = @At(value = "INVOKE", target = "Lnet/minecraft/resource/ResourceManager;getResource(Lnet/minecraft/util/Identifier;)Lnet/minecraft/resource/Resource;"), cancellable = true)
-    public void test(Identifier id, CallbackInfoReturnable<JsonUnbakedModel> cir) {
+    public void loadModelFromJson(Identifier id, CallbackInfoReturnable<JsonUnbakedModel> cir) {
         String modelJson = Utils.createModelJson(id);
         if (modelJson != null && !"".equals(modelJson)) {
             JsonUnbakedModel model = JsonUnbakedModel.deserialize(modelJson);

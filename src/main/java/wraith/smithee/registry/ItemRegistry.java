@@ -7,12 +7,9 @@ import net.minecraft.item.ToolMaterials;
 import net.minecraft.util.registry.Registry;
 import wraith.smithee.ItemGroups;
 import wraith.smithee.Utils;
-import wraith.smithee.items.BindingItem;
-import wraith.smithee.items.HandleItem;
-import wraith.smithee.items.HeadItem;
-import wraith.smithee.parts.BindingPart;
-import wraith.smithee.parts.HandlePart;
-import wraith.smithee.parts.HeadPart;
+import wraith.smithee.items.tool_parts.Part;
+import wraith.smithee.items.tool_parts.ToolPartItem;
+import wraith.smithee.items.tools.*;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -40,9 +37,9 @@ public class ItemRegistry {
     public static void addItems() {
         for (String material : MATERIALS.keySet()) {
             for (String tool : TOOL_TYPES) {
-                ITEMS.put(material + "_" + tool + "_head", new HeadItem(new HeadPart(material, tool, MATERIALS.get(material)), new Item.Settings().group(ItemGroups.SMITHEE_PARTS)));
-                ITEMS.put(material + "_" + tool + "_binding", new BindingItem(new BindingPart(material, tool, MATERIALS.get(material)), new Item.Settings().group(ItemGroups.SMITHEE_PARTS)));
-                ITEMS.put(material + "_" + tool + "_handle", new HandleItem(new HandlePart(material, tool, MATERIALS.get(material)), new Item.Settings().group(ItemGroups.SMITHEE_PARTS)));
+                ITEMS.put(material + "_" + tool + "_head", new ToolPartItem(new Part(material, "head", tool, MATERIALS.get(material)), new Item.Settings().group(ItemGroups.SMITHEE_PARTS)));
+                ITEMS.put(material + "_" + tool + "_binding", new ToolPartItem(new Part(material, "binding", tool, MATERIALS.get(material)), new Item.Settings().group(ItemGroups.SMITHEE_PARTS)));
+                ITEMS.put(material + "_" + tool + "_handle", new ToolPartItem(new Part(material, "handle", tool, MATERIALS.get(material)), new Item.Settings().group(ItemGroups.SMITHEE_PARTS)));
             }
         }
         ITEMS.put("oak_tool_station", new BlockItem(BlockRegistry.BLOCKS.get("oak_tool_station"), new Item.Settings().group(ItemGroups.SMITHEE_BLOCKS)));
@@ -50,6 +47,12 @@ public class ItemRegistry {
         ITEMS.put("spruce_tool_station", new BlockItem(BlockRegistry.BLOCKS.get("spruce_tool_station"), new Item.Settings().group(ItemGroups.SMITHEE_BLOCKS)));
         ITEMS.put("birch_tool_station", new BlockItem(BlockRegistry.BLOCKS.get("birch_tool_station"), new Item.Settings().group(ItemGroups.SMITHEE_BLOCKS)));
         ITEMS.put("jungle_tool_station", new BlockItem(BlockRegistry.BLOCKS.get("jungle_tool_station"), new Item.Settings().group(ItemGroups.SMITHEE_BLOCKS)));
+
+        ITEMS.put("base_smithee_pickaxe", new BaseSmitheePickaxe(new Item.Settings().group(ItemGroups.SMITHEE_PARTS)));
+        ITEMS.put("base_smithee_axe", new BaseSmitheeAxe(new Item.Settings().group(ItemGroups.SMITHEE_PARTS)));
+        ITEMS.put("base_smithee_shovel", new BaseSmitheeShovel(new Item.Settings().group(ItemGroups.SMITHEE_PARTS)));
+        ITEMS.put("base_smithee_hoe", new BaseSmitheeHoe(new Item.Settings().group(ItemGroups.SMITHEE_PARTS)));
+        ITEMS.put("base_smithee_sword", new BaseSmitheeSword(new Item.Settings().group(ItemGroups.SMITHEE_PARTS)));
     }
 
     public static void registerItems() {

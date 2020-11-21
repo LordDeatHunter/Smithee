@@ -1,11 +1,8 @@
 package wraith.smithee;
 
 import net.fabricmc.api.ModInitializer;
-
-import net.fabricmc.loader.api.FabricLoader;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
-import wraith.smithee.mod_support.AstromineSupport;
+import org.apache.logging.log4j.Logger;
 import wraith.smithee.registry.BlockEntityRegistry;
 import wraith.smithee.registry.BlockRegistry;
 import wraith.smithee.registry.ItemRegistry;
@@ -21,11 +18,6 @@ public class Smithee implements ModInitializer {
         LOGGER.info("[Smithee] is loading.");
 
         ItemRegistry.addItems();
-
-        if (FabricLoader.getInstance().isModLoaded("astromine-foundations")) {
-            AstromineSupport.load();
-        }
-
         ItemRegistry.registerItems();
         BlockRegistry.registerBlocks();
         BlockEntityRegistry.addBlockEntities();

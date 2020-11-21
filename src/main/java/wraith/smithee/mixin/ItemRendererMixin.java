@@ -1,105 +1,101 @@
 package wraith.smithee.mixin;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.item.ItemModels;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelTransformation.Mode;
-import net.minecraft.client.texture.NativeImage;
-import net.minecraft.client.texture.NativeImageBackedTexture;
+import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Matrix3f;
-import net.minecraft.util.math.Matrix4f;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import wraith.smithee.tools.SmitheePickaxe;
-import wraith.smithee.tools.SmitheeTool;
-
-import javax.imageio.ImageIO;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashMap;
+import wraith.smithee.Utils;
+import wraith.smithee.registry.ItemRegistry;
 
 @Mixin(ItemRenderer.class)
-public class ItemRendererMixin {
+public abstract class ItemRendererMixin {
+
+    @Shadow @Final private ItemModels models;
+
     @Inject(
+            /*
             method = "renderItem(Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/render/model/json/ModelTransformation$Mode;ZLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;IILnet/minecraft/client/render/model/BakedModel;)V",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;translate(DDD)V", shift = At.Shift.AFTER), cancellable = true
+             */
+            method = "renderItem(Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/render/model/json/ModelTransformation$Mode;ZLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;IILnet/minecraft/client/render/model/BakedModel;)V",
+            at = @At("HEAD"), cancellable = true
     )
     private void renderItem(ItemStack stack, Mode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, BakedModel model, CallbackInfo ci) {
-        if (stack.getItem() instanceof SmitheePickaxe) {
-            VertexConsumer buffer = vertexConsumers.getBuffer(RenderLayer.getEntitySolid(getTextureForStack(stack)));
-            MatrixStack.Entry tos = matrices.peek();
-            Matrix3f normal = tos.getNormal();
-            Matrix4f tr = tos.getModel();
-
-            buffer.vertex(tr, 0.7f, 0.9f, 0.44f).color(1f, 1f, 1f, 1f).texture(0f, 0f).overlay(overlay).light(light).normal(normal, 0f, 0f, 1f).next();
-            buffer.vertex(tr, 0.2f, 0.9f, 0.44f).color(1f, 1f, 1f, 1f).texture(1f, 0f).overlay(overlay).light(light).normal(normal, 0f, 0f, 1f).next();
-            buffer.vertex(tr, 0.2f, 0.1f, 0.44f).color(1f, 1f, 1f, 1f).texture(1f, 1f).overlay(overlay).light(light).normal(normal, 0f, 0f, 1f).next();
-            buffer.vertex(tr, 0.7f, 0.1f, 0.44f).color(1f, 1f, 1f, 1f).texture(0f, 1f).overlay(overlay).light(light).normal(normal, 0f, 0f, 1f).next();
-
-            buffer.vertex(tr, 0.2f, 0.9f, 0.44f).color(1f, 1f, 1f, 1f).texture(0f, 0f).overlay(overlay).light(light).normal(normal, 0f, 0f, 1f).next();
-            buffer.vertex(tr, 0.7f, 0.9f, 0.44f).color(1f, 1f, 1f, 1f).texture(1f, 0f).overlay(overlay).light(light).normal(normal, 0f, 0f, 1f).next();
-            buffer.vertex(tr, 0.7f, 0.1f, 0.44f).color(1f, 1f, 1f, 1f).texture(1f, 1f).overlay(overlay).light(light).normal(normal, 0f, 0f, 1f).next();
-            buffer.vertex(tr, 0.2f, 0.1f, 0.44f).color(1f, 1f, 1f, 1f).texture(0f, 1f).overlay(overlay).light(light).normal(normal, 0f, 0f, 1f).next();
-            ci.cancel();
-            matrices.pop();
-        }
-    }
-
-    private final HashMap<byte[],Identifier> memory = new HashMap<>();
-
-    private Identifier getTextureForStack(ItemStack stack) {
-
-        //if the stack has been assigned a texture it will have a tag, and at no other time.
-        if(stack.hasTag()) {
+        if (!stack.isEmpty() && Utils.isSmitheeTool(stack)) {
             CompoundTag tag = stack.getTag();
-            //if the stack has been assigned a texture, but its not in memory
-            if(!memory.containsKey(tag.getByteArray("tex"))) {
-                try {
-                    InputStream is = new ByteArrayInputStream(tag.getByteArray("tex"));
-                    Identifier id = MinecraftClient.getInstance().getTextureManager().registerDynamicTexture("smithee", new NativeImageBackedTexture(NativeImage.read(is)));
-                    memory.put(tag.getByteArray("tex"),id);
-                    return id;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            String tool = Utils.getToolType(stack.getItem());
+
+            String headString = "iron_" + tool + "_head";
+            String bindingString = "iron_" + tool + "_binding";
+            String handleString = "iron_" + tool + "_handle";
+            if (tag != null && tag.contains("Parts")) {
+                headString = tag.getCompound("Parts").getString("HeadPart") + "_" + tool + "_head";
+                bindingString = tag.getCompound("Parts").getString("BindingPart") + "_" + tool + "_binding";
+                handleString = tag.getCompound("Parts").getString("HandlePart") + "_" + tool + "_handle";
             }
-            //basically any frame after the first one
-            else
-            {
-                return memory.get(tag.getByteArray("tex"));
-            }
+            Item head = ItemRegistry.ITEMS.get(headString);
+            Item binding = ItemRegistry.ITEMS.get(bindingString);
+            Item handle = ItemRegistry.ITEMS.get(handleString);
+
+            BakedModel handleModel = models.getModelManager().getModel(new ModelIdentifier(Utils.ID(handleString), "inventory"));
+            BakedModel bindingModel = models.getModelManager().getModel(new ModelIdentifier(Utils.ID(bindingString), "inventory"));
+            BakedModel headModel = models.getModelManager().getModel(new ModelIdentifier(Utils.ID(headString), "inventory"));
+            MinecraftClient.getInstance().getItemRenderer().renderItem(new ItemStack(handle), renderMode, leftHanded, matrices, vertexConsumers, light, overlay, handleModel);
+            MinecraftClient.getInstance().getItemRenderer().renderItem(new ItemStack(binding), renderMode, leftHanded, matrices, vertexConsumers, light, overlay, bindingModel);
+            MinecraftClient.getInstance().getItemRenderer().renderItem(new ItemStack(head), renderMode, leftHanded, matrices, vertexConsumers, light, overlay, headModel);
+            ci.cancel();
+
+            //Broken code, honestly...
+            /*
+            VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntitySolid(id));
+            model = models.getModelManager().getModel(new ModelIdentifier(id, ""));
+            model.getTransformation().getTransformation(renderMode).apply(leftHanded, matrices);
+
+            //Tried this:
+            //renderBakedItemModel(mdl, stack, light, overlay, matrices, vertexConsumer);
+            //And this:
+            //renderBakedItemQuads(matrices, vertexConsumer, model.getQuads(null, null, new Random()), stack, light, overlay);
+
+            //matrices.pop();
+            //ci.cancel();
+             */
         }
-        else {
-            //if the stack does not have a texture assigned, the texture cannot be in memory
-            CompoundTag tag = new CompoundTag();
-            try {
-
-                ByteArrayOutputStream os = new ByteArrayOutputStream();
-                ImageIO.write(((SmitheeTool)stack.getItem()).getImage(), "PNG" , os);
-                tag.putByteArray("tex", os.toByteArray());
-
-                InputStream is = new ByteArrayInputStream(os.toByteArray());
-                Identifier id = MinecraftClient.getInstance().getTextureManager().registerDynamicTexture("smithee",new NativeImageBackedTexture(NativeImage.read(is)));
-                memory.put(os.toByteArray(),id);
-                stack.setTag(tag);
-
-                return id;
-
-            } catch (IOException e){
-                e.printStackTrace();
-            }
-        }
-        return null;
     }
+
+    //No longer needed
+    /*
+    private static final HashMap<ArrayList<String>, Identifier> textures = new HashMap<>();
+
+    private Identifier getTexture(ItemStack stack) {
+        ArrayList<String> parts = new ArrayList<>();
+        if (stack.getTag().contains("Parts")) {
+            CompoundTag tag = stack.getSubTag("Parts");
+            parts.add(tag.getString("HeadPart"));
+            parts.add(tag.getString("BindingPart"));
+            parts.add(tag.getString("HandlePart"));
+        } else {
+            parts.add("iron");
+            parts.add("iron");
+            parts.add("iron");
+        }
+        if (!textures.containsKey(parts)) {
+            textures.put(parts, Utils.generateTexture(stack));
+        }
+        return textures.get(parts);
+    }
+     */
+
 }

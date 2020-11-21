@@ -15,5 +15,11 @@ public class ToolStationOutputSlot extends Slot {
         return false;
     }
 
+    @Override
+    public void onTake(int amount) {
+        inventory.removeStack(0, 1);
+        inventory.removeStack(1, 1);
+        inventory.removeStack(2, 1);
+    }
 
 }
