@@ -1,0 +1,30 @@
+{
+
+  "block.smithee.oak_assembly_table": "Oak Assembly Table",
+  "block.smithee.dark_oak_assembly_table": "Dark Oak Assembly Table",
+  "block.smithee.spruce_assembly_table": "Spruce Assembly Table",
+  "block.smithee.birch_assembly_table": "Birch Assembly Table",
+  "block.smithee.jungle_assembly_table": "Jungle Assembly Table",
+  "block.smithee.acacia_assembly_table": "Acacia Assembly Table",
+  "block.smithee.stone_disassembly_table": "Stone Disassembly Table",
+  "block.smithee.diorite_disassembly_table": "Diorite Disassembly Table",
+  "block.smithee.andesite_disassembly_table": "Andesite Disassembly Table",
+  "block.smithee.granite_disassembly_table": "Granite Disassembly Table",
+
+  "item.smithee.oak_assembly_table": "Oak Assembly Table",
+  "item.smithee.dark_oak_assembly_table": "Dark Oak Assembly Table",
+  "item.smithee.spruce_assembly_table": "Spruce Assembly Table",
+  "item.smithee.birch_assembly_table": "Birch Assembly Table",
+  "item.smithee.jungle_assembly_table": "Jungle Assembly Table",
+  "item.smithee.acacia_assembly_table": "Acacia Assembly Table",
+  "item.smithee.stone_disassembly_table": "Stone Disassembly Table",
+  "item.smithee.diorite_disassembly_table": "Diorite Disassembly Table",
+  "item.smithee.andesite_disassembly_table": "Andesite Disassembly Table",
+  "item.smithee.granite_disassembly_table": "Granite Disassembly Table",
+
+  "itemGroup.smithee.parts": "Smithee Parts",
+  "itemGroup.smithee.blocks": "Smithee Blocks",
+
+  "container.smithee.assembly_table": "Assembly Table",
+  "container.smithee.disassembly_table": "Disassembly Table"
+}

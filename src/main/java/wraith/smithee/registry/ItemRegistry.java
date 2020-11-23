@@ -42,11 +42,17 @@ public class ItemRegistry {
                 ITEMS.put(material + "_" + tool + "_handle", new ToolPartItem(new Part(material, "handle", tool, MATERIALS.get(material)), new Item.Settings().group(ItemGroups.SMITHEE_PARTS)));
             }
         }
-        ITEMS.put("oak_tool_station", new BlockItem(BlockRegistry.BLOCKS.get("oak_tool_station"), new Item.Settings().group(ItemGroups.SMITHEE_BLOCKS)));
-        ITEMS.put("dark_oak_tool_station", new BlockItem(BlockRegistry.BLOCKS.get("dark_oak_tool_station"), new Item.Settings().group(ItemGroups.SMITHEE_BLOCKS)));
-        ITEMS.put("spruce_tool_station", new BlockItem(BlockRegistry.BLOCKS.get("spruce_tool_station"), new Item.Settings().group(ItemGroups.SMITHEE_BLOCKS)));
-        ITEMS.put("birch_tool_station", new BlockItem(BlockRegistry.BLOCKS.get("birch_tool_station"), new Item.Settings().group(ItemGroups.SMITHEE_BLOCKS)));
-        ITEMS.put("jungle_tool_station", new BlockItem(BlockRegistry.BLOCKS.get("jungle_tool_station"), new Item.Settings().group(ItemGroups.SMITHEE_BLOCKS)));
+        ITEMS.put("oak_assembly_table", new BlockItem(BlockRegistry.BLOCKS.get("oak_assembly_table"), new Item.Settings().group(ItemGroups.SMITHEE_BLOCKS)));
+        ITEMS.put("dark_oak_assembly_table", new BlockItem(BlockRegistry.BLOCKS.get("dark_oak_assembly_table"), new Item.Settings().group(ItemGroups.SMITHEE_BLOCKS)));
+        ITEMS.put("spruce_assembly_table", new BlockItem(BlockRegistry.BLOCKS.get("spruce_assembly_table"), new Item.Settings().group(ItemGroups.SMITHEE_BLOCKS)));
+        ITEMS.put("birch_assembly_table", new BlockItem(BlockRegistry.BLOCKS.get("birch_assembly_table"), new Item.Settings().group(ItemGroups.SMITHEE_BLOCKS)));
+        ITEMS.put("jungle_assembly_table", new BlockItem(BlockRegistry.BLOCKS.get("jungle_assembly_table"), new Item.Settings().group(ItemGroups.SMITHEE_BLOCKS)));
+        ITEMS.put("acacia_assembly_table", new BlockItem(BlockRegistry.BLOCKS.get("acacia_assembly_table"), new Item.Settings().group(ItemGroups.SMITHEE_BLOCKS)));
+
+        ITEMS.put("stone_disassembly_table", new BlockItem(BlockRegistry.BLOCKS.get("stone_disassembly_table"), new Item.Settings().group(ItemGroups.SMITHEE_BLOCKS)));
+        ITEMS.put("diorite_disassembly_table", new BlockItem(BlockRegistry.BLOCKS.get("diorite_disassembly_table"), new Item.Settings().group(ItemGroups.SMITHEE_BLOCKS)));
+        ITEMS.put("andesite_disassembly_table", new BlockItem(BlockRegistry.BLOCKS.get("andesite_disassembly_table"), new Item.Settings().group(ItemGroups.SMITHEE_BLOCKS)));
+        ITEMS.put("granite_disassembly_table", new BlockItem(BlockRegistry.BLOCKS.get("granite_disassembly_table"), new Item.Settings().group(ItemGroups.SMITHEE_BLOCKS)));
 
         ITEMS.put("base_smithee_pickaxe", new BaseSmitheePickaxe(new Item.Settings().group(ItemGroups.SMITHEE_PARTS)));
         ITEMS.put("base_smithee_axe", new BaseSmitheeAxe(new Item.Settings().group(ItemGroups.SMITHEE_PARTS)));

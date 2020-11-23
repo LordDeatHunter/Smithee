@@ -9,5 +9,5 @@ public class ItemGroups {
 
     public static final ItemGroup SMITHEE_PARTS = FabricItemGroupBuilder.create(Utils.ID("parts")).icon(() -> new ItemStack(ItemRegistry.ITEMS.get("diamond_pickaxe_head"))).build();
 
-    public static final ItemGroup SMITHEE_BLOCKS = FabricItemGroupBuilder.create(Utils.ID("blocks")).icon(() -> new ItemStack(ItemRegistry.ITEMS.get("oak_tool_station"))).build();;
+    public static final ItemGroup SMITHEE_BLOCKS = FabricItemGroupBuilder.create(Utils.ID("blocks")).icon(() -> new ItemStack(ItemRegistry.ITEMS.get("oak_assembly_table"))).build();;
 }
