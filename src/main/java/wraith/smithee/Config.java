@@ -11,6 +11,17 @@ import java.util.Scanner;
 
 public class Config {
 
+    public static JsonObject loadConfig() {
+        String defaultConfig =
+                "{\n" +
+                        "  \"regenerate_deleted_files\": true,\n" +
+                        "  \"replace_old_files_when_regenerating\": false\n" +
+                        "}";
+        String path = "config/smithee/config.json";
+        Config.createFile(path, defaultConfig, false);
+        return getJsonObject(readFile(new File(path)));
+    }
+
     public static void createFile(String path, String contents, boolean overwrite) {
         File file = new File(path);
         if (file.exists() && !overwrite) {

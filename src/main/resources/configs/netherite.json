@@ -1,0 +1,54 @@
+{
+	"individual_parts": {
+		"head": {
+			"mining_level": 4,
+			"durability": 1971,
+			"mining_speed": 7.2,
+			"attack_damage": 4.5,
+			"attack_speed": 0.6,
+			"traits": [
+				{
+					"trait": "superheated",
+					"min_level": 1,
+					"max_level": 1,
+					"activate_on": "none",
+					"chance": 1
+				}
+			]
+		},
+		"binding": {
+			"mining_level": 0,
+			"durability": 4730,
+			"mining_speed": 0.3,
+			"attack_damage": 0.25,
+			"attack_speed": 0.1,
+			"traits": [
+				{
+					"trait": "superheated",
+					"min_level": 1,
+					"max_level": 1,
+					"activate_on": "none",
+					"chance": 1
+				}
+			]
+		},
+		"handle": {
+			"mining_level": 0,
+			"durability": 3154,
+			"mining_speed": 1.5,
+			"attack_damage": 1.2,
+			"attack_speed": 0.3,
+			"traits": [
+				{
+					"trait": "superheated",
+					"min_level": 1,
+					"max_level": 1,
+					"activate_on": "none",
+					"chance": 1
+				}
+			]
+		}
+	},
+	"two_parts": {},
+	"full_tool": {}
+}

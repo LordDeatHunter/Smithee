@@ -1,0 +1,56 @@
+{
+	"individual_parts": {
+		"head": {
+			"mining_level": 2,
+			"durability": 190,
+			"mining_speed": 1.8,
+			"attack_damage": 2.6,
+			"attack_speed": 0.3,
+			"traits": [
+				{
+					"trait": "magnetic",
+					"min_level": 1,
+					"max_level": 1,
+					"activate_on": "mine_block",
+					"chance": 1
+				}
+			]
+		},
+		"binding": {
+			"mining_level": 0,
+			"durability": 342,
+			"mining_speed": 0.6,
+			"attack_damage": 0.1,
+			"attack_speed": 0.1,
+			"traits": [
+				{
+					"trait": "magnetic",
+					"min_level": 1,
+					"max_level": 1,
+					"activate_on": "mine_block",
+					"chance": 1
+				}
+			]
+		},
+		"handle": {
+			"mining_level": 0,
+			"durability": 228,
+			"mining_speed": 3.6,
+			"attack_damage": 0.3,
+			"attack_speed": 0.6,
+			"traits": [
+				{
+					"trait": "magnetic",
+					"min_level": 1,
+					"max_level": 1,
+					"activate_on": "mine_block",
+					"chance": 1
+				}
+			]
+		}
+	},
+	"two_parts": {},
+	"full_tool": {
+		"durability": "base + 30"
+	}
+}

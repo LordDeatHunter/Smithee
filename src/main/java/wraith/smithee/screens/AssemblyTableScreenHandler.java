@@ -14,6 +14,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.World;
 import wraith.smithee.blocks.AssemblyTableEntity;
 import wraith.smithee.items.tool_parts.ToolPartItem;
+import wraith.smithee.properties.Properties;
 import wraith.smithee.registry.ItemRegistry;
 import wraith.smithee.registry.ScreenHandlerRegistry;
 import wraith.smithee.screens.slots.PartSlot;
@@ -38,19 +39,19 @@ public class AssemblyTableScreenHandler extends ScreenHandler {
         if (inventory instanceof AssemblyTableEntity) {
             ((AssemblyTableEntity)inventory).setHandler(this);
         }
-        this.addSlot(new PartSlot(inventory, 0, 26, 62, "handle")); //Handle
-        this.addSlot(new PartSlot(inventory, 1, 48, 40, "binding")); //Binding
-        this.addSlot(new PartSlot(inventory, 2, 70, 18, "head")); //Head
-        this.addSlot(new AssemblyTableOutputSlot(inventory, 3, 124, 40)); //Output
+        this.addSlot(new PartSlot(inventory, 0, 43, 57, "handle")); //Handle
+        this.addSlot(new PartSlot(inventory, 1, 55, 37, "binding")); //Binding
+        this.addSlot(new PartSlot(inventory, 2, 67, 17, "head")); //Head
+        this.addSlot(new AssemblyTableOutputSlot(inventory, 3, 113, 38)); //Output
 
         for (int y = 0; y < 3; ++y) {
             for (int x = 0; x < 9; ++x) {
-                this.addSlot(new Slot(playerInventory, x + y * 9 + 9, 8 + x * 18, 94 + y * 18));
+                this.addSlot(new Slot(playerInventory, x + y * 9 + 9, 8 + x * 18, 84 + y * 18));
             }
         }
 
         for (int x = 0; x < 9; ++x) {
-            this.addSlot(new Slot(playerInventory, x, 8 + x * 18, 152));
+            this.addSlot(new Slot(playerInventory, x, 8 + x * 18, 142));
         }
         this.result = inventory.getStack(3);
     }
@@ -129,6 +130,8 @@ public class AssemblyTableScreenHandler extends ScreenHandler {
             tag.putString("BindingPart", binding.part.materialName);
             tag.putString("HandlePart", handle.part.materialName);
             itemStack.putSubTag("Parts", tag);
+
+            Properties.setProperties(itemStack, Properties.getProperties(itemStack));
 
             result = itemStack.copy();
             inventory.setStack(3, itemStack);

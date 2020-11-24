@@ -7,7 +7,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import wraith.smithee.Utils;
+import wraith.smithee.utils.Utils;
 
 public class AssemblyTableScreen extends HandledScreen<ScreenHandler> {
 
@@ -18,8 +18,9 @@ public class AssemblyTableScreen extends HandledScreen<ScreenHandler> {
         super(handler, inventory, title);
         this.handler = (AssemblyTableScreenHandler) handler;
         this.backgroundWidth = 176;
-        this.backgroundHeight = 176;
+        this.backgroundHeight = 166;
         this.playerInventoryTitleY = this.backgroundHeight - 94;
+        this.titleX += 20;
     }
 
     @Override
@@ -38,14 +39,17 @@ public class AssemblyTableScreen extends HandledScreen<ScreenHandler> {
         int y = this.y;
         this.drawTexture(matrices, x, y, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
+        //Hande
         if (this.handler.slots.get(0).getStack().isEmpty()) {
-            this.drawTexture(matrices, x + 26, y + 62, 176, 0, 16, 16);
+            this.drawTexture(matrices, x + 43, y + 57, 176, 0, 16, 16);
         }
+        //Binding
         if (this.handler.slots.get(1).getStack().isEmpty()) {
-            this.drawTexture(matrices, x + 48, y + 40, 176 + 16, 0, 16, 16);
+            this.drawTexture(matrices, x + 55, y + 37, 176 + 16, 0, 16, 16);
         }
+        //Head
         if (this.handler.slots.get(2).getStack().isEmpty()) {
-            this.drawTexture(matrices, x + 70, y + 18, 176 + 32, 0, 16, 16);
+            this.drawTexture(matrices, x + 67, y + 17, 176 + 32, 0, 16, 16);
         }
 
     }

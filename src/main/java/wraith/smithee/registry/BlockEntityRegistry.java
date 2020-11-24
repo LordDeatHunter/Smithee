@@ -3,7 +3,7 @@ package wraith.smithee.registry;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.util.registry.Registry;
-import wraith.smithee.Utils;
+import wraith.smithee.utils.Utils;
 import wraith.smithee.blocks.AssemblyTableEntity;
 import wraith.smithee.blocks.DisassemblyTableEntity;
 

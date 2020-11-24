@@ -10,7 +10,7 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import wraith.smithee.Utils;
+import wraith.smithee.utils.Utils;
 
 public class DisassemblyTableScreen extends HandledScreen<ScreenHandler> {
 
@@ -24,6 +24,7 @@ public class DisassemblyTableScreen extends HandledScreen<ScreenHandler> {
         this.backgroundWidth = 176;
         this.backgroundHeight = 176;
         this.playerInventoryTitleY = this.backgroundHeight - 94;
+        this.titleX += 20;
     }
 
     @Override
@@ -42,31 +43,39 @@ public class DisassemblyTableScreen extends HandledScreen<ScreenHandler> {
         int y = this.y;
         this.drawTexture(matrices, x, y, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
+        //Handle
         if (this.handler.slots.get(3).getStack().isEmpty()) {
-            this.drawTexture(matrices, x + 150, y + 60, 176, 0, 16, 16);
+            this.drawTexture(matrices, x + 108, y + 62, 176, 0, 16, 16);
         }
+        //Binding
         if (this.handler.slots.get(2).getStack().isEmpty()) {
-            this.drawTexture(matrices, x + 150, y + 40, 176 + 16, 0, 16, 16);
+            this.drawTexture(matrices, x + 50, y + 62, 176 + 16, 0, 16, 16);
         }
+        //Head
         if (this.handler.slots.get(1).getStack().isEmpty()) {
-            this.drawTexture(matrices, x + 150, y + 20, 176 + 32, 0, 16, 16);
+            this.drawTexture(matrices, x + 79, y + 18, 176 + 32, 0, 16, 16);
         }
 
         int s = 196;
-        if (mouseX >= x + 17 && mouseY >= y + 40 && mouseX < x + 17 + 20 && mouseY < y + 40 + 20) {
-            s += mouseClicked ? 20 : -20;
+        if (mouseX >= x + 16 && mouseY >= y + 61 && mouseX < x + 16 + 20 && mouseY < y + 61 + 20) {
+            s += mouseClicked ? -20 : 20;
         }
-        this.drawTexture(matrices, x + 17, y + 40, s, 16, 20, 20);
+        this.drawTexture(matrices, x + 16, y + 61, s, 16, 20, 20);
     }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        this.mouseClicked = false;
-        if (mouseX >= x + 17 && mouseY >= y + 40 && mouseX < x + 17 + 20 && mouseY < y + 40 + 20) {
+        this.mouseClicked = true;
+        if (mouseX >= x + 16 && mouseY >= y + 61 && mouseX < x + 16 + 20 && mouseY < y + 61 + 20) {
             MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
             this.client.interactionManager.clickButton(this.handler.syncId, 0);
         }
         return super.mouseClicked(mouseX, mouseY, button);
     }
 
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        this.mouseClicked = false;
+        return super.mouseReleased(mouseX, mouseY, button);
+    }
 }

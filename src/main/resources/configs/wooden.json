@@ -1,0 +1,66 @@
+{
+	"individual_parts": {
+		"head": {
+			"mining_level": 0,
+			"durability": 18,
+			"mining_speed": 0.6,
+			"attack_damage": 0.8,
+			"attack_speed": 0.6,
+			"traits": [
+				{
+					"trait": "ecological",
+					"min_level": 1,
+					"max_level": 2,
+					"activate_on": "tick",
+					"chance": 0.00125
+				}
+			]
+		},
+		"binding": {
+			"mining_level": 0,
+			"durability": 30,
+			"mining_speed": 0.2,
+			"attack_damage": 0.05,
+			"attack_speed": 0.1,
+			"traits": [
+				{
+					"trait": "ecological",
+					"min_level": 1,
+					"max_level": 2,
+					"activate_on": "tick",
+					"chance": 0.00125
+				}
+			]
+		},
+		"handle": {
+			"mining_level": 0,
+			"durability": 24,
+			"mining_speed": 1.2,
+			"attack_damage": 0.15,
+			"attack_speed": 0.3,
+			"traits": [
+				{
+					"trait": "ecological",
+					"min_level": 1,
+					"max_level": 2,
+					"activate_on": "tick",
+					"chance": 0.00125
+				}
+			]
+		}
+	},
+	"two_parts": {
+		"combinations": [
+			{
+				"parts": "handle+binding",
+				"durability": "base + 6",
+				"mining_speed": "base + 0.25",
+				"attack_damage": "base - 0.2"
+			}
+		]
+	},
+	"full_tool": {
+		"durability": "59",
+		"attack_speed": "base - 0.2"
+	}
+}

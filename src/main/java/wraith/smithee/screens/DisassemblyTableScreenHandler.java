@@ -10,7 +10,7 @@ import net.minecraft.network.packet.s2c.play.ScreenHandlerSlotUpdateS2CPacket;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
-import wraith.smithee.Utils;
+import wraith.smithee.utils.Utils;
 import wraith.smithee.blocks.DisassemblyTableEntity;
 import wraith.smithee.items.tools.BaseSmitheeTool;
 import wraith.smithee.registry.ItemRegistry;
@@ -32,10 +32,10 @@ public class DisassemblyTableScreenHandler extends ScreenHandler {
         if (inventory instanceof DisassemblyTableEntity) {
             ((DisassemblyTableEntity) inventory).setHandler(this);
         }
-        this.addSlot(new ToolSlot(inventory, 0, 55, 40)); //Output
-        this.addSlot(new DisassemblyTableOutputSlot(inventory, 1, 150, 20)); //Head
-        this.addSlot(new DisassemblyTableOutputSlot(inventory, 2, 150, 40)); //Binding
-        this.addSlot(new DisassemblyTableOutputSlot(inventory, 3, 150, 60)); //Handle
+        this.addSlot(new ToolSlot(inventory, 0, 80, 49)); //Output
+        this.addSlot(new DisassemblyTableOutputSlot(inventory, 1, 80, 19)); //Head
+        this.addSlot(new DisassemblyTableOutputSlot(inventory, 2, 51, 63)); //Binding
+        this.addSlot(new DisassemblyTableOutputSlot(inventory, 3, 109, 63)); //Handle
 
         for (int y = 0; y < 3; ++y) {
             for (int x = 0; x < 9; ++x) {

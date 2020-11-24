@@ -1,16 +1,21 @@
 package wraith.smithee.registry;
 
+import com.google.gson.JsonObject;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.item.ToolMaterials;
 import net.minecraft.util.registry.Registry;
+import wraith.smithee.Config;
 import wraith.smithee.ItemGroups;
-import wraith.smithee.Utils;
+import wraith.smithee.utils.JsonParser;
+import wraith.smithee.utils.Utils;
 import wraith.smithee.items.tool_parts.Part;
 import wraith.smithee.items.tool_parts.ToolPartItem;
 import wraith.smithee.items.tools.*;
+import wraith.smithee.properties.Properties;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -33,6 +38,7 @@ public class ItemRegistry {
         add("sword");
         add("hoe");
     }};
+    public static final HashMap<String, Properties> PROPERTIES = new HashMap<>();
 
     public static void addItems() {
         for (String material : MATERIALS.keySet()) {
@@ -64,6 +70,39 @@ public class ItemRegistry {
     public static void registerItems() {
         for (String id : ITEMS.keySet()) {
             Registry.register(Registry.ITEM, Utils.ID(id), ITEMS.get(id));
+        }
+    }
+
+    public static void generateProperties() {
+        File[] files = Config.getFiles("config/smithee/parts/");
+        if (files == null) {
+            return ;
+        }
+        for(File file : files) {
+            JsonObject json = Config.getJsonObject(Config.readFile(file));
+            try {
+                String[] segments = file.getName().split("/");
+                String filename = segments[segments.length - 1].split("\\.")[0];
+
+                PROPERTIES.put(filename, new Properties());
+
+                JsonObject parts = json.get("individual_parts").getAsJsonObject();
+                JsonParser.parseIndividualPart(parts.get("head").getAsJsonObject(), PROPERTIES.get(filename), "head");
+                JsonParser.parseIndividualPart(parts.get("binding").getAsJsonObject(), PROPERTIES.get(filename), "binding");
+                JsonParser.parseIndividualPart(parts.get("handle").getAsJsonObject(), PROPERTIES.get(filename), "handle");
+
+                if (json.has("two_parts")) {
+                    if (json.get("two_parts").getAsJsonObject().has("combinations")) {
+                        JsonParser.parseTwoParts(json.get("two_parts").getAsJsonObject().get("combinations").getAsJsonArray(), PROPERTIES.get(filename));
+                    }
+                }
+                if (json.has("two_parts")) {
+                    JsonParser.parseFullTool(json.get("full_tool").getAsJsonObject(), PROPERTIES.get(filename));
+                }
+            }
+            catch(Exception e) {
+                System.out.println("Found error with file '" + file.getName() + "'");
+            }
         }
     }
 

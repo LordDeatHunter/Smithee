@@ -4,8 +4,10 @@
   "package": "wraith.smithee.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "AxeItemAccessor",
     "ItemRendererMixin",
     "ItemStackMixin",
+    "MiningToolItemAccessor",
     "ModelLoaderMixin"
   ],
   "client": [

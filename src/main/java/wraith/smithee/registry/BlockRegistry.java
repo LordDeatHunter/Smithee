@@ -5,7 +5,7 @@ import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.Material;
 import net.minecraft.util.registry.Registry;
-import wraith.smithee.Utils;
+import wraith.smithee.utils.Utils;
 import wraith.smithee.blocks.AssemblyTable;
 import wraith.smithee.blocks.DisassemblyTable;
 

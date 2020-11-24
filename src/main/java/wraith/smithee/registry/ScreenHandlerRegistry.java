@@ -2,8 +2,7 @@ package wraith.smithee.registry;
 
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
-import wraith.smithee.Utils;
-import wraith.smithee.blocks.DisassemblyTable;
+import wraith.smithee.utils.Utils;
 import wraith.smithee.screens.AssemblyTableScreenHandler;
 import wraith.smithee.screens.DisassemblyTableScreenHandler;
 
