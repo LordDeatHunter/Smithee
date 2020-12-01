@@ -8,28 +8,45 @@ import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.screen.NamedScreenHandlerFactory;
+import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.collection.DefaultedList;
 import wraith.smithee.Smithee;
 import wraith.smithee.registry.BlockEntityRegistry;
+import wraith.smithee.screens.ChiselingTableScreenHandler;
 import wraith.smithee.screens.ImplementedInventory;
-import wraith.smithee.screens.AssemblyTableScreenHandler;
 
-public class AssemblyTableEntity extends LockableContainerBlockEntity implements NamedScreenHandlerFactory, ImplementedInventory {
+public class ChiselingTableBlockEntity extends LockableContainerBlockEntity implements NamedScreenHandlerFactory, ImplementedInventory {
 
-    private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(4, ItemStack.EMPTY);
-    private AssemblyTableScreenHandler handler;
+    private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(10, ItemStack.EMPTY);
+    private int page = 0;
 
-    public AssemblyTableEntity() {
-        super(BlockEntityRegistry.BLOCK_ENTITIES.get("assembly_table"));
+    public ChiselingTableBlockEntity() {
+        super(BlockEntityRegistry.BLOCK_ENTITIES.get("chiseling_table"));
     }
+
+    private final PropertyDelegate propertyDelegate = new PropertyDelegate() {
+        @Override
+        public int get(int index) {
+            return page;
+        }
+
+        @Override
+        public void set(int index, int value) {
+            page = value;
+        }
+
+        @Override
+        public int size() {
+            return 1;
+        }
+    };
 
     @Override
     public int size() {
-        return 4;
+        return inventory.size();
     }
 
     @Override
@@ -39,8 +56,7 @@ public class AssemblyTableEntity extends LockableContainerBlockEntity implements
 
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
-        this.handler = new AssemblyTableScreenHandler(syncId, playerInventory, this, ScreenHandlerContext.EMPTY);
-        return handler;
+        return new ChiselingTableScreenHandler(syncId, playerInventory, this, propertyDelegate);
     }
 
     @Override
@@ -50,7 +66,7 @@ public class AssemblyTableEntity extends LockableContainerBlockEntity implements
 
     @Override
     public Text getDisplayName() {
-        return new TranslatableText("container." + Smithee.MOD_ID + ".assembly_table");
+        return new TranslatableText("container." + Smithee.MOD_ID + ".chiseling_table");
     }
 
     @Override
@@ -61,6 +77,7 @@ public class AssemblyTableEntity extends LockableContainerBlockEntity implements
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         super.toTag(tag);
+        tag.putInt("ToolPageNumber", this.page);
         Inventories.toTag(tag, this.inventory);
         return tag;
     }
@@ -68,6 +85,7 @@ public class AssemblyTableEntity extends LockableContainerBlockEntity implements
     @Override
     public void fromTag(BlockState state, CompoundTag tag) {
         super.fromTag(state, tag);
+        this.page = tag.getInt("ToolPageNumber");
         Inventories.fromTag(tag, this.inventory);
     }
 
@@ -83,39 +101,22 @@ public class AssemblyTableEntity extends LockableContainerBlockEntity implements
     @Override
     public ItemStack removeStack(int slot, int count) {
         ItemStack result = Inventories.splitStack(getItems(), slot, count);
-        boolean update = false;
-        if (slot < 3) {
-            if (!result.isEmpty()) {
+        if (slot < 3 && !result.isEmpty()) {
                 markDirty();
-            }
-            else {
-                update = true;
-            }
-        }
-        if (update || slot == 3) {
-            handler.onContentChanged(this);
         }
         return result;
     }
 
     @Override
     public void setStack(int slot, ItemStack stack) {
-        ItemStack oldStack = getItems().get(slot).copy();
         getItems().set(slot, stack);
         if (stack.getCount() > getMaxCountPerStack()) {
             stack.setCount(getMaxCountPerStack());
         }
-        boolean oldIsEmpty = oldStack == ItemStack.EMPTY;
-        boolean newIsEmpty = stack == ItemStack.EMPTY;
-
-        if (slot != 3 || (!oldIsEmpty && newIsEmpty)) {
-            handler.onContentChanged(this);
-        }
         markDirty();
     }
 
-    public void setHandler(AssemblyTableScreenHandler handler) {
-        this.handler = handler;
+    public void setHandler(ChiselingTableScreenHandler handler) {
     }
 
 }

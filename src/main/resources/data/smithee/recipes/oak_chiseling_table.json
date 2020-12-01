@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "///",
+    "###"
+  ],
+  "key": {
+    "/": {
+      "item": "minecraft:flint"
+    },
+    "#": {
+      "item": "minecraft:oak_log"
+    }
+  },
+  "result": {
+    "item": "smithee:oak_chiseling_table"
+  }
+}

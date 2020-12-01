@@ -20,6 +20,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.Enumeration;
 import java.util.Objects;
 import java.util.jar.JarEntry;
@@ -32,9 +33,13 @@ public class Utils {
 
     public static String createModelJson(Identifier id) {
         String[] split = id.getPath().split("/")[1].split("_");
-        if (id.getNamespace().equals(Smithee.MOD_ID) && split.length == 3) {
+        if (id.getNamespace().equals(Smithee.MOD_ID) && split.length >= 3) {
+            String material = "";
+            for (int i = 0; i < split.length - 2; ++i) {
+                material += split[i];
+            }
             //Tool Part
-            if (ItemRegistry.MATERIALS.containsKey(split[0]) && ItemRegistry.TOOL_TYPES.contains(split[1])) {
+            if (ItemRegistry.MATERIALS.contains(material) && ItemRegistry.TOOL_TYPES.contains(split[1])) {
                 return "{\n" +
                         "  \"parent\": \"item/generated\",\n" +
                         "  \"textures\": {\n" +
@@ -141,7 +146,7 @@ public class Utils {
 
     }
 
-    public static void saveFilesFromJar(String dir, boolean overwrite) {
+    public static void saveFilesFromJar(String dir, String outputDir, boolean overwrite) {
         JarFile jar = null;
         try {
             jar = new JarFile(Utils.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath());
@@ -153,41 +158,105 @@ public class Utils {
             Enumeration<JarEntry> entries = jar.entries();
             while(entries.hasMoreElements()) {
                 JarEntry entry = entries.nextElement();
-                if (!entry.getName().startsWith("config") || !entry.getName().endsWith(".json")) {
+                if (!entry.getName().startsWith(dir) || (!entry.getName().endsWith(".json") && !entry.getName().endsWith(".png"))) {
                     continue;
                 }
                 String[] segments = entry.getName().split("/");
                 String filename = segments[segments.length - 1];
+                if (entry.isDirectory()) {
+                    continue;
+                }
                 InputStream is = Utils.class.getResourceAsStream("/" + entry.getName());
-                inputStreamToFile(is, new File("config/smithee/parts/" + filename), overwrite);
+                String path = "config/smithee/" + outputDir + ("".equals(outputDir) ? "" : File.separator) + filename;
+                if (filename.endsWith(".png")) {
+                    if (Files.exists(new File(path).toPath()) && overwrite) {
+                        try {
+                            Files.delete(new File(path).toPath());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    try {
+                        new File(path).getParentFile().mkdirs();
+                        Files.copy(is, new File(path).toPath());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    try {
+                        inputStreamToFile(is, new File(path), overwrite);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         } else {
             System.out.println("Launched from IDE.");
             File[] files = FabricLoader.getInstance().getModContainer(Smithee.MOD_ID).get().getPath(dir).toFile().listFiles();
             for(File file : files) {
+                if (file.isDirectory()) {
+                    continue;
+                }
                 String[] segments = file.getName().split("/");
                 String filename = segments[segments.length - 1];
-                try {
-                    Config.createFile("config/smithee/parts/" + filename, FileUtils.readFileToString(file, StandardCharsets.UTF_8), overwrite);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                String path = "config/smithee/" + outputDir + ("".equals(outputDir) ? "" : File.separator) + filename;
+                if (filename.endsWith(".png")) {
+                    if (Files.exists(new File(path).toPath()) && overwrite) {
+                        try {
+                            Files.delete(new File(path).toPath());
+                        } catch (IOException e) {
+                            Smithee.LOGGER.warn("ERROR OCCURRED WHILE DELETING OLD TEXTURES FOR " + filename);
+                            e.printStackTrace();
+                        }
+                    }
+                    try {
+                        Smithee.LOGGER.info("Regenerating " + filename);
+                        new File(path).getParentFile().mkdirs();
+                        Files.copy(file.toPath(), new File(path).toPath());
+                    } catch (IOException e) {
+                        Smithee.LOGGER.warn("ERROR OCCURRED WHILE REGENERATING " + filename + " TEXTURE");
+                        e.printStackTrace();
+                    }
+                } else {
+                    try {
+                        Config.createFile(path, FileUtils.readFileToString(file, StandardCharsets.UTF_8), overwrite);
+                    } catch (IOException e) {
+                        Smithee.LOGGER.warn("ERROR OCCURRED WHILE REGENERATING " + filename + " TEXTURE");
+                        e.printStackTrace();
+                    }
                 }
             }
         }
     }
 
-    private static void inputStreamToFile(InputStream inputStream, File file, boolean overwrite) {
+    private static void inputStreamToFile(InputStream inputStream, File file, boolean overwrite) throws IOException{
         if (!file.exists() || overwrite) {
-            try {
-                FileUtils.copyInputStreamToFile(inputStream, file);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            FileUtils.copyInputStreamToFile(inputStream, file);
         }
     }
-
     public static double evaluateExpression(String stringExpression) {
         return new Expression(stringExpression).eval().doubleValue();
     }
 
+    public static String capitalize(String string) {
+        return Character.toUpperCase(string.charAt(0)) + string.substring(1);
+    }
+
+    public static ItemStack setDamage(ItemStack output, int damage) {
+        output.setDamage(damage);
+        if (output.getDamage() >= output.getMaxDamage()) {
+            output = ItemStack.EMPTY;
+        }
+        return output;
+    }
+
+    public static String stripToolType(String part) {
+        String[] parts = part.split("_");
+        String stripped = "";
+        for (int i = 0; i < parts.length - 1; ++i) {
+            stripped += parts[i];
+        }
+        stripped += parts[parts.length - 1];
+        return stripped;
+    }
 }

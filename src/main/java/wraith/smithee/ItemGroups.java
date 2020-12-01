@@ -9,6 +9,6 @@ import wraith.smithee.utils.Utils;
 public class ItemGroups {
 
     public static final ItemGroup SMITHEE_PARTS = FabricItemGroupBuilder.create(Utils.ID("parts")).icon(() -> new ItemStack(ItemRegistry.ITEMS.get("diamond_pickaxe_head"))).build();
-
     public static final ItemGroup SMITHEE_BLOCKS = FabricItemGroupBuilder.create(Utils.ID("blocks")).icon(() -> new ItemStack(ItemRegistry.ITEMS.get("oak_assembly_table"))).build();;
+    public static final ItemGroup SMITHEE_ITEMS = FabricItemGroupBuilder.create(Utils.ID("items")).icon(() -> new ItemStack(ItemRegistry.ITEMS.get("flint_chisel"))).build();;
 }

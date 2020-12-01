@@ -1,0 +1,63 @@
+{	
+	"minecraft:gold_block": {
+		"head": {
+			"required_material_amount": 1,
+			"output_material": "golden",
+			"drop_remains": true,
+			"remains": "minecraft:gold_nugget",
+			"remains_amount": 6
+		},
+		"binding": {
+			"required_material_amount": 1,
+			"output_material": "golden",
+			"drop_remains": true,
+			"remains": "minecraft:gold_nugget",
+			"remains_amount": 6
+		},
+		"handle": {
+			"required_material_amount": 1,
+			"output_material": "golden",
+			"drop_remains": true,
+			"remains": "minecraft:gold_nugget",
+			"remains_amount": 6
+		}
+	},
+	"minecraft:gold_ingot": {
+		"head": {
+			"required_material_amount": 3,
+			"output_material": "golden",
+			"drop_remains": true,
+			"remains": "minecraft:gold_nugget",
+			"remains_amount": 2
+		},
+		"binding": {
+			"required_material_amount": 1,
+			"output_material": "golden",
+			"drop_remains": false
+		},
+		"handle": {
+			"required_material_amount": 2,
+			"output_material": "golden",
+			"drop_remains": true,
+			"remains": "minecraft:gold_nugget",
+			"remains_amount": 1
+		}
+	},
+	"minecraft:gold_nugget": {
+		"head": {
+			"required_material_amount": 27,
+			"output_material": "golden",
+			"drop_remains": false
+		},
+		"binding": {
+			"required_material_amount": 9,
+			"output_material": "golden",
+			"drop_remains": false
+		},
+		"handle": {
+			"required_material_amount": 18,
+			"output_material": "golden",
+			"drop_remains": false
+		}
+	}
+}

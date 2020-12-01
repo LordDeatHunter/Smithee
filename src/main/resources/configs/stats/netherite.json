@@ -4,7 +4,7 @@
 			"mining_level": 4,
 			"durability": 1971,
 			"mining_speed": 7.2,
-			"attack_damage": 4.5,
+			"attack_damage": 4.0,
 			"attack_speed": 0.6,
 			"traits": [
 				{
@@ -20,7 +20,7 @@
 			"mining_level": 0,
 			"durability": 4730,
 			"mining_speed": 0.3,
-			"attack_damage": 0.25,
+			"attack_damage": 0.2,
 			"attack_speed": 0.1,
 			"traits": [
 				{
@@ -37,7 +37,7 @@
 			"durability": 3154,
 			"mining_speed": 1.5,
 			"attack_damage": 1.2,
-			"attack_speed": 0.3,
+			"attack_speed": 0.0,
 			"traits": [
 				{
 					"trait": "superheated",
@@ -48,7 +48,5 @@
 				}
 			]
 		}
-	},
-	"two_parts": {},
-	"full_tool": {}
+	}
 }

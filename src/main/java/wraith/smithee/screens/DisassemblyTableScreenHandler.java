@@ -11,11 +11,11 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
 import wraith.smithee.utils.Utils;
-import wraith.smithee.blocks.DisassemblyTableEntity;
+import wraith.smithee.blocks.DisassemblyTableBlockEntity;
 import wraith.smithee.items.tools.BaseSmitheeTool;
 import wraith.smithee.registry.ItemRegistry;
 import wraith.smithee.registry.ScreenHandlerRegistry;
-import wraith.smithee.screens.slots.DisassemblyTableOutputSlot;
+import wraith.smithee.screens.slots.ToolOutputSlot;
 import wraith.smithee.screens.slots.ToolSlot;
 
 public class DisassemblyTableScreenHandler extends ScreenHandler {
@@ -29,13 +29,13 @@ public class DisassemblyTableScreenHandler extends ScreenHandler {
     public DisassemblyTableScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory) {
         super(ScreenHandlerRegistry.SCREEN_HANDLERS.get("disassembly_table"), syncId);
         this.inventory = inventory;
-        if (inventory instanceof DisassemblyTableEntity) {
-            ((DisassemblyTableEntity) inventory).setHandler(this);
+        if (inventory instanceof DisassemblyTableBlockEntity) {
+            ((DisassemblyTableBlockEntity) inventory).setHandler(this);
         }
         this.addSlot(new ToolSlot(inventory, 0, 80, 49)); //Output
-        this.addSlot(new DisassemblyTableOutputSlot(inventory, 1, 80, 19)); //Head
-        this.addSlot(new DisassemblyTableOutputSlot(inventory, 2, 51, 63)); //Binding
-        this.addSlot(new DisassemblyTableOutputSlot(inventory, 3, 109, 63)); //Handle
+        this.addSlot(new ToolOutputSlot(inventory, 1, 80, 19)); //Head
+        this.addSlot(new ToolOutputSlot(inventory, 2, 51, 63)); //Binding
+        this.addSlot(new ToolOutputSlot(inventory, 3, 109, 63)); //Handle
 
         for (int y = 0; y < 3; ++y) {
             for (int x = 0; x < 9; ++x) {
@@ -91,13 +91,8 @@ public class DisassemblyTableScreenHandler extends ScreenHandler {
 
     @Override
     public boolean onButtonClick(PlayerEntity player, int id) {
-        for (int i = 1; i < 4; i++) {
-            if (!inventory.getStack(i).isEmpty()) {
-                return false;
-            }
-        }
         if (inventory.getStack(0).getItem() instanceof BaseSmitheeTool) {
-            ServerPlayerEntity serverPlayerEntity = null;
+            ServerPlayerEntity serverPlayerEntity;
             if (player instanceof ServerPlayerEntity) {
                 serverPlayerEntity = (ServerPlayerEntity) player;
             } else {
@@ -106,16 +101,36 @@ public class DisassemblyTableScreenHandler extends ScreenHandler {
 
             ItemStack stack = inventory.getStack(0);
             CompoundTag tag = stack.getTag();
-            if (tag.contains("Parts")) {
-                tag = tag.getCompound("Parts");
-            }
-            else {
+            if (!tag.contains("Parts")) {
                 return false;
             }
+            tag = tag.getCompound("Parts");
             String tool = Utils.getToolType(stack.getItem());
             ItemStack head = new ItemStack(ItemRegistry.ITEMS.get(tag.getString("HeadPart") + "_" + tool + "_head"));
             ItemStack binding = new ItemStack(ItemRegistry.ITEMS.get(tag.getString("BindingPart") + "_" + tool + "_binding"));
             ItemStack handle = new ItemStack(ItemRegistry.ITEMS.get(tag.getString("HandlePart") + "_" + tool + "_handle"));
+
+            double damage;
+            int headDurability = ItemRegistry.PROPERTIES.get(tag.getString("HeadPart")).partProperties.get("head").durability;
+            int bindingDurability = ItemRegistry.PROPERTIES.get(tag.getString("BindingPart")).partProperties.get("binding").durability;
+            int handleDurability = ItemRegistry.PROPERTIES.get(tag.getString("HandlePart")).partProperties.get("handle").durability;
+            int normalDurability = headDurability + bindingDurability + handleDurability;
+
+            damage = ((double)(stack.getDamage() * normalDurability) / stack.getMaxDamage());
+            damage *= ((double)headDurability / (double)normalDurability);
+            head.getTag().putDouble("PartDamage", damage);
+            Utils.setDamage(head, (int) damage);
+
+            damage = ((double)(stack.getDamage() * normalDurability) / stack.getMaxDamage());
+            damage *= ((double)bindingDurability / (double)normalDurability);
+            binding.getTag().putDouble("PartDamage", damage);
+            Utils.setDamage(binding, (int) damage);
+
+            damage = ((double)(stack.getDamage() * normalDurability) / stack.getMaxDamage());
+            damage *= ((double)handleDurability / (double)normalDurability);
+            handle.getTag().putDouble("PartDamage", damage);
+            Utils.setDamage(handle, (int) damage);
+
             inventory.setStack(0, ItemStack.EMPTY);
             inventory.setStack(1, head);
             inventory.setStack(2, binding);
@@ -127,4 +142,5 @@ public class DisassemblyTableScreenHandler extends ScreenHandler {
         }
         return true;
     }
+
 }

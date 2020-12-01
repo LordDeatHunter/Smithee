@@ -12,7 +12,7 @@ import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.World;
-import wraith.smithee.blocks.AssemblyTableEntity;
+import wraith.smithee.blocks.AassemblyTableBlockEntity;
 import wraith.smithee.items.tool_parts.ToolPartItem;
 import wraith.smithee.properties.Properties;
 import wraith.smithee.registry.ItemRegistry;
@@ -36,8 +36,8 @@ public class AssemblyTableScreenHandler extends ScreenHandler {
         this.inventory = inventory;
         this.context = context;
         this.player = playerInventory.player;
-        if (inventory instanceof AssemblyTableEntity) {
-            ((AssemblyTableEntity)inventory).setHandler(this);
+        if (inventory instanceof AassemblyTableBlockEntity) {
+            ((AassemblyTableBlockEntity)inventory).setHandler(this);
         }
         this.addSlot(new PartSlot(inventory, 0, 43, 57, "handle")); //Handle
         this.addSlot(new PartSlot(inventory, 1, 55, 37, "binding")); //Binding
@@ -46,12 +46,12 @@ public class AssemblyTableScreenHandler extends ScreenHandler {
 
         for (int y = 0; y < 3; ++y) {
             for (int x = 0; x < 9; ++x) {
-                this.addSlot(new Slot(playerInventory, x + y * 9 + 9, 8 + x * 18, 84 + y * 18));
+                this.addSlot(new Slot(playerInventory, x + y * 9 + 9, 8 + x * 18, 102 + y * 18));
             }
         }
 
         for (int x = 0; x < 9; ++x) {
-            this.addSlot(new Slot(playerInventory, x, 8 + x * 18, 142));
+            this.addSlot(new Slot(playerInventory, x, 8 + x * 18, 160));
         }
         this.result = inventory.getStack(3);
     }
@@ -120,18 +120,39 @@ public class AssemblyTableScreenHandler extends ScreenHandler {
                     return;
             }
 
-            ToolPartItem handle = (ToolPartItem)inventory.getStack(0).getItem();
-            ToolPartItem binding = (ToolPartItem)inventory.getStack(1).getItem();
-            ToolPartItem head = (ToolPartItem)inventory.getStack(2).getItem();
+            ItemStack handle = inventory.getStack(0);
+            ItemStack binding = inventory.getStack(1);
+            ItemStack head = inventory.getStack(2);
 
-            ItemStack itemStack = new ItemStack(ItemRegistry.ITEMS.get("base_smithee_" + head.part.toolType));
+            ItemStack itemStack = new ItemStack(ItemRegistry.ITEMS.get("base_smithee_" + ((ToolPartItem)head.getItem()).part.toolType));
             CompoundTag tag = itemStack.getOrCreateSubTag("Parts");
-            tag.putString("HeadPart", head.part.materialName);
-            tag.putString("BindingPart", binding.part.materialName);
-            tag.putString("HandlePart", handle.part.materialName);
+            tag.putString("HeadPart", ((ToolPartItem)head.getItem()).part.materialName);
+            tag.putString("BindingPart", ((ToolPartItem)binding.getItem()).part.materialName);
+            tag.putString("HandlePart", ((ToolPartItem)handle.getItem()).part.materialName);
             itemStack.putSubTag("Parts", tag);
 
             Properties.setProperties(itemStack, Properties.getProperties(itemStack));
+            double headDamage = 0;
+            if (head.hasTag() && head.getTag().contains("PartDamage")) {
+                headDamage = head.getTag().getDouble("PartDamage");
+            }
+            double bindingDamage = 0;
+            if (binding.hasTag() && binding.getTag().contains("PartDamage")) {
+                bindingDamage = binding.getTag().getDouble("PartDamage");
+            }
+            double handleDamage = 0;
+            if (handle.hasTag() && handle.getTag().contains("PartDamage")) {
+                handleDamage = handle.getTag().getDouble("PartDamage");
+            }
+            double totalDamage = headDamage + bindingDamage + handleDamage;
+            int totalDurability = ItemRegistry.PROPERTIES.get(((ToolPartItem)head.getItem()).part.materialName).partProperties.get("head").durability;
+            totalDurability += ItemRegistry.PROPERTIES.get(((ToolPartItem)binding.getItem()).part.materialName).partProperties.get("binding").durability;
+            totalDurability += ItemRegistry.PROPERTIES.get(((ToolPartItem)handle.getItem()).part.materialName).partProperties.get("handle").durability;
+
+            itemStack.setDamage((int) Math.ceil((totalDamage * itemStack.getMaxDamage())/totalDurability));
+            if (itemStack.getDamage() >= itemStack.getMaxDamage()) {
+                itemStack = ItemStack.EMPTY;
+            }
 
             result = itemStack.copy();
             inventory.setStack(3, itemStack);

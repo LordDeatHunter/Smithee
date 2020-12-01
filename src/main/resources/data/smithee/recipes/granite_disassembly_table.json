@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "|-|",
+    "| |"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:granite"
+    },
+    "|": {
+      "tag": "minecraft:logs"
+    },
+    "-": {
+      "tag": "minecraft:planks"
+    }
+  },
+  "result": {
+    "item": "smithee:granite_disassembly_table"
+  }
+}

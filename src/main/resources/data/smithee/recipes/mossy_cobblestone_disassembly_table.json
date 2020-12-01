@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "|-|",
+    "| |"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:mossy_cobblestone"
+    },
+    "|": {
+      "tag": "minecraft:logs"
+    },
+    "-": {
+      "tag": "minecraft:planks"
+    }
+  },
+  "result": {
+    "item": "smithee:mossy_cobblestone_disassembly_table"
+  }
+}

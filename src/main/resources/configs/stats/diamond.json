@@ -4,7 +4,7 @@
 			"mining_level": 3,
 			"durability": 1501,
 			"mining_speed": 6.4,
-			"attack_damage": 3.8,
+			"attack_damage": 3.0,
 			"attack_speed": 0.6,
 			"traits": [
 				{
@@ -36,10 +36,8 @@
 			"mining_level": 0,
 			"durability": 1801,
 			"mining_speed": 1.35,
-			"attack_damage": 1.0,
-			"attack_speed": 0.3
+			"attack_damage": 0.8,
+			"attack_speed": 0.2
 		}
-	},
-	"two_parts": {},
-	"full_tool": {}
+	}
 }

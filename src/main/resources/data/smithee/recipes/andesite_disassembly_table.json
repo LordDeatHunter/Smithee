@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "|-|",
+    "| |"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:andesite"
+    },
+    "|": {
+      "tag": "minecraft:logs"
+    },
+    "-": {
+      "tag": "minecraft:planks"
+    }
+  },
+  "result": {
+    "item": "smithee:andesite_disassembly_table"
+  }
+}

@@ -3,9 +3,9 @@
 		"head": {
 			"mining_level": 1,
 			"durability": 71,
-			"mining_speed": 1.2,
-			"attack_damage": 1.65,
-			"attack_speed": 0.3,
+			"mining_speed": 3.6,
+			"attack_damage": 1.0,
+			"attack_speed": 0.6,
 			"traits": [
 				{
 					"trait": "brittle",
@@ -19,9 +19,9 @@
 		"binding": {
 			"mining_level": 0,
 			"durability": 121,
-			"mining_speed": 0.4,
-			"attack_damage": 0.1,
-			"attack_speed": 0.1,
+			"mining_speed": -0.6,
+			"attack_damage": -0.3,
+			"attack_speed": -0.1,
 			"traits": [
 				{
 					"trait": "brittle",
@@ -35,9 +35,9 @@
 		"handle": {
 			"mining_level": 0,
 			"durability": 96,
-			"mining_speed": 2.4,
-			"attack_damage": 0.25,
-			"attack_speed": 0.6,
+			"mining_speed": 1.0,
+			"attack_damage": 0.3,
+			"attack_speed": -0.2,
 			"traits": [
 				{
 					"trait": "brittle",
@@ -48,12 +48,5 @@
 				}
 			]
 		}
-	},
-	"two_parts": {},
-	"full_tool": {
-		"durability": "base + 16",
-		"mining_speed": "base - 1.0",
-		"attack_damage": "base + 0.5",
-		"attack_speed": "base - 0.4"
 	}
 }

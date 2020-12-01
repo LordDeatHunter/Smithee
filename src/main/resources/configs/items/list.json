@@ -1,0 +1,10 @@
+{
+  "materials": [
+    "wooden",
+    "stone",
+    "golden",
+    "iron",
+    "diamond",
+    "netherite"
+  ]
+}

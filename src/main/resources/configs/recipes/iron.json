@@ -1,0 +1,63 @@
+{	
+	"minecraft:iron_block": {
+		"head": {
+			"required_material_amount": 1,
+			"output_material": "iron",
+			"drop_remains": true,
+			"remains": "minecraft:iron_nugget",
+			"remains_amount": 6
+		},
+		"binding": {
+			"required_material_amount": 1,
+			"output_material": "iron",
+			"drop_remains": true,
+			"remains": "minecraft:iron_nugget",
+			"remains_amount": 6
+		},
+		"handle": {
+			"required_material_amount": 1,
+			"output_material": "iron",
+			"drop_remains": true,
+			"remains": "minecraft:iron_nugget",
+			"remains_amount": 6
+		}
+	},
+	"minecraft:iron_ingot": {
+		"head": {
+			"required_material_amount": 3,
+			"output_material": "iron",
+			"drop_remains": true,
+			"remains": "minecraft:iron_nugget",
+			"remains_amount": 2
+		},
+		"binding": {
+			"required_material_amount": 1,
+			"output_material": "iron",
+			"drop_remains": false
+		},
+		"handle": {
+			"required_material_amount": 2,
+			"output_material": "iron",
+			"drop_remains": true,
+			"remains": "minecraft:iron_nugget",
+			"remains_amount": 1
+		}
+	},
+	"minecraft:iron_nugget": {
+		"head": {
+			"required_material_amount": 27,
+			"output_material": "iron",
+			"drop_remains": false
+		},
+		"binding": {
+			"required_material_amount": 9,
+			"output_material": "iron",
+			"drop_remains": false
+		},
+		"handle": {
+			"required_material_amount": 18,
+			"output_material": "iron",
+			"drop_remains": false
+		}
+	}
+}

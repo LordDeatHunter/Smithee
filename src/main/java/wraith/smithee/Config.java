@@ -14,8 +14,16 @@ public class Config {
     public static JsonObject loadConfig() {
         String defaultConfig =
                 "{\n" +
-                        "  \"regenerate_deleted_files\": true,\n" +
-                        "  \"replace_old_files_when_regenerating\": false\n" +
+                        "  \"regenerate_deleted_stat_files\": true,\n" +
+                        "  \"replace_old_stat_files_when_regenerating\": false,\n" +
+                        "  \"regenerate_deleted_recipe_files\": true,\n" +
+                        "  \"replace_old_recipe_files_when_regenerating\": false,\n" +
+                        "  \"regenerate_deleted_smithing_files\": true,\n" +
+                        "  \"replace_old_smithing_files_when_regenerating\": false,\n" +
+                        "  \"regenerate_deleted_combination_files\": true,\n" +
+                        "  \"replace_old_combination_files_when_regenerating\": false,\n" +
+                        "  \"regenerate_material_list\": true,\n" +
+                        "  \"replace_material_list_when_regenerating\": false\n" +
                         "}";
         String path = "config/smithee/config.json";
         Config.createFile(path, defaultConfig, false);

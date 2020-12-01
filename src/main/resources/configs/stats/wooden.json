@@ -4,7 +4,7 @@
 			"mining_level": 0,
 			"durability": 18,
 			"mining_speed": 0.6,
-			"attack_damage": 0.8,
+			"attack_damage": 0.0,
 			"attack_speed": 0.6,
 			"traits": [
 				{
@@ -20,7 +20,7 @@
 			"mining_level": 0,
 			"durability": 30,
 			"mining_speed": 0.2,
-			"attack_damage": 0.05,
+			"attack_damage": 0.0,
 			"attack_speed": 0.1,
 			"traits": [
 				{
@@ -36,7 +36,7 @@
 			"mining_level": 0,
 			"durability": 24,
 			"mining_speed": 1.2,
-			"attack_damage": 0.15,
+			"attack_damage": 0.0,
 			"attack_speed": 0.3,
 			"traits": [
 				{
@@ -49,18 +49,15 @@
 			]
 		}
 	},
-	"two_parts": {
-		"combinations": [
-			{
-				"parts": "handle+binding",
-				"durability": "base + 6",
-				"mining_speed": "base + 0.25",
-				"attack_damage": "base - 0.2"
-			}
-		]
-	},
-	"full_tool": {
-		"durability": "59",
-		"attack_speed": "base - 0.2"
-	}
+	"combinations": [
+		{
+			"handle_combinations": [
+				"wooden"
+			],
+			"binding_combinations": [
+				"wooden"
+			],
+			"durability": "base - 13"
+		}
+	]
 }

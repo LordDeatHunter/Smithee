@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "///",
+    "###"
+  ],
+  "key": {
+    "/": {
+      "item": "minecraft:flint"
+    },
+    "#": {
+      "item": "minecraft:acacia_log"
+    }
+  },
+  "result": {
+    "item": "smithee:acacia_chiseling_table"
+  }
+}

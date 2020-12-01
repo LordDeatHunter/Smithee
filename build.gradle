@@ -23,6 +23,7 @@ dependencies {
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
 	compile 'com.udojava:EvalEx:2.5'
+	include 'com.udojava:EvalEx:2.5'
 
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 }

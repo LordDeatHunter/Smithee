@@ -6,14 +6,11 @@ import wraith.smithee.registry.ItemRegistry;
 import wraith.smithee.utils.Utils;
 
 import java.util.HashMap;
-import java.util.HashSet;
 
 public class Properties {
 
-    public HashMap<HashSet<String>, HashMap<String, String>> combinations = new HashMap<>();;
     public HashMap<String, Trait> traits = new HashMap<>();
     public HashMap<String, Property> partProperties = new HashMap<>();
-    public HashMap<String, String> fullToolProperties = new HashMap<>();
 
     public static Property getProperties(ItemStack stack) {
         CompoundTag tag = stack.getSubTag("Parts");
@@ -31,52 +28,34 @@ public class Properties {
         float miningSpeed = Math.max(headProperties.partProperties.get("head").miningSpeed + bindingProperties.partProperties.get("binding").miningSpeed + handleProperties.partProperties.get("handle").miningSpeed, 0.5f);
         float attackDamage = Math.max(headProperties.partProperties.get("head").attackDamage + bindingProperties.partProperties.get("binding").attackDamage + handleProperties.partProperties.get("handle").attackDamage, 0.5f);
         float attackSpeed = Math.max(headProperties.partProperties.get("head").attackSpeed + bindingProperties.partProperties.get("binding").attackSpeed + handleProperties.partProperties.get("handle").attackSpeed, 0.5f);
-        Property property = new Property(miningSpeed, miningLevel, durability, attackDamage, attackSpeed);
 
-        HashSet<String> headBinding = new HashSet<String>(){{add("head");add("binding");}};
-        HashSet<String> headHandle = new HashSet<String>(){{add("head");add("handle");}};
-        HashSet<String> handleBinding = new HashSet<String>(){{add("handle");add("binding");}};
-        if (headPart.equals(bindingPart) && headProperties.combinations.containsKey(headBinding)) {
-            changeProperties(headProperties.combinations.get(headBinding), property);
-        } else if (bindingPart.equals(handlePart) && bindingProperties.combinations.containsKey(handleBinding)) {
-            changeProperties(bindingProperties.combinations.get(handleBinding), property);
-        } else if (handlePart.equals(headPart) && handleProperties.combinations.containsKey(headHandle)) {
-            changeProperties(handleProperties.combinations.get(headHandle), property);
-        }
-        if (headPart.equals(bindingPart) && bindingPart.equals(handlePart) && handlePart.equals(headPart)) {
-            if (!headProperties.fullToolProperties.isEmpty()) {
-                changeProperties(headProperties.fullToolProperties, property);
-            }
-            if (!bindingProperties.fullToolProperties.isEmpty()) {
-                changeProperties(headProperties.fullToolProperties, property);
-            }
-            if (!handleProperties.fullToolProperties.isEmpty()) {
-                changeProperties(headProperties.fullToolProperties, property);
+        PartCombination partCombination = null;
+        for (PartCombination combination : PartCombination.COMBINATIONS) {
+            if ((combination.includes.get("head").isEmpty() || combination.includes.get("head").contains(headPart)) &&
+                (combination.includes.get("binding").isEmpty() || combination.includes.get("binding").contains(bindingPart)) &&
+                (combination.includes.get("handle").isEmpty() || combination.includes.get("handle").contains(handlePart)) &&
+                (!combination.excludes.get("head").contains(headPart)) &&
+                (!combination.excludes.get("binding").contains(bindingPart)) &&
+                (!combination.excludes.get("handle").contains(handlePart))) {
+                    partCombination = combination;
+                    break;
             }
         }
-        return property;
-    }
+        if (partCombination != null) {
+            if (partCombination.stats.containsKey("mining_level")) {
+                miningLevel = (int) Utils.evaluateExpression(partCombination.stats.get("mining_level").replace("base", String.valueOf(miningLevel)));
+            } else if (partCombination.stats.containsKey("durability")) {
+                durability = (int) Utils.evaluateExpression(partCombination.stats.get("durability").replace("base", String.valueOf(durability)));
+            } else if (partCombination.stats.containsKey("mining_speed")) {
+                miningSpeed = (int) Utils.evaluateExpression(partCombination.stats.get("mining_speed").replace("base", String.valueOf(miningSpeed)));
+            } else if (partCombination.stats.containsKey("attack_damage")) {
+                attackDamage = (int) Utils.evaluateExpression(partCombination.stats.get("attack_damage").replace("base", String.valueOf(attackDamage)));
+            } else if (partCombination.stats.containsKey("attack_speed")) {
+                attackSpeed = (int) Utils.evaluateExpression(partCombination.stats.get("attack_speed").replace("base", String.valueOf(attackSpeed)));
+            }
+        }
 
-    private static void changeProperties(HashMap<String, String> properties, Property property) {
-        if (properties.containsKey("miningLevel")) {
-            property.miningLevel = (int) Math.max(Utils.evaluateExpression(replaceVariables(properties.get("miningLevel"), property.miningLevel)), 0);
-        }
-        else if (properties.containsKey("durability")) {
-            property.durability = (int) Math.max(Utils.evaluateExpression(replaceVariables(properties.get("durability"), property.durability)), 1);
-        }
-        else if (properties.containsKey("miningSpeed")) {
-            property.miningSpeed = (float) Math.max(Utils.evaluateExpression(replaceVariables(properties.get("miningSpeed"), property.miningSpeed)), 0.5);
-        }
-        else if (properties.containsKey("attackDamage")) {
-            property.attackDamage = (float) Math.max(Utils.evaluateExpression(replaceVariables(properties.get("attackDamage"), property.attackDamage)), 0.5);
-        }
-        else if (properties.containsKey("attackSpeed")) {
-            property.attackSpeed = (float) Math.max(Utils.evaluateExpression(replaceVariables(properties.get("attackSpeed"), property.attackSpeed)), 0.5);
-        }
-    }
-
-    private static String replaceVariables(String expression, double value) {
-         return expression.replace("base", String.valueOf(value));
+        return new Property(miningSpeed, miningLevel, durability, attackDamage, attackSpeed);
     }
 
     public static void setProperties(ItemStack itemStack, Property properties) {
@@ -89,5 +68,33 @@ public class Properties {
         tag.putInt("Durability", properties.durability);
 
         itemStack.putSubTag("SmitheeProperties", tag);
+    }
+
+    public static float getExtraDamage(String toolType) {
+        switch (toolType) {
+            case "pickaxe":
+                return 1;
+            case "axe":
+                return 6;
+            case "sword":
+                return 3;
+            case "shovel":
+                return 1.5f;
+            default:
+                return 0;
+        }
+    }
+
+    public static float getExtraAttackSpeed(String toolType) {
+        switch (toolType) {
+            case "pickaxe":
+                return 0.2f;
+            case "axe":
+                return -0.2f;
+            case "sword":
+                return 0.6f;
+            default:
+                return 0;
+        }
     }
 }

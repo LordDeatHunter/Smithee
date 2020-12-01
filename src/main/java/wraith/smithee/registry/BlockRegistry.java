@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.Material;
 import net.minecraft.util.registry.Registry;
+import wraith.smithee.blocks.ChiselingTable;
 import wraith.smithee.utils.Utils;
 import wraith.smithee.blocks.AssemblyTable;
 import wraith.smithee.blocks.DisassemblyTable;
@@ -22,9 +23,18 @@ public class BlockRegistry {
         put("acacia_assembly_table", new AssemblyTable(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));
 
         put("stone_disassembly_table", new DisassemblyTable(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));
+        put("cobblestone_disassembly_table", new DisassemblyTable(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));
+        put("mossy_cobblestone_disassembly_table", new DisassemblyTable(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));
         put("diorite_disassembly_table", new DisassemblyTable(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));
         put("andesite_disassembly_table", new DisassemblyTable(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));
         put("granite_disassembly_table", new DisassemblyTable(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));
+
+        put("oak_chiseling_table", new ChiselingTable(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));
+        put("dark_oak_chiseling_table", new ChiselingTable(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));
+        put("spruce_chiseling_table", new ChiselingTable(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));
+        put("birch_chiseling_table", new ChiselingTable(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));
+        put("jungle_chiseling_table", new ChiselingTable(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));
+        put("acacia_chiseling_table", new ChiselingTable(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));
     }};
 
     public static void registerBlocks() {

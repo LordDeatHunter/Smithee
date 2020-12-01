@@ -5,10 +5,14 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "AxeItemAccessor",
+    "ForgingScreenHandlerAccessor",
+    "ItemAccessor",
     "ItemRendererMixin",
     "ItemStackMixin",
     "MiningToolItemAccessor",
-    "ModelLoaderMixin"
+    "ModelLoaderMixin",
+    "NamespaceResourceManagerMixin",
+    "SmithingScreenHandlerMixin"
   ],
   "client": [
   ],

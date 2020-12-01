@@ -4,8 +4,8 @@
 			"mining_level": 0,
 			"durability": -28,
 			"mining_speed": 8.0,
-			"attack_damage": 1.65,
-			"attack_speed": 0.3,
+			"attack_damage": 0.0,
+			"attack_speed": 0.6,
 			"traits": [
 				{
 					"trait": "meidas_touch",
@@ -20,8 +20,8 @@
 			"mining_level": 0,
 			"durability": 34,
 			"mining_speed": 0.5,
-			"attack_damage": 0.1,
-			"attack_speed": 0.1,
+			"attack_damage": 0.0,
+			"attack_speed": 0.3,
 			"traits": [
 				{
 					"trait": "brittle",
@@ -36,8 +36,8 @@
 			"mining_level": 0,
 			"durability": 26,
 			"mining_speed": 3.5,
-			"attack_damage": 0.25,
-			"attack_speed": 0.6,
+			"attack_damage": 0.0,
+			"attack_speed": 0.3,
 			"traits": [
 				{
 					"trait": "brittle",
@@ -48,20 +48,5 @@
 				}
 			]
 		}
-	},
-    "two_parts": {
-        "combinations": [
-            {
-                "parts": "head+binding",
-                "durability": "base + 6",
-				"mining_speed": "base + 0.25",
-				"attack_damage": "base - 0.2"
-            }
-        ]
-    },
-    "full_tool": {
-		"mining_speed": "base + 2.0",
-		"attack_damage": "base - 0.5",
-		"attack_speed": "base + 0.4"
 	}
 }

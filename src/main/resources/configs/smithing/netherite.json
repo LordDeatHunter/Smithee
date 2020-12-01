@@ -1,0 +1,6 @@
+{
+  "input_material": "diamond",
+  "addition_item": "minecraft:netherite_ingot",
+  "addition_mount": 1,
+  "output_material": "netherite"
+}

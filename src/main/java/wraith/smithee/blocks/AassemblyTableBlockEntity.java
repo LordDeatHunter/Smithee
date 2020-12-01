@@ -9,21 +9,22 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.collection.DefaultedList;
 import wraith.smithee.Smithee;
 import wraith.smithee.registry.BlockEntityRegistry;
-import wraith.smithee.screens.DisassemblyTableScreenHandler;
 import wraith.smithee.screens.ImplementedInventory;
+import wraith.smithee.screens.AssemblyTableScreenHandler;
 
-public class DisassemblyTableEntity extends LockableContainerBlockEntity implements NamedScreenHandlerFactory, ImplementedInventory {
+public class AassemblyTableBlockEntity extends LockableContainerBlockEntity implements NamedScreenHandlerFactory, ImplementedInventory {
 
     private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(4, ItemStack.EMPTY);
-    private DisassemblyTableScreenHandler handler;
+    private AssemblyTableScreenHandler handler;
 
-    public DisassemblyTableEntity() {
-        super(BlockEntityRegistry.BLOCK_ENTITIES.get("disassembly_table"));
+    public AassemblyTableBlockEntity() {
+        super(BlockEntityRegistry.BLOCK_ENTITIES.get("assembly_table"));
     }
 
     @Override
@@ -38,7 +39,7 @@ public class DisassemblyTableEntity extends LockableContainerBlockEntity impleme
 
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
-        this.handler = new DisassemblyTableScreenHandler(syncId, playerInventory, this);
+        this.handler = new AssemblyTableScreenHandler(syncId, playerInventory, this, ScreenHandlerContext.EMPTY);
         return handler;
     }
 
@@ -49,7 +50,7 @@ public class DisassemblyTableEntity extends LockableContainerBlockEntity impleme
 
     @Override
     public Text getDisplayName() {
-        return new TranslatableText("container." + Smithee.MOD_ID + ".disassembly_table");
+        return new TranslatableText("container." + Smithee.MOD_ID + ".assembly_table");
     }
 
     @Override
@@ -99,17 +100,21 @@ public class DisassemblyTableEntity extends LockableContainerBlockEntity impleme
 
     @Override
     public void setStack(int slot, ItemStack stack) {
+        ItemStack oldStack = getItems().get(slot).copy();
         getItems().set(slot, stack);
         if (stack.getCount() > getMaxCountPerStack()) {
             stack.setCount(getMaxCountPerStack());
         }
-        if (slot == 0) {
+        boolean oldIsEmpty = oldStack == ItemStack.EMPTY;
+        boolean newIsEmpty = stack == ItemStack.EMPTY;
+
+        if (slot != 3 || (!oldIsEmpty && newIsEmpty)) {
             handler.onContentChanged(this);
         }
         markDirty();
     }
 
-    public void setHandler(DisassemblyTableScreenHandler handler) {
+    public void setHandler(AssemblyTableScreenHandler handler) {
         this.handler = handler;
     }
 

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "///",
+    "###"
+  ],
+  "key": {
+    "/": {
+      "item": "minecraft:flint"
+    },
+    "#": {
+      "item": "minecraft:spruce_log"
+    }
+  },
+  "result": {
+    "item": "smithee:spruce_chiseling_table"
+  }
+}

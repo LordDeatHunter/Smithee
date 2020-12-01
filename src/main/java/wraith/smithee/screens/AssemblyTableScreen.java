@@ -1,24 +1,43 @@
 package wraith.smithee.screens;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import io.netty.buffer.Unpooled;
+import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.slot.Slot;
+import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
+import wraith.smithee.Smithee;
+import wraith.smithee.items.tools.BaseSmitheeTool;
 import wraith.smithee.utils.Utils;
+import net.minecraft.item.ItemStack;
+
+import java.util.Objects;
 
 public class AssemblyTableScreen extends HandledScreen<ScreenHandler> {
 
     private static final Identifier TEXTURE = Utils.ID("textures/gui/assembly_table.png");
     public final AssemblyTableScreenHandler handler;
+    private boolean ignoreTypedCharacter;
+    private TextFieldWidget nameInputField;
+    private boolean canType = false;
+    private boolean hadTool = false;
 
     public AssemblyTableScreen(ScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
         this.handler = (AssemblyTableScreenHandler) handler;
         this.backgroundWidth = 176;
-        this.backgroundHeight = 166;
+        this.backgroundHeight = 184;
         this.playerInventoryTitleY = this.backgroundHeight - 94;
         this.titleX += 20;
     }
@@ -30,6 +49,25 @@ public class AssemblyTableScreen extends HandledScreen<ScreenHandler> {
         this.drawMouseoverTooltip(matrices, mouseX, mouseY);
     }
 
+    @Override
+    public void tick() {
+        super.tick();
+        ItemStack tool = handler.slots.get(3).getStack();
+        if (tool.getItem() instanceof BaseSmitheeTool) {
+            if (!hadTool) {
+                hadTool = true;
+                this.nameInputField.setText(tool.getName().asString());
+            }
+            canType = true;
+        } else {
+            if (hadTool) {
+                hadTool = false;
+                this.nameInputField.setText("");
+            }
+            this.nameInputField.setSelected(false);
+            canType = false;
+        }
+    }
 
     @Override
     protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
@@ -51,7 +89,92 @@ public class AssemblyTableScreen extends HandledScreen<ScreenHandler> {
         if (this.handler.slots.get(2).getStack().isEmpty()) {
             this.drawTexture(matrices, x + 67, y + 17, 176 + 32, 0, 16, 16);
         }
+        this.nameInputField.render(matrices, mouseX, mouseY, delta);
 
     }
+    @Override
+    public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
+        this.ignoreTypedCharacter = false;
+        return super.keyReleased(keyCode, scanCode, modifiers);
+    }
+    @Override
+    protected void onMouseClick(Slot slot, int invSlot, int clickData, SlotActionType actionType) {
+        super.onMouseClick(slot, invSlot, clickData, actionType);
+        if (canType) {
+            this.nameInputField.setCursorToEnd();
+            this.nameInputField.setSelectionEnd(0);
+        }
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        this.ignoreTypedCharacter = false;
+        if (InputUtil.fromKeyCode(keyCode, scanCode).method_30103().isPresent() && this.handleHotbarKeyPressed(keyCode, scanCode)) {
+            this.ignoreTypedCharacter = true;
+            return true;
+        } else {
+            String string = this.nameInputField.getText();
+            if (this.nameInputField.keyPressed(keyCode, scanCode, modifiers)) {
+                if (!Objects.equals(string, this.nameInputField.getText())) {
+                    this.rename();
+                }
+
+                return true;
+            } else {
+                return this.nameInputField.isFocused() && this.nameInputField.isVisible() && keyCode != 256 || super.keyPressed(keyCode, scanCode, modifiers);
+            }
+        }
+    }
+
+    @Override
+    public boolean charTyped(char chr, int keyCode) {
+        if (this.ignoreTypedCharacter || !canType) {
+            return false;
+        } else {
+            String string = this.nameInputField.getText();
+            if (this.nameInputField.charTyped(chr, keyCode)) {
+                if (!Objects.equals(string, this.nameInputField.getText())) {
+                    this.rename();
+                }
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+    @Override
+    public void resize(MinecraftClient client, int width, int height) {
+        String string = this.nameInputField.getText();
+        this.init(client, width, height);
+        this.nameInputField.setText(string);
+        if (!this.nameInputField.getText().isEmpty()) {
+            this.rename();
+        }
+    }
+
+    private void rename() {
+        if (canType) {
+            PacketByteBuf data = new PacketByteBuf(Unpooled.buffer());
+            CompoundTag tag = new CompoundTag();
+            tag.putString("tool_name", this.nameInputField.getText());
+            data.writeCompoundTag(tag);
+            ClientSidePacketRegistry.INSTANCE.sendToServer(new Identifier(Smithee.MOD_ID, "rename_tool_assembly"), data);
+        }
+    }
+
+    @Override
+    protected void init() {
+        super.init();
+        this.nameInputField = new TextFieldWidget(this.textRenderer, this.x + 31, this.y + 80, 115, 9, new TranslatableText("smithee.assembly.rename"));
+        this.nameInputField.setMaxLength(32);
+        this.nameInputField.setHasBorder(false);
+        this.nameInputField.setEditableColor(0xffffff);
+        this.nameInputField.setVisible(true);
+        this.nameInputField.setSelected(false);
+        this.nameInputField.setFocusUnlocked(true);
+        this.nameInputField.setText("");
+        this.children.add(this.nameInputField);
+    }
+
 
 }
