@@ -2,10 +2,8 @@ package wraith.smithee;
 
 import com.google.common.base.Charsets;
 import com.mojang.datafixers.util.Pair;
-import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
-import net.fabricmc.fabric.impl.client.indigo.renderer.helper.GeometryHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.model.*;
@@ -18,7 +16,6 @@ import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resource.Resource;
-import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -36,44 +33,37 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class ItemBakedModel implements FabricBakedModel, BakedModel, UnbakedModel {
+    private static final HashMap<String, FabricBakedModel> PART_MODELS = new HashMap<>();
+    private static final Set<String> PART_PATHS = new HashSet<>();
 
-    static HashMap<String, BakedModel> models = new HashMap<>();
-    //static HashMap<String, JsonUnbakedModel> models = new HashMap<>();
+    static {
+        for (String material : ItemRegistry.MATERIALS) {
+            for (String tool : ItemRegistry.TOOL_TYPES) {
+                PART_PATHS.add(material + "_" + tool + "_head");
+                PART_PATHS.add(material + "_" + tool + "_binding");
+                PART_PATHS.add(material + "_" + tool + "_handle");
+            }
+        }
+    }
+
     @Override
     public void emitItemQuads(ItemStack itemStack, Supplier<Random> supplier, RenderContext context) {
-
         String tool = Utils.getToolType(itemStack.getItem());
 
         String head = "iron_" + tool + "_head";
         String binding = "iron_" + tool + "_binding";
         String handle = "iron_" + tool + "_handle";
-        if (itemStack.hasTag() && itemStack.getTag().contains("Parts")) {
-            CompoundTag tag = itemStack.getSubTag("Parts");
+
+        CompoundTag tag = itemStack.getSubTag("Parts");
+        if (tag != null) {
             head = tag.getString("HeadPart") + "_" + tool + "_head";
             binding = tag.getString("BindingPart") + "_" + tool + "_binding";
             handle = tag.getString("HandlePart") + "_" + tool + "_handle";
         }
 
-        QuadEmitter emitter = context.getEmitter();
-
-
-        BakedModelManager bakedModelManager = MinecraftClient.getInstance().getBakedModelManager();
-        context.fallbackConsumer().accept(bakedModelManager.getModel(getModel(head)));
-        context.fallbackConsumer().accept(bakedModelManager.getModel(getModel(binding)));
-        context.fallbackConsumer().accept(bakedModelManager.getModel(getModel(handle)));
-
-        models.get(handle).getQuads(null, null, supplier.get()).forEach(q -> {
-            emitter.fromVanilla(q.getVertexData(), 0, false);
-            emitter.emit();
-        });
-        models.get(binding).getQuads(null, null, supplier.get()).forEach(q -> {
-            emitter.fromVanilla(q.getVertexData(), 0, false);
-            emitter.emit();
-        });
-        models.get(head).getQuads(null, null, supplier.get()).forEach(q -> {
-            emitter.fromVanilla(q.getVertexData(), 0, false);
-            emitter.emit();
-        });
+        PART_MODELS.get(head).emitItemQuads(null, null, context);
+        PART_MODELS.get(binding).emitItemQuads(null, null, context);
+        PART_MODELS.get(handle).emitItemQuads(null, null, context);
     }
 
     public static ModelTransformation loadTransformFromJson(Identifier location) {
@@ -92,14 +82,16 @@ public class ItemBakedModel implements FabricBakedModel, BakedModel, UnbakedMode
         return new BufferedReader(new InputStreamReader(resource.getInputStream(), Charsets.UTF_8));
     }
 
-    private static ModelIdentifier getModel(String type) {
+    private static Identifier getModelId(String type) {
         return new ModelIdentifier(Utils.ID(type), "inventory");
     }
 
     @Override
     public @Nullable BakedModel bake(ModelLoader loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId) {
-        for (Identifier id : IDS) {
-            models.put(id.getPath(), loader.getOrLoadModel(id).bake(loader, textureGetter, rotationContainer, id));
+        if (PART_MODELS.isEmpty()) {
+            for (String path : PART_PATHS) {
+                PART_MODELS.put(path, (FabricBakedModel) loader.bake(getModelId(path), ModelRotation.X0_Y0));
+            }
         }
         return this;
     }
@@ -108,16 +100,6 @@ public class ItemBakedModel implements FabricBakedModel, BakedModel, UnbakedMode
     public Collection<Identifier> getModelDependencies() {
         return Collections.emptyList();
     }
-
-    static final HashSet<Identifier> IDS = new HashSet<Identifier>(){{
-        for (String material : ItemRegistry.MATERIALS) {
-            for (String tool : ItemRegistry.TOOL_TYPES) {
-                add(Utils.ID(material + "_" + tool + "_head"));
-                add(Utils.ID(material + "_" + tool + "_binding"));
-                add(Utils.ID(material + "_" + tool + "_handle"));
-            }
-        }
-    }};
 
     @Override
     public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {
@@ -171,5 +153,4 @@ public class ItemBakedModel implements FabricBakedModel, BakedModel, UnbakedMode
     public boolean isVanillaAdapter() {
         return false;
     }
-
 }
