@@ -35,9 +35,20 @@ public class Utils {
     }
 
     public static String createModelJson(Identifier id) {
-        String[] split = id.getPath().split("/")[1].split("_");
+
+        String path = id.getPath();
+        String[] split = id.getPath().split("/");
+        String itemString;
+        if (split.length < 2){
+            split = path.split("_");
+            itemString = path;
+        } else {
+            itemString = split[1];
+            split = split[1].split("_");
+        }
+
         if (id.getNamespace().equals(Smithee.MOD_ID) && split.length >= 3) {
-            Item item = ItemRegistry.ITEMS.get(id.getPath().split("/")[1]);
+            Item item = ItemRegistry.ITEMS.get(itemString);
             if (item instanceof ToolPartItem) {
                 //Tool Part
                 if (ItemRegistry.MATERIALS.contains(((ToolPartItem)item).part.materialName) && ItemRegistry.TOOL_TYPES.contains(split[split.length - 2])) {
@@ -50,6 +61,7 @@ public class Utils {
                 }
             }
             //Tool
+            /*
             else if ((split[0] + "_" + split[1]).equals("base_" + Smithee.MOD_ID) && ItemRegistry.TOOL_TYPES.contains(split[2])) {
                 return "{\n" +
                         "  \"parent\": \"item/handheld\",\n" +
@@ -58,6 +70,7 @@ public class Utils {
                         "  }\n" +
                         "}";
             }
+            */
         }
         return "";
     }
@@ -293,4 +306,33 @@ public class Utils {
         return result;
     }
 
+    public static boolean isToolPart(String path) {
+        String[] segments = path.split("_");
+        if (segments.length < 3) {
+            return false;
+        }
+        String material = "";
+        for (int i = 0; i < segments.length - 2; ++i) {
+            material += segments[i];
+            if (i + 1 < segments.length -2) {
+                material += "_";
+            }
+        }
+        String tool = segments[segments.length - 2];
+        String part = segments[segments.length - 1];
+        HashSet<String> parts = new HashSet<String>(){{
+            add("head");
+            add("binding");
+            add("handle");
+        }};
+        return ItemRegistry.MATERIALS.contains(material) && ItemRegistry.TOOL_TYPES.contains(tool) && parts.contains(part);
+    }
+
+    public static boolean isSmitheeTool(String path) {
+        HashSet<String> baseTools = new HashSet<>();
+        for(String tool : ItemRegistry.TOOL_TYPES) {
+            baseTools.add("base_smithee_" + tool);
+        }
+        return baseTools.contains(path);
+    }
 }

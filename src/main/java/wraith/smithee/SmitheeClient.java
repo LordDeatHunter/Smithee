@@ -1,6 +1,7 @@
 package wraith.smithee;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.entity.player.PlayerEntity;
@@ -15,6 +16,7 @@ public class SmitheeClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         ScreenRegistry.registerScreens();
+        ModelLoadingRegistry.INSTANCE.registerVariantProvider(rm -> new ItemModelProvider());
     }
 
 }

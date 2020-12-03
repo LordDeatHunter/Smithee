@@ -10,7 +10,6 @@
     "ForgingScreenHandlerAccessor",
     "ItemAccessor",
     "ItemEntityMixin",
-    "ItemRendererMixin",
     "ItemStackMixin",
     "MiningToolItemAccessor",
     "ModelLoaderMixin",

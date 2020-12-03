@@ -17,11 +17,12 @@ public class ModelLoaderMixin {
     @Inject(method = "loadModelFromJson", at = @At(value = "INVOKE", target = "Lnet/minecraft/resource/ResourceManager;getResource(Lnet/minecraft/util/Identifier;)Lnet/minecraft/resource/Resource;"), cancellable = true)
     public void loadModelFromJson(Identifier id, CallbackInfoReturnable<JsonUnbakedModel> cir) {
         String modelJson = Utils.createModelJson(id);
-        if (modelJson != null && !"".equals(modelJson)) {
+        if (!"".equals(modelJson)) {
             JsonUnbakedModel model = JsonUnbakedModel.deserialize(modelJson);
             model.id = id.toString();
             cir.setReturnValue(model);
             cir.cancel();
         }
     }
+
 }

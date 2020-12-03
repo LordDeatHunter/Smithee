@@ -1,3 +1,4 @@
+/*
 package wraith.smithee.mixin;
 
 import net.minecraft.client.MinecraftClient;
@@ -26,10 +27,6 @@ public abstract class ItemRendererMixin {
     @Shadow @Final private ItemModels models;
 
     @Inject(
-            /*
-            method = "renderItem(Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/render/model/json/ModelTransformation$Mode;ZLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;IILnet/minecraft/client/render/model/BakedModel;)V",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;translate(DDD)V", shift = At.Shift.AFTER), cancellable = true
-             */
             method = "renderItem(Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/render/model/json/ModelTransformation$Mode;ZLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;IILnet/minecraft/client/render/model/BakedModel;)V",
             at = @At("HEAD"), cancellable = true
     )
@@ -71,7 +68,6 @@ public abstract class ItemRendererMixin {
 
             //matrices.pop();
             //ci.cancel();
-             */
         }
     }
 
@@ -96,6 +92,6 @@ public abstract class ItemRendererMixin {
         }
         return textures.get(parts);
     }
-     */
 
 }
+*/
