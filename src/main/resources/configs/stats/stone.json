@@ -11,8 +11,7 @@
 					"trait": "brittle",
 					"min_level": 1,
 					"max_level": 1,
-					"activate_on": "mine_block",
-					"chance": 0.05
+					"chance": 0.1
 				}
 			]
 		},
@@ -27,8 +26,7 @@
 					"trait": "brittle",
 					"min_level": 1,
 					"max_level": 1,
-					"activate_on": "mine_block",
-					"chance": 0.05
+					"chance": 0.1
 				}
 			]
 		},
@@ -43,8 +41,7 @@
 					"trait": "brittle",
 					"min_level": 1,
 					"max_level": 1,
-					"activate_on": "mine_block",
-					"chance": 0.05
+					"chance": 0.1
 				}
 			]
 		}

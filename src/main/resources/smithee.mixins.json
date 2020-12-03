@@ -5,14 +5,18 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "AxeItemAccessor",
+    "BlockMixin",
+    "CraftingScreenHandlerMixin",
     "ForgingScreenHandlerAccessor",
     "ItemAccessor",
+    "ItemEntityMixin",
     "ItemRendererMixin",
     "ItemStackMixin",
     "MiningToolItemAccessor",
     "ModelLoaderMixin",
     "NamespaceResourceManagerMixin",
-    "SmithingScreenHandlerMixin"
+    "SmithingScreenHandlerMixin",
+    "TextColorInvoker"
   ],
   "client": [
   ],

@@ -1,0 +1,63 @@
+{
+  "#c:truesilver_blocks": {
+    "head": {
+      "required_material_amount": 1,
+      "output_material": "truesilver",
+      "drop_remains": true,
+      "remains": "#c:truesilver_nuggets",
+      "remains_amount": 6
+    },
+    "binding": {
+      "required_material_amount": 1,
+      "output_material": "truesilver",
+      "drop_remains": true,
+      "remains": "#c:truesilver_nuggets",
+      "remains_amount": 6
+    },
+    "handle": {
+      "required_material_amount": 1,
+      "output_material": "truesilver",
+      "drop_remains": true,
+      "remains": "#c:truesilver_nuggets",
+      "remains_amount": 6
+    }
+  },
+  "#c:truesilver_ingots": {
+    "head": {
+      "required_material_amount": 3,
+      "output_material": "truesilver",
+      "drop_remains": true,
+      "remains": "#c:truesilver_nuggets",
+      "remains_amount": 2
+    },
+    "binding": {
+      "required_material_amount": 1,
+      "output_material": "truesilver",
+      "drop_remains": false
+    },
+    "handle": {
+      "required_material_amount": 2,
+      "output_material": "truesilver",
+      "drop_remains": true,
+      "remains": "#c:truesilver_nuggets",
+      "remains_amount": 1
+    }
+  },
+  "#c:truesilver_nuggets": {
+    "head": {
+      "required_material_amount": 27,
+      "output_material": "truesilver",
+      "drop_remains": false
+    },
+    "binding": {
+      "required_material_amount": 9,
+      "output_material": "truesilver",
+      "drop_remains": false
+    },
+    "handle": {
+      "required_material_amount": 18,
+      "output_material": "truesilver",
+      "drop_remains": false
+    }
+  }
+}

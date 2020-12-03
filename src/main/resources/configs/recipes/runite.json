@@ -1,0 +1,63 @@
+{
+  "#c:runite_blocks": {
+    "head": {
+      "required_material_amount": 1,
+      "output_material": "runite",
+      "drop_remains": true,
+      "remains": "#c:runite_nuggets",
+      "remains_amount": 6
+    },
+    "binding": {
+      "required_material_amount": 1,
+      "output_material": "runite",
+      "drop_remains": true,
+      "remains": "#c:runite_nuggets",
+      "remains_amount": 6
+    },
+    "handle": {
+      "required_material_amount": 1,
+      "output_material": "runite",
+      "drop_remains": true,
+      "remains": "#c:runite_nuggets",
+      "remains_amount": 6
+    }
+  },
+  "#c:runite_ingots": {
+    "head": {
+      "required_material_amount": 3,
+      "output_material": "runite",
+      "drop_remains": true,
+      "remains": "#c:runite_nuggets",
+      "remains_amount": 2
+    },
+    "binding": {
+      "required_material_amount": 1,
+      "output_material": "runite",
+      "drop_remains": false
+    },
+    "handle": {
+      "required_material_amount": 2,
+      "output_material": "runite",
+      "drop_remains": true,
+      "remains": "#c:runite_nuggets",
+      "remains_amount": 1
+    }
+  },
+  "#c:runite_nuggets": {
+    "head": {
+      "required_material_amount": 27,
+      "output_material": "runite",
+      "drop_remains": false
+    },
+    "binding": {
+      "required_material_amount": 9,
+      "output_material": "runite",
+      "drop_remains": false
+    },
+    "handle": {
+      "required_material_amount": 18,
+      "output_material": "runite",
+      "drop_remains": false
+    }
+  }
+}

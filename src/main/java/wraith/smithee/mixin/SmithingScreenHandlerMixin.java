@@ -49,7 +49,7 @@ public class SmithingScreenHandlerMixin {
 
         if (addition.getCount() >= recipe.additionAmount) {
             ItemStack output = new ItemStack(ItemRegistry.ITEMS.get(recipe.outputMaterial + "_" + segments[1] + "_" + segments[2]));
-            output = Utils.setDamage(output, (int) input.getTag().getDouble("PartDamage"));
+            Utils.setDamage(output, (int) input.getTag().getDouble("PartDamage"));
             ((ForgingScreenHandlerAccessor) this).getOutput().setStack(0, output);
             ci.cancel();
         }

@@ -2,6 +2,7 @@ package wraith.smithee;
 
 import com.google.gson.JsonObject;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
@@ -27,8 +28,14 @@ public class Smithee implements ModInitializer {
 
         JsonObject json = Config.loadConfig();
 
-        if (!json.has("regenerate_material_list") || json.get("regenerate_material_list").getAsBoolean()) {
-            Utils.saveFilesFromJar("configs/items", "items", json.has("replace_material_list_when_regenerating") && json.get("replace_material_list_when_regenerating").getAsBoolean());
+        if (json.has("disable_vanilla_tools") && json.get("disable_vanilla_tools").getAsBoolean()) {
+            ItemRegistry.setDisabledItems();
+        }
+
+        Config.createMaterials(json.has("replace_material_list_when_regenerating") && json.get("replace_material_list_when_regenerating").getAsBoolean());
+
+        if (!json.has("regenerate_deleted_texture_files") || json.get("regenerate_deleted_texture_files").getAsBoolean()) {
+            Utils.saveFilesFromJar("configs/textures", "textures", json.has("replace_old_texture_files_when_regenerating") && json.get("replace_old_texture_files_when_regenerating").getAsBoolean());
         }
 
         ItemRegistry.addMaterials();
@@ -56,9 +63,9 @@ public class Smithee implements ModInitializer {
         }
         JsonParser.parseCombinations();
 
-        ItemRegistry.generateRecipes();
         RecipesGenerator.generateRecipes();
         registerPacketHandlers();
+        registerEvents();
         LOGGER.info("[Smithee] has successfully been loaded.");
     }
 
@@ -68,6 +75,12 @@ public class Smithee implements ModInitializer {
             if (packetContext.getPlayer().currentScreenHandler instanceof AssemblyTableScreenHandler && !packetContext.getPlayer().currentScreenHandler.slots.get(3).getStack().isEmpty()) {
                 packetContext.getPlayer().currentScreenHandler.slots.get(3).getStack().getSubTag("SmitheeProperties").putString("CustomName", tag.getString("tool_name"));
             }
+        });
+    }
+
+    private void registerEvents() {
+        ServerWorldEvents.LOAD.register((server, world) -> {
+            ItemRegistry.generateRecipes();
         });
     }
 

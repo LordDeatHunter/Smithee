@@ -33,19 +33,49 @@
     },
     {
       "includes": [
-        "wooden_handle",
-        "wooden_binding"
+        "oak_handle",
+        "oak_binding",
+        "acacia_handle",
+        "acacia_binding",
+        "dark_oak_handle",
+        "dark_oak_binding",
+        "birch_handle",
+        "birch_binding",
+        "jungle_handle",
+        "jungle_binding",
+        "spruce_handle",
+        "spruce_binding"
       ],
       "excludes": [
-        "wooden_head"
+        "oak_head",
+        "acacia_head",
+        "birch_head",
+        "dark_oak_head",
+        "jungle_head",
+        "spruce_head"
       ],
       "durability": "base - 13"
     },
     {
       "includes": [
-        "wooden_handle",
-        "wooden_binding",
-        "wooden_head"
+        "oak_handle",
+        "oak_binding",
+        "oak_head",
+        "acacia_handle",
+        "acacia_binding",
+        "acacia_head",
+        "birch_handle",
+        "birch_binding",
+        "birch_head",
+        "dark_oak_handle",
+        "dark_oak_binding",
+        "dark_oak_head",
+        "jungle_handle",
+        "jungle_binding",
+        "jungle_head",
+        "spruce_handle",
+        "spruce_binding",
+        "spruce_head"
       ],
       "excludes": [],
       "durability": "59",

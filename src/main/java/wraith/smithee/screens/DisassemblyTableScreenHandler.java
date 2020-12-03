@@ -99,6 +99,10 @@ public class DisassemblyTableScreenHandler extends ScreenHandler {
                 return false;
             }
 
+            if (!inventory.getStack(1).isEmpty() || !inventory.getStack(2).isEmpty() || !inventory.getStack(3).isEmpty()) {
+                return false;
+            }
+
             ItemStack stack = inventory.getStack(0);
             CompoundTag tag = stack.getTag();
             if (!tag.contains("Parts")) {

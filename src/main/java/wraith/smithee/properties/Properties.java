@@ -6,10 +6,12 @@ import wraith.smithee.registry.ItemRegistry;
 import wraith.smithee.utils.Utils;
 
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class Properties {
 
-    public HashMap<String, Trait> traits = new HashMap<>();
+    //ToolPart --> Traits
+    public HashMap<String, HashSet<Trait>> traits = new HashMap<>();
     public HashMap<String, Property> partProperties = new HashMap<>();
 
     public static Property getProperties(ItemStack stack) {
@@ -97,4 +99,5 @@ public class Properties {
                 return 0;
         }
     }
+
 }

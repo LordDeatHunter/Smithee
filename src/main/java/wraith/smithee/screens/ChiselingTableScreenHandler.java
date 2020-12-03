@@ -164,8 +164,7 @@ public class ChiselingTableScreenHandler extends ScreenHandler {
 
             if (!"".equals(recipes.get(type).remains)) {
                 ItemStack shardSlot = inventory.getStack(7 + id);
-                String[] segments = recipes.get(type).remains.split(":");
-                Item shard = Registry.ITEM.get(new Identifier(segments[0], segments[1]));
+                Item shard = recipes.get(type).getRemains();
                 int shardAmount = recipes.get(type).remainsAmount;
                 if (shardSlot.isEmpty()) {
                     inventory.setStack(7 + id, new ItemStack(shard, shardAmount));

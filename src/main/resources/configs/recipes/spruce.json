@@ -1,0 +1,69 @@
+{
+  "#minecraft:spruce_logs": {
+    "head": {
+      "required_material_amount": 1,
+      "output_material": "spruce",
+      "drop_remains": true,
+      "remains": "smithee:spruce_shard",
+      "remains_amount": 11
+    },
+    "binding": {
+      "required_material_amount": 1,
+      "output_material": "spruce",
+      "drop_remains": true,
+      "remains": "smithee:spruce_shard",
+      "remains_amount": 28
+    },
+    "handle": {
+      "required_material_amount": 1,
+      "output_material": "spruce",
+      "drop_remains": true,
+      "remains": "smithee:spruce_shard",
+      "remains_amount": 20
+    }
+  },
+  "minecraft:spruce_planks": {
+    "head": {
+      "required_material_amount": 3,
+      "output_material": "spruce",
+      "output_amount": 1,
+      "drop_remains": true,
+      "remains": "smithee:spruce_shard",
+      "remains_amount": 2
+    },
+    "binding": {
+      "required_material_amount": 1,
+      "output_material": "spruce",
+      "output_amount": 1,
+      "drop_remains": false
+    },
+    "handle": {
+      "required_material_amount": 1,
+      "output_material": "spruce",
+      "output_amount": 2,
+      "drop_remains": true,
+      "remains": "smithee:spruce_shard",
+      "remains_amount": 1
+    }
+  },
+  "smithee:spruce_shard": {
+    "head": {
+      "required_material_amount": 27,
+      "output_material": "spruce",
+      "output_amount": 1,
+      "drop_remains": false
+    },
+    "binding": {
+      "required_material_amount": 9,
+      "output_material": "spruce",
+      "output_amount": 1,
+      "drop_remains": false
+    },
+    "handle": {
+      "required_material_amount": 5,
+      "output_material": "spruce",
+      "output_amount": 1,
+      "drop_remains": false
+    }
+  }
+}

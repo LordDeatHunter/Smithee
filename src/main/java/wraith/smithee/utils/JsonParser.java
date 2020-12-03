@@ -1,15 +1,15 @@
 package wraith.smithee.utils;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.fabricmc.fabric.api.tag.TagRegistry;
 import net.minecraft.item.Item;
+import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import wraith.smithee.Config;
 import wraith.smithee.properties.*;
 import wraith.smithee.properties.Properties;
-import wraith.smithee.registry.ItemRegistry;
 
 import java.io.File;
 import java.util.*;
@@ -32,9 +32,8 @@ public class JsonParser {
             String traitName = traitObject.get("trait").getAsString();
             int minLevel = traitObject.get("min_level").getAsInt();
             int maxLevel = traitObject.get("max_level").getAsInt();
-            String activateOn = traitObject.get("activate_on").getAsString();
             double chance = traitObject.get("chance").getAsDouble();
-            properties.traits.put(traitName, new Trait(traitName, minLevel, maxLevel, activateOn, chance));
+            properties.traits.get(type).add(new Trait(traitName, minLevel, maxLevel, chance));
         }
 
     }
@@ -44,12 +43,18 @@ public class JsonParser {
             JsonObject recipe = entry.getValue().getAsJsonObject();
             String material = entry.getKey();
 
-            String[] segments = material.split(":");
-            Item item = Registry.ITEM.get(new Identifier(segments[0], segments[1]));
-            properties.put(item, new HashMap<>());
-            parseRecipeType(recipe.getAsJsonObject("head"), properties.get(item), "head");
-            parseRecipeType(recipe.getAsJsonObject("binding"), properties.get(item), "binding");
-            parseRecipeType(recipe.getAsJsonObject("handle"), properties.get(item), "handle");
+            HashSet<Item> items = new HashSet<>();
+            if (material.startsWith("#")) {
+                items.addAll(TagRegistry.item(new Identifier(material.substring(1))).values());
+            } else {
+                items.add(Registry.ITEM.get(new Identifier(material)));
+            }
+            for (Item item : items) {
+                properties.put(item, new HashMap<>());
+                parseRecipeType(recipe.getAsJsonObject("head"), properties.get(item), "head");
+                parseRecipeType(recipe.getAsJsonObject("binding"), properties.get(item), "binding");
+                parseRecipeType(recipe.getAsJsonObject("handle"), properties.get(item), "handle");
+            }
         }
     }
 

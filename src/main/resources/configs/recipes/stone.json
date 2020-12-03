@@ -41,69 +41,6 @@
 			"remains_amount": 1
 		}
 	},
-	"minecraft:diorite": {
-		"head": {
-			"required_material_amount": 3,
-			"output_material": "stone",
-			"drop_remains": true,
-			"remains": "smithee:stone_shard",
-			"remains_amount": 2
-		},
-		"binding": {
-			"required_material_amount": 1,
-			"output_material": "stone",
-			"drop_remains": false
-		},
-		"handle": {
-			"required_material_amount": 2,
-			"output_material": "stone",
-			"drop_remains": true,
-			"remains": "smithee:stone_shard",
-			"remains_amount": 1
-		}
-	},
-	"minecraft:andesite": {
-		"head": {
-			"required_material_amount": 3,
-			"output_material": "stone",
-			"drop_remains": true,
-			"remains": "smithee:stone_shard",
-			"remains_amount": 2
-		},
-		"binding": {
-			"required_material_amount": 1,
-			"output_material": "stone",
-			"drop_remains": false
-		},
-		"handle": {
-			"required_material_amount": 2,
-			"output_material": "stone",
-			"drop_remains": true,
-			"remains": "smithee:stone_shard",
-			"remains_amount": 1
-		}
-	},
-	"minecraft:granite": {
-		"head": {
-			"required_material_amount": 3,
-			"output_material": "stone",
-			"drop_remains": true,
-			"remains": "smithee:stone_shard",
-			"remains_amount": 2
-		},
-		"binding": {
-			"required_material_amount": 1,
-			"output_material": "stone",
-			"drop_remains": false
-		},
-		"handle": {
-			"required_material_amount": 2,
-			"output_material": "stone",
-			"drop_remains": true,
-			"remains": "smithee:stone_shard",
-			"remains_amount": 1
-		}
-	},
 	"smithee:stone_shard": {
 		"head": {
 			"required_material_amount": 27,

@@ -11,8 +11,7 @@
 					"trait": "lucky",
 					"min_level": 1,
 					"max_level": 2,
-					"activate_on": "mine_block",
-					"chance": 0.01
+					"chance": 0.2
 				}
 			]
 		},
@@ -27,8 +26,7 @@
 					"trait": "brittle",
 					"min_level": 1,
 					"max_level": 2,
-					"activate_on": "mine_block",
-					"chance": 0.005
+					"chance": 0.01
 				}
 			]
 		},

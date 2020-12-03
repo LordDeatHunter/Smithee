@@ -8,11 +8,10 @@
 			"attack_speed": 0.6,
 			"traits": [
 				{
-					"trait": "meidas_touch",
+					"trait": "midas_touch",
 					"min_level": 1,
 					"max_level": 2,
-					"activate_on": "mine_block",
-					"chance": 0.075
+					"chance": 0.3
 				}
 			]
 		},
@@ -27,8 +26,7 @@
 					"trait": "brittle",
 					"min_level": 1,
 					"max_level": 3,
-					"activate_on": "mine_block",
-					"chance": 0.05
+					"chance": 0.15
 				}
 			]
 		},
@@ -40,11 +38,16 @@
 			"attack_speed": 0.3,
 			"traits": [
 				{
+					"trait": "midas_touch",
+					"min_level": 1,
+					"max_level": 2,
+					"chance": 0.2
+				},
+				{
 					"trait": "brittle",
 					"min_level": 1,
 					"max_level": 3,
-					"activate_on": "mine_block",
-					"chance": 0.05
+					"chance": 0.15
 				}
 			]
 		}

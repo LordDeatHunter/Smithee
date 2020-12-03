@@ -2,11 +2,14 @@ package wraith.smithee.mixin;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.Material;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
@@ -16,22 +19,27 @@ import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
+import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import wraith.smithee.items.tool_parts.ToolPartItem;
 import wraith.smithee.items.tools.BaseSmitheePickaxe;
 import wraith.smithee.items.tools.BaseSmitheeSword;
 import wraith.smithee.items.tools.BaseSmitheeTool;
 import wraith.smithee.properties.Properties;
 import wraith.smithee.properties.ToolPartRecipe;
+import wraith.smithee.properties.Trait;
 import wraith.smithee.registry.ItemRegistry;
 import wraith.smithee.utils.Utils;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 @Mixin(ItemStack.class)
@@ -47,6 +55,8 @@ public abstract class ItemStackMixin {
     @Shadow
     private CompoundTag tag;
 
+    @Shadow public abstract boolean hasTag();
+
     @Inject(method = "getMaxDamage", at = @At("HEAD"), cancellable = true)
     public void getMaxDamage(CallbackInfoReturnable<Integer> cir) {
         if (Utils.isSmitheeTool(((ItemStack) (Object) this)) && tag != null && tag.contains("SmitheeProperties")) {
@@ -56,6 +66,7 @@ public abstract class ItemStackMixin {
         }
     }
 
+    /*
     @Inject(method = "getTranslationKey", at = @At("HEAD"), cancellable = true)
     public void getTranslationKey(CallbackInfoReturnable<String> cir) {
         if (getItem() instanceof BaseSmitheeTool && tag != null && tag.contains("Parts")) {
@@ -64,6 +75,7 @@ public abstract class ItemStackMixin {
             cir.setReturnValue("items.smithee.tools." + head + "_" + Utils.getToolType(getItem()));
         }
     }
+     */
 
     @Inject(method = "getMiningSpeedMultiplier", at = @At("HEAD"), cancellable = true)
     public void getMiningSpeedMultiplier(BlockState state, CallbackInfoReturnable<Float> cir) {
@@ -134,14 +146,18 @@ public abstract class ItemStackMixin {
             if (tag != null && tag.contains("SmitheeProperties") && tag.getCompound("SmitheeProperties").contains("CustomName")) {
                 cir.setReturnValue(new LiteralText(tag.getCompound("SmitheeProperties").getString("CustomName")));
             } else if (tag != null && tag.contains("Parts")) {
-                cir.setReturnValue(new LiteralText(Utils.capitalize(tag.getCompound("Parts").getString("HeadPart")) + " " + Utils.capitalize(Utils.getToolType(getItem()))));
+                cir.setReturnValue(new LiteralText(Utils.capitalize(tag.getCompound("Parts").getString("HeadPart").split("_")) + " " + Utils.capitalize(Utils.getToolType(getItem()))));
             } else {
                 cir.setReturnValue(new LiteralText("Base Smithee " + Utils.capitalize(Utils.getToolType(getItem()))));
             }
+        } else if (getItem() instanceof ToolPartItem) {
+            ToolPartItem part = (ToolPartItem)getItem();
+            cir.setReturnValue(new LiteralText(part.toString()));
         }
     }
 
-    @ModifyVariable(method = "getTooltip", at = @At("RETURN"))
+    @Environment(EnvType.CLIENT)
+    @ModifyVariable(method = "getTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;isSectionHidden(ILnet/minecraft/item/ItemStack$TooltipSection;)Z", ordinal = 3))
     public List<Text> getTooltip(List<Text> list, PlayerEntity player, TooltipContext context) {
         if (ItemRegistry.TOOL_PART_RECIPES.containsKey(getItem())) {
             HashMap<String, ToolPartRecipe> recipes = ItemRegistry.TOOL_PART_RECIPES.get(getItem());
@@ -153,8 +169,29 @@ public abstract class ItemStackMixin {
             } else {
                 list.add(new LiteralText("§5Tool material - Hold §1[§dSHIFT§1] §5for info."));
             }
-            return list;
+        }
+        if (getItem() instanceof BaseSmitheeTool) {
+            list.addAll(Trait.getTooltip(((ItemStack)(Object)this)));
         }
         return list;
+    }
+
+    @Inject(method = "inventoryTick", at = @At("HEAD"))
+    public void inventoryTick(World world, Entity entity, int slot, boolean selected, CallbackInfo ci) {
+        if (getItem() instanceof BaseSmitheeTool && hasTag() && tag.contains("Parts")) {
+            CompoundTag tag = getSubTag("Parts");
+            evaluateTrait(tag.getString("HeadPart"), "head");
+            evaluateTrait(tag.getString("BindingPart"), "binding");
+            evaluateTrait(tag.getString("HandlePart"), "handle");
+        }
+    }
+
+    private void evaluateTrait(String material, String part) {
+        HashSet<Trait> traits = ItemRegistry.PROPERTIES.get(material).traits.get(part);
+        for (Trait trait : traits) {
+            if ("ecological".equals(trait.traitName)) {
+                Trait.evaluateEcological(trait, (ItemStack)(Object)this);
+            }
+        }
     }
 }

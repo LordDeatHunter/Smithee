@@ -27,10 +27,11 @@ public class NamespaceResourceManagerMixin {
         parts.add("head");
         parts.add("binding");
         parts.add("handle");
-        if (id.getNamespace().equals(Smithee.MOD_ID) && path.endsWith(".png") && segments.length == 3 && parts.contains(segments[2].split("\\.")[0])) {
+        if (id.getNamespace().equals(Smithee.MOD_ID) && path.endsWith(".png") && segments.length >= 3 && parts.contains(segments[segments.length - 1].split("\\.")[0])) {
             try {
-                File file = new File("config/smithee/items/" + path);
-                cir.setReturnValue(new ResourceImpl(Smithee.MOD_ID, id, new FileInputStream(file), null));
+                File texture = new File("config/smithee/textures/" + path);
+                File metadata = new File("config/smithee/textures/" + path + ".mcmeta");
+                cir.setReturnValue(new ResourceImpl(Smithee.MOD_ID, id, new FileInputStream(texture), metadata.exists() ? new FileInputStream(metadata) : null));
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }

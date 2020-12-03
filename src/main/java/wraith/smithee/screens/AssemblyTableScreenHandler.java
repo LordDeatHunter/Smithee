@@ -17,8 +17,8 @@ import wraith.smithee.items.tool_parts.ToolPartItem;
 import wraith.smithee.properties.Properties;
 import wraith.smithee.registry.ItemRegistry;
 import wraith.smithee.registry.ScreenHandlerRegistry;
-import wraith.smithee.screens.slots.PartSlot;
 import wraith.smithee.screens.slots.AssemblyTableOutputSlot;
+import wraith.smithee.screens.slots.PartSlot;
 
 public class AssemblyTableScreenHandler extends ScreenHandler {
 
@@ -132,6 +132,7 @@ public class AssemblyTableScreenHandler extends ScreenHandler {
             itemStack.putSubTag("Parts", tag);
 
             Properties.setProperties(itemStack, Properties.getProperties(itemStack));
+
             double headDamage = 0;
             if (head.hasTag() && head.getTag().contains("PartDamage")) {
                 headDamage = head.getTag().getDouble("PartDamage");

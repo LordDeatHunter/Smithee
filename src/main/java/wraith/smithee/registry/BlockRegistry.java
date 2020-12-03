@@ -28,6 +28,7 @@ public class BlockRegistry {
         put("diorite_disassembly_table", new DisassemblyTable(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));
         put("andesite_disassembly_table", new DisassemblyTable(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));
         put("granite_disassembly_table", new DisassemblyTable(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));
+        put("netherrack_disassembly_table", new DisassemblyTable(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));
 
         put("oak_chiseling_table", new ChiselingTable(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));
         put("dark_oak_chiseling_table", new ChiselingTable(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));

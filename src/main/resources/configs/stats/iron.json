@@ -11,7 +11,6 @@
 					"trait": "magnetic",
 					"min_level": 1,
 					"max_level": 1,
-					"activate_on": "mine_block",
 					"chance": 1
 				}
 			]
@@ -27,7 +26,6 @@
 					"trait": "magnetic",
 					"min_level": 1,
 					"max_level": 1,
-					"activate_on": "mine_block",
 					"chance": 1
 				}
 			]
@@ -43,7 +41,6 @@
 					"trait": "magnetic",
 					"min_level": 1,
 					"max_level": 1,
-					"activate_on": "mine_block",
 					"chance": 1
 				}
 			]

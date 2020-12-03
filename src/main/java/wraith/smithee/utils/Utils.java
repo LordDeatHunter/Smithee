@@ -11,6 +11,7 @@ import net.minecraft.util.Identifier;
 import org.apache.commons.io.FileUtils;
 import wraith.smithee.Config;
 import wraith.smithee.Smithee;
+import wraith.smithee.items.tool_parts.ToolPartItem;
 import wraith.smithee.items.tools.BaseSmitheeTool;
 import wraith.smithee.registry.ItemRegistry;
 
@@ -21,12 +22,14 @@ import java.io.*;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.Enumeration;
-import java.util.Objects;
+import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 public class Utils {
+
+    public static final Random random = new Random(Calendar.getInstance().getTimeInMillis());
+
     public static Identifier ID(String id) {
         return new Identifier(Smithee.MOD_ID, id);
     }
@@ -34,18 +37,17 @@ public class Utils {
     public static String createModelJson(Identifier id) {
         String[] split = id.getPath().split("/")[1].split("_");
         if (id.getNamespace().equals(Smithee.MOD_ID) && split.length >= 3) {
-            String material = "";
-            for (int i = 0; i < split.length - 2; ++i) {
-                material += split[i];
-            }
-            //Tool Part
-            if (ItemRegistry.MATERIALS.contains(material) && ItemRegistry.TOOL_TYPES.contains(split[1])) {
-                return "{\n" +
-                        "  \"parent\": \"item/generated\",\n" +
-                        "  \"textures\": {\n" +
-                        "    \"layer0\": \"" + id + "\"\n" +
-                        "  }\n" +
-                        "}";
+            Item item = ItemRegistry.ITEMS.get(id.getPath().split("/")[1]);
+            if (item instanceof ToolPartItem) {
+                //Tool Part
+                if (ItemRegistry.MATERIALS.contains(((ToolPartItem)item).part.materialName) && ItemRegistry.TOOL_TYPES.contains(split[split.length - 2])) {
+                    return "{\n" +
+                            "  \"parent\": \"item/generated\",\n" +
+                            "  \"textures\": {\n" +
+                            "    \"layer0\": \"" + id + "\"\n" +
+                            "  }\n" +
+                            "}";
+                }
             }
             //Tool
             else if ((split[0] + "_" + split[1]).equals("base_" + Smithee.MOD_ID) && ItemRegistry.TOOL_TYPES.contains(split[2])) {
@@ -176,11 +178,13 @@ public class Utils {
                             e.printStackTrace();
                         }
                     }
-                    try {
-                        new File(path).getParentFile().mkdirs();
-                        Files.copy(is, new File(path).toPath());
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    if (!Files.exists(new File(path).toPath())) {
+                        try {
+                            new File(path).getParentFile().mkdirs();
+                            Files.copy(is, new File(path).toPath());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 } else {
                     try {
@@ -209,13 +213,15 @@ public class Utils {
                             e.printStackTrace();
                         }
                     }
-                    try {
-                        Smithee.LOGGER.info("Regenerating " + filename);
-                        new File(path).getParentFile().mkdirs();
-                        Files.copy(file.toPath(), new File(path).toPath());
-                    } catch (IOException e) {
-                        Smithee.LOGGER.warn("ERROR OCCURRED WHILE REGENERATING " + filename + " TEXTURE");
-                        e.printStackTrace();
+                    if (!Files.exists(new File(path).toPath())) {
+                        try {
+                            Smithee.LOGGER.info("Regenerating " + filename);
+                            new File(path).getParentFile().mkdirs();
+                            Files.copy(file.toPath(), new File(path).toPath());
+                        } catch (IOException e) {
+                            Smithee.LOGGER.warn("ERROR OCCURRED WHILE REGENERATING " + filename + " TEXTURE");
+                            e.printStackTrace();
+                        }
                     }
                 } else {
                     try {
@@ -242,12 +248,19 @@ public class Utils {
         return Character.toUpperCase(string.charAt(0)) + string.substring(1);
     }
 
-    public static ItemStack setDamage(ItemStack output, int damage) {
-        output.setDamage(damage);
-        if (output.getDamage() >= output.getMaxDamage()) {
-            output = ItemStack.EMPTY;
+    public static void setDamage(ItemStack stack, int damage) {
+        stack.setDamage(damage);
+        if (stack.getDamage() >= stack.getMaxDamage()) {
+            stack.setCount(0);
         }
-        return output;
+    }
+
+    public static void damage(ItemStack stack, int damage) {
+        setDamage(stack, stack.getDamage() + damage);
+    }
+
+    public static void repair(ItemStack stack, int repairAmount) {
+        setDamage(stack, Math.max(0, stack.getDamage() - repairAmount));
     }
 
     public static String stripToolType(String part) {
@@ -259,4 +272,25 @@ public class Utils {
         stripped += parts[parts.length - 1];
         return stripped;
     }
+
+    public static int getRandomIntInRange(int min, int max) {
+        return random.nextInt(max - min + 1) + min;
+    }
+
+    public static double getRandomDoubleInRange(int min, int max) {
+        return min + random.nextDouble() * max;
+    }
+
+    public static String capitalize(String[] split) {
+        String result = "";
+        Iterator<String> it = Arrays.asList(split).iterator();
+        while (it.hasNext()) {
+            result += capitalize(it.next());
+            if (it.hasNext()) {
+                result += " ";
+            }
+        }
+        return result;
+    }
+
 }

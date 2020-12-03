@@ -1,7 +1,5 @@
 package wraith.smithee.recipes;
 
-import net.minecraft.util.Identifier;
-
 public class SmithingRecipe {
 
     public String inputMaterial;

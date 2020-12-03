@@ -1,0 +1,25 @@
+{
+  "individual_parts": {
+    "head": {
+      "mining_level": 2,
+      "durability": 176,
+      "mining_speed": 5.0,
+      "attack_damage": 2.0,
+      "attack_speed": 0.8
+    },
+    "binding": {
+      "mining_level": 0,
+      "durability": 316,
+      "mining_speed": 0.4,
+      "attack_damage": 0.5,
+      "attack_speed": 0.2
+    },
+    "handle": {
+      "mining_level": 0,
+      "durability": 212,
+      "mining_speed": 1.0,
+      "attack_damage": 0.8,
+      "attack_speed": 0.3
+    }
+  }
+}

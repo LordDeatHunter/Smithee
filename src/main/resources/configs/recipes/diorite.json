@@ -1,0 +1,40 @@
+{
+  "minecraft:diorite": {
+    "head": {
+      "required_material_amount": 3,
+      "output_material": "diorite",
+      "drop_remains": true,
+      "remains": "smithee:diorite_shard",
+      "remains_amount": 2
+    },
+    "binding": {
+      "required_material_amount": 1,
+      "output_material": "diorite",
+      "drop_remains": false
+    },
+    "handle": {
+      "required_material_amount": 2,
+      "output_material": "diorite",
+      "drop_remains": true,
+      "remains": "smithee:diorite_shard",
+      "remains_amount": 1
+    }
+  },
+  "smithee:diorite_shard": {
+    "head": {
+      "required_material_amount": 27,
+      "output_material": "diorite",
+      "drop_remains": false
+    },
+    "binding": {
+      "required_material_amount": 9,
+      "output_material": "diorite",
+      "drop_remains": false
+    },
+    "handle": {
+      "required_material_amount": 18,
+      "output_material": "diorite",
+      "drop_remains": false
+    }
+  }
+}

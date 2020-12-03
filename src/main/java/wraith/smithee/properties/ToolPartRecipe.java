@@ -1,5 +1,11 @@
 package wraith.smithee.properties;
 
+import net.fabricmc.fabric.api.tag.TagRegistry;
+import net.minecraft.item.Item;
+import net.minecraft.tag.Tag;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
+
 public class ToolPartRecipe {
 
     public int requiredAmount;
@@ -20,4 +26,13 @@ public class ToolPartRecipe {
         this.remainsAmount = remainsAmount;
     }
 
+    public Item getRemains() {
+        if (remains == null || "".equals(remains)) {
+            return null;
+        }
+        if (remains.startsWith("#")) {
+            return TagRegistry.item(new Identifier(remains.substring(1))).values().get(0);
+        }
+        return Registry.ITEM.get(new Identifier(remains));
+    }
 }
