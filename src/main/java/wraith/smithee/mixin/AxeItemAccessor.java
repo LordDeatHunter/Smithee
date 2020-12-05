@@ -11,6 +11,6 @@ import java.util.Set;
 public interface AxeItemAccessor {
 
     @Accessor("field_23139")
-    public Set<Material> getEffectiveMaterials();
+    Set<Material> getEffectiveMaterials();
 
 }

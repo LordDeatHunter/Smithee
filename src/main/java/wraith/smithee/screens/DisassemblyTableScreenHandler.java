@@ -111,8 +111,8 @@ public class DisassemblyTableScreenHandler extends ScreenHandler {
             tag = tag.getCompound("Parts");
             String tool = Utils.getToolType(stack.getItem());
             ItemStack head = new ItemStack(ItemRegistry.ITEMS.get(tag.getString("HeadPart") + "_" + tool + "_head"));
-            ItemStack binding = new ItemStack(ItemRegistry.ITEMS.get(tag.getString("BindingPart") + "_" + tool + "_binding"));
-            ItemStack handle = new ItemStack(ItemRegistry.ITEMS.get(tag.getString("HandlePart") + "_" + tool + "_handle"));
+            ItemStack binding = new ItemStack(ItemRegistry.ITEMS.get(tag.getString("BindingPart") + "_binding"));
+            ItemStack handle = new ItemStack(ItemRegistry.ITEMS.get(tag.getString("HandlePart") + "_handle"));
 
             double damage;
             int headDurability = ItemRegistry.PROPERTIES.get(tag.getString("HeadPart")).partProperties.get("head").durability;

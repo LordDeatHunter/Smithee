@@ -5,7 +5,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.PickaxeItem;
 import net.minecraft.item.ToolMaterials;
 
-public class BaseSmitheePickaxe extends PickaxeItem implements BaseSmitheeTool {
+public class BaseSmitheePickaxe extends PickaxeItem implements BaseSmitheeMiningTool {
 
     public BaseSmitheePickaxe(Item.Settings settings) {
         super(ToolMaterials.WOOD, 0, 0, settings);

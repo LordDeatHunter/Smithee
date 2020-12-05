@@ -5,7 +5,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ToolMaterials;
 
-public class BaseSmitheeAxe extends AxeItem implements BaseSmitheeTool {
+public class BaseSmitheeAxe extends AxeItem implements BaseSmitheeMiningTool {
 
     public BaseSmitheeAxe(Item.Settings settings) {
         super(ToolMaterials.WOOD, 0, 0, settings);

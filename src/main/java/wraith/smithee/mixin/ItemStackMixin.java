@@ -59,7 +59,7 @@ public abstract class ItemStackMixin {
 
     @Inject(method = "getMaxDamage", at = @At("HEAD"), cancellable = true)
     public void getMaxDamage(CallbackInfoReturnable<Integer> cir) {
-        if (Utils.isSmitheeTool(((ItemStack) (Object) this)) && tag != null && tag.contains("SmitheeProperties")) {
+        if (getItem() instanceof BaseSmitheeTool && tag != null && tag.contains("SmitheeProperties")) {
             CompoundTag tag = getSubTag("SmitheeProperties");
             cir.setReturnValue(tag.getInt("Durability"));
             cir.cancel();
@@ -160,6 +160,7 @@ public abstract class ItemStackMixin {
     @ModifyVariable(method = "getTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;isSectionHidden(ILnet/minecraft/item/ItemStack$TooltipSection;)Z", ordinal = 3))
     public List<Text> getTooltip(List<Text> list, PlayerEntity player, TooltipContext context) {
         if (ItemRegistry.TOOL_PART_RECIPES.containsKey(getItem())) {
+            /*
             HashMap<String, ToolPartRecipe> recipes = ItemRegistry.TOOL_PART_RECIPES.get(getItem());
             if (Screen.hasShiftDown()) {
                 list.add(new LiteralText("§dTool material:"));
@@ -167,8 +168,9 @@ public abstract class ItemStackMixin {
                 list.add(new LiteralText("§9Binding - Takes " + recipes.get("binding").requiredAmount));
                 list.add(new LiteralText("§9Handle - Takes " + recipes.get("handle").requiredAmount));
             } else {
-                list.add(new LiteralText("§5Tool material - Hold §1[§dSHIFT§1] §5for info."));
             }
+             */
+            list.add(new LiteralText("§1[§5Tool material§1]"));
         }
         if (getItem() instanceof BaseSmitheeTool) {
             list.addAll(Trait.getTooltip(((ItemStack)(Object)this)));

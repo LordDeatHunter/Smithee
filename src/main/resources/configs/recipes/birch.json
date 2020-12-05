@@ -1,69 +1,20 @@
 {
   "#minecraft:birch_logs": {
-    "head": {
-      "required_material_amount": 1,
-      "output_material": "birch",
-      "drop_remains": true,
-      "remains": "smithee:birch_shard",
-      "remains_amount": 11
-    },
-    "binding": {
-      "required_material_amount": 1,
-      "output_material": "birch",
-      "drop_remains": true,
-      "remains": "smithee:birch_shard",
-      "remains_amount": 28
-    },
-    "handle": {
-      "required_material_amount": 1,
-      "output_material": "birch",
-      "drop_remains": true,
-      "remains": "smithee:birch_shard",
-      "remains_amount": 20
-    }
+    "output_material": "birch",
+    "material_value": 81,
+    "chiseling_level": 0,
+    "overrides": {}
   },
   "minecraft:birch_planks": {
-    "head": {
-      "required_material_amount": 3,
-      "output_material": "birch",
-      "output_amount": 1,
-      "drop_remains": true,
-      "remains": "smithee:birch_shard",
-      "remains_amount": 2
-    },
-    "binding": {
-      "required_material_amount": 1,
-      "output_material": "birch",
-      "output_amount": 1,
-      "drop_remains": false
-    },
-    "handle": {
-      "required_material_amount": 1,
-      "output_material": "birch",
-      "output_amount": 2,
-      "drop_remains": true,
-      "remains": "smithee:birch_shard",
-      "remains_amount": 1
-    }
+    "output_material": "birch",
+    "material_value": 9,
+    "chiseling_level": 0,
+    "overrides": {}
   },
   "smithee:birch_shard": {
-    "head": {
-      "required_material_amount": 27,
-      "output_material": "birch",
-      "output_amount": 1,
-      "drop_remains": false
-    },
-    "binding": {
-      "required_material_amount": 9,
-      "output_material": "birch",
-      "output_amount": 1,
-      "drop_remains": false
-    },
-    "handle": {
-      "required_material_amount": 5,
-      "output_material": "birch",
-      "output_amount": 1,
-      "drop_remains": false
-    }
+    "output_material": "birch",
+    "material_value": 1,
+    "chiseling_level": 0,
+    "overrides": {}
   }
 }

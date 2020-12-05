@@ -10,6 +10,8 @@ import net.minecraft.util.registry.Registry;
 import wraith.smithee.Config;
 import wraith.smithee.properties.*;
 import wraith.smithee.properties.Properties;
+import wraith.smithee.recipes.ChiselingRemainder;
+import wraith.smithee.registry.ItemRegistry;
 
 import java.io.File;
 import java.util.*;
@@ -38,40 +40,44 @@ public class JsonParser {
 
     }
 
-    public static void parseRecipes(Set<Map.Entry<String, JsonElement>> recipes, HashMap<Item, HashMap<String, ToolPartRecipe>> properties) {
+    public static void parseRecipes(Set<Map.Entry<String, JsonElement>> recipes, HashMap<Item, HashMap<String, ToolPartRecipe>> recipeList, HashMap<String, ChiselingRemainder> remains) {
         for (Map.Entry<String, JsonElement> entry : recipes) {
             JsonObject recipe = entry.getValue().getAsJsonObject();
             String material = entry.getKey();
+            String outputMaterial = recipe.get("output_material").getAsString();
+            int chiselingLevel = recipe.get("chiseling_level").getAsInt();
+
+            if (!remains.containsKey(outputMaterial)) {
+                remains.put(outputMaterial, new ChiselingRemainder(new HashSet<>(), recipe.get("material_value").getAsInt()));
+            }
 
             HashSet<Item> items = new HashSet<>();
             if (material.startsWith("#")) {
-                items.addAll(TagRegistry.item(new Identifier(material.substring(1))).values());
+                for (Item item : TagRegistry.item(new Identifier(material.substring(1))).values()) {
+                    items.add(item);
+                    remains.get(outputMaterial).remainders.add(item);
+                }
             } else {
-                items.add(Registry.ITEM.get(new Identifier(material)));
+                Item item = Registry.ITEM.get(new Identifier(material));
+                items.add(item);
+                remains.get(outputMaterial).remainders.add(item);
             }
+            JsonObject overrides = recipe.get("overrides").getAsJsonObject();
             for (Item item : items) {
-                properties.put(item, new HashMap<>());
-                parseRecipeType(recipe.getAsJsonObject("head"), properties.get(item), "head");
-                parseRecipeType(recipe.getAsJsonObject("binding"), properties.get(item), "binding");
-                parseRecipeType(recipe.getAsJsonObject("handle"), properties.get(item), "handle");
+                recipeList.put(item, new HashMap<>());
+                for (String recipeType : ItemRegistry.BASE_RECIPE_VALUES.keySet()) {
+                    int base = ItemRegistry.BASE_RECIPE_VALUES.get(recipeType);
+                    recipeList.get(item).put(recipeType, new ToolPartRecipe(outputMaterial, base, chiselingLevel));
+                    if (overrides.has(recipeType)) {
+                        recipeList.get(item).get(recipeType).requiredAmount = (int) Utils.evaluateExpression(overrides.get(recipeType).getAsString().replace("base", String.valueOf(base)));
+                    }
+                }
             }
-        }
-    }
-
-    private static void parseRecipeType(JsonObject recipe, HashMap<String, ToolPartRecipe> properties, String type) {
-        String outputMaterial = recipe.get("output_material").getAsString();
-        int requiredMaterialAmount = recipe.get("required_material_amount").getAsInt();
-        if (!recipe.get("drop_remains").getAsBoolean()) {
-            properties.put(type, new ToolPartRecipe(outputMaterial, requiredMaterialAmount));
-        } else {
-            String remains = recipe.get("remains").getAsString();
-            int remainAmount = recipe.get("remains_amount").getAsInt();
-            properties.put(type, new ToolPartRecipe(outputMaterial, requiredMaterialAmount, remains, remainAmount));
         }
     }
 
     public static void parseCombinations() {
-        File[] files = Config.getFiles("config/smithee/combinations");
+        File[] files = Config.getFiles("config/smithee/combinations/");
         for (File file : files){
             JsonObject json = Config.getJsonObject(Config.readFile(file));
             for (JsonElement combination : json.get("combinations").getAsJsonArray()) {

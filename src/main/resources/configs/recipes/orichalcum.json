@@ -1,63 +1,20 @@
 {
   "#c:orichalcum_blocks": {
-    "head": {
-      "required_material_amount": 1,
-      "output_material": "orichalcum",
-      "drop_remains": true,
-      "remains": "#c:orichalcum_nuggets",
-      "remains_amount": 6
-    },
-    "binding": {
-      "required_material_amount": 1,
-      "output_material": "orichalcum",
-      "drop_remains": true,
-      "remains": "#c:orichalcum_nuggets",
-      "remains_amount": 6
-    },
-    "handle": {
-      "required_material_amount": 1,
-      "output_material": "orichalcum",
-      "drop_remains": true,
-      "remains": "#c:orichalcum_nuggets",
-      "remains_amount": 6
-    }
+    "output_material": "orichalcum",
+    "material_value": 81,
+    "chiseling_level": 1,
+    "overrides": {}
   },
   "#c:orichalcum_ingots": {
-    "head": {
-      "required_material_amount": 3,
-      "output_material": "orichalcum",
-      "drop_remains": true,
-      "remains": "#c:orichalcum_nuggets",
-      "remains_amount": 2
-    },
-    "binding": {
-      "required_material_amount": 1,
-      "output_material": "orichalcum",
-      "drop_remains": false
-    },
-    "handle": {
-      "required_material_amount": 2,
-      "output_material": "orichalcum",
-      "drop_remains": true,
-      "remains": "#c:orichalcum_nuggets",
-      "remains_amount": 1
-    }
+    "output_material": "orichalcum",
+    "material_value": 9,
+    "chiseling_level": 1,
+    "overrides": {}
   },
   "#c:orichalcum_nuggets": {
-    "head": {
-      "required_material_amount": 27,
-      "output_material": "orichalcum",
-      "drop_remains": false
-    },
-    "binding": {
-      "required_material_amount": 9,
-      "output_material": "orichalcum",
-      "drop_remains": false
-    },
-    "handle": {
-      "required_material_amount": 18,
-      "output_material": "orichalcum",
-      "drop_remains": false
-    }
+    "output_material": "orichalcum",
+    "material_value": 1,
+    "chiseling_level": 1,
+    "overrides": {}
   }
 }

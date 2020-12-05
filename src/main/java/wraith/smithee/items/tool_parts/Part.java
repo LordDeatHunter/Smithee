@@ -12,4 +12,13 @@ public class Part {
         this.toolType = toolType;
     }
 
+    @Override
+    public String toString() {
+        return materialName + "_" + ("any".equals(toolType)?"":toolType+"_") + partType;
+    }
+
+    public String recipeString() {
+        return ("any".equals(toolType)?"":toolType+"_") + partType;
+    }
+
 }

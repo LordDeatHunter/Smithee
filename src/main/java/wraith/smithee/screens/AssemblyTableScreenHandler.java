@@ -15,10 +15,13 @@ import net.minecraft.world.World;
 import wraith.smithee.blocks.AassemblyTableBlockEntity;
 import wraith.smithee.items.tool_parts.ToolPartItem;
 import wraith.smithee.properties.Properties;
+import wraith.smithee.properties.ToolPartRecipe;
 import wraith.smithee.registry.ItemRegistry;
 import wraith.smithee.registry.ScreenHandlerRegistry;
 import wraith.smithee.screens.slots.AssemblyTableOutputSlot;
 import wraith.smithee.screens.slots.PartSlot;
+
+import java.util.HashSet;
 
 public class AssemblyTableScreenHandler extends ScreenHandler {
 
@@ -40,7 +43,7 @@ public class AssemblyTableScreenHandler extends ScreenHandler {
             ((AassemblyTableBlockEntity)inventory).setHandler(this);
         }
         this.addSlot(new PartSlot(inventory, 0, 43, 57, "handle")); //Handle
-        this.addSlot(new PartSlot(inventory, 1, 55, 37, "binding")); //Binding
+        this.addSlot(new PartSlot(inventory, 1, 55, 37, "binding", "sword_guard")); //Binding
         this.addSlot(new PartSlot(inventory, 2, 67, 17, "head")); //Head
         this.addSlot(new AssemblyTableOutputSlot(inventory, 3, 113, 38)); //Output
 
@@ -76,7 +79,7 @@ public class AssemblyTableScreenHandler extends ScreenHandler {
             } else if (originalStack.getItem() instanceof ToolPartItem) {
                 ToolPartItem tool = (ToolPartItem) originalStack.getItem();
                 if (("handle".equals(tool.part.partType) && !this.insertItem(originalStack, 0, 1, false)) ||
-                    ("binding".equals(tool.part.partType) && !this.insertItem(originalStack, 1, 2, false)) ||
+                    (("binding".equals(tool.part.partType) || "sword_guard".equals(tool.part.partType)) && !this.insertItem(originalStack, 1, 2, false)) ||
                     ("head".equals(tool.part.partType) && !this.insertItem(originalStack, 2, 3, false))) {
                         return ItemStack.EMPTY;
                 }
@@ -123,6 +126,14 @@ public class AssemblyTableScreenHandler extends ScreenHandler {
             ItemStack handle = inventory.getStack(0);
             ItemStack binding = inventory.getStack(1);
             ItemStack head = inventory.getStack(2);
+            HashSet<String> recipe = new HashSet<String>(){{
+                add(((ToolPartItem)handle.getItem()).part.recipeString());
+                add(((ToolPartItem)binding.getItem()).part.recipeString());
+                add(((ToolPartItem)head.getItem()).part.recipeString());
+            }};
+            if (!ToolPartRecipe.TOOL_ASSEMBLY_RECIPES.contains(recipe)){
+                return;
+            }
 
             ItemStack itemStack = new ItemStack(ItemRegistry.ITEMS.get("base_smithee_" + ((ToolPartItem)head.getItem()).part.toolType));
             CompoundTag tag = itemStack.getOrCreateSubTag("Parts");

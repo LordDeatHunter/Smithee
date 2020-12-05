@@ -20,8 +20,9 @@ import wraith.smithee.screens.ImplementedInventory;
 
 public class ChiselingTableBlockEntity extends LockableContainerBlockEntity implements NamedScreenHandlerFactory, ImplementedInventory {
 
-    private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(10, ItemStack.EMPTY);
-    private int page = 0;
+    private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(3, ItemStack.EMPTY);
+    private int tool = 0;
+    private int part = 0;
 
     public ChiselingTableBlockEntity() {
         super(BlockEntityRegistry.BLOCK_ENTITIES.get("chiseling_table"));
@@ -30,17 +31,25 @@ public class ChiselingTableBlockEntity extends LockableContainerBlockEntity impl
     private final PropertyDelegate propertyDelegate = new PropertyDelegate() {
         @Override
         public int get(int index) {
-            return page;
+            if (index == 0) {
+                return tool;
+            } else {
+                return part;
+            }
         }
 
         @Override
         public void set(int index, int value) {
-            page = value;
+            if (index == 0) {
+                tool = value;
+            } else {
+                part = value;
+            }
         }
 
         @Override
         public int size() {
-            return 1;
+            return 2;
         }
     };
 
@@ -77,7 +86,8 @@ public class ChiselingTableBlockEntity extends LockableContainerBlockEntity impl
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         super.toTag(tag);
-        tag.putInt("ToolPageNumber", this.page);
+        tag.putInt("ToolPageNumber", this.tool);
+        tag.putInt("PartPageNumber", this.part);
         Inventories.toTag(tag, this.inventory);
         return tag;
     }
@@ -85,7 +95,8 @@ public class ChiselingTableBlockEntity extends LockableContainerBlockEntity impl
     @Override
     public void fromTag(BlockState state, CompoundTag tag) {
         super.fromTag(state, tag);
-        this.page = tag.getInt("ToolPageNumber");
+        this.tool = tag.getInt("ToolPageNumber");
+        this.part = tag.getInt("PartPageNumber");
         Inventories.fromTag(tag, this.inventory);
     }
 
@@ -102,7 +113,7 @@ public class ChiselingTableBlockEntity extends LockableContainerBlockEntity impl
     public ItemStack removeStack(int slot, int count) {
         ItemStack result = Inventories.splitStack(getItems(), slot, count);
         if (slot < 3 && !result.isEmpty()) {
-                markDirty();
+            markDirty();
         }
         return result;
     }
@@ -114,9 +125,6 @@ public class ChiselingTableBlockEntity extends LockableContainerBlockEntity impl
             stack.setCount(getMaxCountPerStack());
         }
         markDirty();
-    }
-
-    public void setHandler(ChiselingTableScreenHandler handler) {
     }
 
 }

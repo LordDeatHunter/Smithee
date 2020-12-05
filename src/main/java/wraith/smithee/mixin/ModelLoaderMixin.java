@@ -16,6 +16,13 @@ public class ModelLoaderMixin {
 
     @Inject(method = "loadModelFromJson", at = @At(value = "INVOKE", target = "Lnet/minecraft/resource/ResourceManager;getResource(Lnet/minecraft/util/Identifier;)Lnet/minecraft/resource/Resource;"), cancellable = true)
     public void loadModelFromJson(Identifier id, CallbackInfoReturnable<JsonUnbakedModel> cir) {
+        if (Utils.isToolPart(id.getPath()) || id.getPath().endsWith("_chisel")) {
+            JsonUnbakedModel model = JsonUnbakedModel.deserialize(Utils.createModelJson(id.getPath(), id.getPath().endsWith("_chisel")?"handheld":"generated"));
+            model.id = id.toString();
+            cir.setReturnValue(model);
+            cir.cancel();
+        }
+        /*
         String modelJson = Utils.createModelJson(id);
         if (!"".equals(modelJson)) {
             JsonUnbakedModel model = JsonUnbakedModel.deserialize(modelJson);
@@ -23,6 +30,8 @@ public class ModelLoaderMixin {
             cir.setReturnValue(model);
             cir.cancel();
         }
+         */
+
     }
 
 }

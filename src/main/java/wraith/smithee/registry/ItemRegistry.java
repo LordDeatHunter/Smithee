@@ -18,6 +18,7 @@ import wraith.smithee.items.tool_parts.ToolPartItem;
 import wraith.smithee.items.tools.*;
 import wraith.smithee.properties.Properties;
 import wraith.smithee.properties.ToolPartRecipe;
+import wraith.smithee.recipes.ChiselingRemainder;
 import wraith.smithee.utils.JsonParser;
 import wraith.smithee.utils.Utils;
 
@@ -44,30 +45,53 @@ public class ItemRegistry {
     //Material -> Properties
     public static final HashMap<String, Properties> PROPERTIES = new HashMap<>();
 
-    //Material -> [Part_Type --> Recipe]
-    public static HashMap<Item, HashMap<String, ToolPartRecipe>> TOOL_PART_RECIPES = new HashMap<>();
+    //Material -> [Tool_Type__Part_Type] -> Recipe
+    public static final HashMap<Item, HashMap<String, ToolPartRecipe>> TOOL_PART_RECIPES = new HashMap<>();
+    //Material -> Remains
+    public static final HashMap<String, ChiselingRemainder> REMAINS = new HashMap<>();
+
+    public static final HashMap<String, Integer> BASE_RECIPE_VALUES = new HashMap<String, Integer>(){{
+        put("pickaxe_head", 3);
+        put("hoe_head", 2);
+        put("axe_head", 3);
+        put("shovel_head", 1);
+        put("sword_head", 2);
+
+        put("binding", 1);
+        put("handle", 2);
+        put("sword_guard", 2);
+    }};
 
     public static void addItems() {
         for (String material : MATERIALS) {
-            for (String tool : TOOL_TYPES) {
-                try {
-                    int durability = PROPERTIES.get(material).partProperties.get("head").durability;
+            ITEMS.put(material + "_chisel", new Chisel(new Item.Settings().maxDamage(100).group(ItemGroups.SMITHEE_ITEMS), 5));
+            try {
+                int durability;
+                for (String tool : TOOL_TYPES) {
+                    durability = PROPERTIES.get(material).partProperties.get("head").durability;
                     ITEMS.put(material + "_" + tool + "_head", new ToolPartItem(new Part(material, "head", tool), new Item.Settings().maxDamage(durability).group(ItemGroups.SMITHEE_PARTS)));
-                    durability = PROPERTIES.get(material).partProperties.get("binding").durability;
-                    ITEMS.put(material + "_" + tool + "_binding", new ToolPartItem(new Part(material, "binding", tool), new Item.Settings().maxDamage(durability).group(ItemGroups.SMITHEE_PARTS)));
-                    durability = PROPERTIES.get(material).partProperties.get("handle").durability;
-                    ITEMS.put(material + "_" + tool + "_handle", new ToolPartItem(new Part(material, "handle", tool), new Item.Settings().maxDamage(durability).group(ItemGroups.SMITHEE_PARTS)));
-                } catch (Exception e) {
-                    Smithee.LOGGER.error("Error with material " + material);
                 }
+                durability = PROPERTIES.get(material).partProperties.get("binding").durability;
+                ITEMS.put(material + "_binding", new ToolPartItem(new Part(material, "binding", "any"), new Item.Settings().maxDamage(durability).group(ItemGroups.SMITHEE_PARTS)));
+                ITEMS.put(material + "_sword_guard", new ToolPartItem(new Part(material, "sword_guard", "any"), new Item.Settings().maxDamage(durability).group(ItemGroups.SMITHEE_PARTS)));
+                durability = PROPERTIES.get(material).partProperties.get("handle").durability;
+                ITEMS.put(material + "_handle", new ToolPartItem(new Part(material, "handle", "any"), new Item.Settings().maxDamage(durability).group(ItemGroups.SMITHEE_PARTS)));
+            } catch (Exception e) {
+                Smithee.LOGGER.error("Error with material " + material);
             }
         }
-        ITEMS.put("oak_assembly_table", new BlockItem(BlockRegistry.BLOCKS.get("oak_assembly_table"), new Item.Settings().group(ItemGroups.SMITHEE_BLOCKS)));
-        ITEMS.put("dark_oak_assembly_table", new BlockItem(BlockRegistry.BLOCKS.get("dark_oak_assembly_table"), new Item.Settings().group(ItemGroups.SMITHEE_BLOCKS)));
-        ITEMS.put("spruce_assembly_table", new BlockItem(BlockRegistry.BLOCKS.get("spruce_assembly_table"), new Item.Settings().group(ItemGroups.SMITHEE_BLOCKS)));
-        ITEMS.put("birch_assembly_table", new BlockItem(BlockRegistry.BLOCKS.get("birch_assembly_table"), new Item.Settings().group(ItemGroups.SMITHEE_BLOCKS)));
-        ITEMS.put("jungle_assembly_table", new BlockItem(BlockRegistry.BLOCKS.get("jungle_assembly_table"), new Item.Settings().group(ItemGroups.SMITHEE_BLOCKS)));
-        ITEMS.put("acacia_assembly_table", new BlockItem(BlockRegistry.BLOCKS.get("acacia_assembly_table"), new Item.Settings().group(ItemGroups.SMITHEE_BLOCKS)));
+        HashSet<String> woods = new HashSet<String>(){{
+            add("oak");
+            add("dark_oak");
+            add("spruce");
+            add("birch");
+            add("acacia");
+            add("jungle");
+        }};
+        for (String wood : woods) {
+            ITEMS.put(wood + "_assembly_table", new BlockItem(BlockRegistry.BLOCKS.get(wood + "_assembly_table"), new Item.Settings().group(ItemGroups.SMITHEE_BLOCKS)));
+            ITEMS.put(wood + "_chiseling_table", new BlockItem(BlockRegistry.BLOCKS.get(wood + "_chiseling_table"), new Item.Settings().group(ItemGroups.SMITHEE_BLOCKS)));
+        }
 
         ITEMS.put("stone_disassembly_table", new BlockItem(BlockRegistry.BLOCKS.get("stone_disassembly_table"), new Item.Settings().group(ItemGroups.SMITHEE_BLOCKS)));
         ITEMS.put("cobblestone_disassembly_table", new BlockItem(BlockRegistry.BLOCKS.get("cobblestone_disassembly_table"), new Item.Settings().group(ItemGroups.SMITHEE_BLOCKS)));
@@ -77,20 +101,13 @@ public class ItemRegistry {
         ITEMS.put("granite_disassembly_table", new BlockItem(BlockRegistry.BLOCKS.get("granite_disassembly_table"), new Item.Settings().group(ItemGroups.SMITHEE_BLOCKS)));
         ITEMS.put("netherrack_disassembly_table", new BlockItem(BlockRegistry.BLOCKS.get("netherrack_disassembly_table"), new Item.Settings().group(ItemGroups.SMITHEE_BLOCKS)));
 
-        ITEMS.put("oak_chiseling_table", new BlockItem(BlockRegistry.BLOCKS.get("oak_chiseling_table"), new Item.Settings().group(ItemGroups.SMITHEE_BLOCKS)));
-        ITEMS.put("dark_oak_chiseling_table", new BlockItem(BlockRegistry.BLOCKS.get("dark_oak_chiseling_table"), new Item.Settings().group(ItemGroups.SMITHEE_BLOCKS)));
-        ITEMS.put("spruce_chiseling_table", new BlockItem(BlockRegistry.BLOCKS.get("spruce_chiseling_table"), new Item.Settings().group(ItemGroups.SMITHEE_BLOCKS)));
-        ITEMS.put("birch_chiseling_table", new BlockItem(BlockRegistry.BLOCKS.get("birch_chiseling_table"), new Item.Settings().group(ItemGroups.SMITHEE_BLOCKS)));
-        ITEMS.put("jungle_chiseling_table", new BlockItem(BlockRegistry.BLOCKS.get("jungle_chiseling_table"), new Item.Settings().group(ItemGroups.SMITHEE_BLOCKS)));
-        ITEMS.put("acacia_chiseling_table", new BlockItem(BlockRegistry.BLOCKS.get("acacia_chiseling_table"), new Item.Settings().group(ItemGroups.SMITHEE_BLOCKS)));
-
         ITEMS.put("base_smithee_pickaxe", new BaseSmitheePickaxe(new Item.Settings().group(ItemGroups.SMITHEE_PARTS)));
         ITEMS.put("base_smithee_axe", new BaseSmitheeAxe(new Item.Settings().group(ItemGroups.SMITHEE_PARTS)));
         ITEMS.put("base_smithee_shovel", new BaseSmitheeShovel(new Item.Settings().group(ItemGroups.SMITHEE_PARTS)));
         ITEMS.put("base_smithee_hoe", new BaseSmitheeHoe(new Item.Settings().group(ItemGroups.SMITHEE_PARTS)));
         ITEMS.put("base_smithee_sword", new BaseSmitheeSword(new Item.Settings().group(ItemGroups.SMITHEE_PARTS)));
 
-        ITEMS.put("flint_chisel", new Chisel(new Item.Settings().maxDamage(6).group(ItemGroups.SMITHEE_ITEMS)));
+        ITEMS.put("flint_chisel", new Chisel(new Item.Settings().maxDamage(6).group(ItemGroups.SMITHEE_ITEMS), 0));
 
         ITEMS.put("oak_shard", new Item(new Item.Settings().group(ItemGroups.SMITHEE_ITEMS)));
         ITEMS.put("dark_oak_shard", new Item(new Item.Settings().group(ItemGroups.SMITHEE_ITEMS)));
@@ -195,7 +212,7 @@ public class ItemRegistry {
             JsonObject json = Config.getJsonObject(Config.readFile(file));
             try {
                 Set<Map.Entry<String, JsonElement>> recipes = json.entrySet();
-                JsonParser.parseRecipes(recipes, TOOL_PART_RECIPES);
+                JsonParser.parseRecipes(recipes, TOOL_PART_RECIPES, REMAINS);
             }
             catch(Exception e) {
                 Smithee.LOGGER.warn("Found error with recipes file '" + file.getName() + "'");

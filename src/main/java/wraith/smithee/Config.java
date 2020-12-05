@@ -122,6 +122,8 @@ public class Config {
                         "  \"replace_old_smithing_files_when_regenerating\": false,\n" +
                         "  \"regenerate_deleted_combination_files\": true,\n" +
                         "  \"replace_old_combination_files_when_regenerating\": false,\n" +
+                        "  \"regenerate_deleted_palettes\": true,\n" +
+                        "  \"replace_old_palettes_when_regenerating\": false,\n" +
                         "  \"regenerate_deleted_texture_files\": true,\n" +
                         "  \"replace_old_texture_files_when_regenerating\": false,\n" +
                         "  \"regenerate_material_list\": true,\n" +
