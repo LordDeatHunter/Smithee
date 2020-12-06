@@ -2,46 +2,46 @@
   "individual_parts": {
     "head": {
       "mining_level": 1,
-      "durability": 71,
+      "durability": 190,
       "mining_speed": 3.6,
-      "attack_damage": 1.0,
-      "attack_speed": 0.6,
+      "attack_damage": 1.5,
+      "attack_speed": 0.4,
       "traits": [
         {
           "trait": "brittle",
           "min_level": 1,
-          "max_level": 1,
-          "chance": 0.1
+          "max_level": 3,
+          "chance": 0.25
         }
       ]
     },
     "binding": {
       "mining_level": 0,
-      "durability": 121,
-      "mining_speed": -0.6,
-      "attack_damage": -0.3,
+      "durability": 100,
+      "mining_speed": -0.1,
+      "attack_damage": 0.3,
       "attack_speed": -0.1,
       "traits": [
         {
           "trait": "brittle",
           "min_level": 1,
-          "max_level": 1,
-          "chance": 0.1
+          "max_level": 2,
+          "chance": 0.25
         }
       ]
     },
     "handle": {
       "mining_level": 0,
-      "durability": 96,
-      "mining_speed": 1.0,
+      "durability": 120,
+      "mining_speed": -0.1,
       "attack_damage": 0.3,
       "attack_speed": -0.2,
       "traits": [
         {
           "trait": "brittle",
           "min_level": 1,
-          "max_level": 1,
-          "chance": 0.1
+          "max_level": 2,
+          "chance": 0.25
         }
       ]
     }

@@ -2,8 +2,8 @@
   "individual_parts": {
     "head": {
       "mining_level": 1,
-      "durability": 71,
-      "mining_speed": 3.6,
+      "durability": 90,
+      "mining_speed": 4.0,
       "attack_damage": 1.0,
       "attack_speed": 0.6,
       "traits": [
@@ -17,10 +17,10 @@
     },
     "binding": {
       "mining_level": 0,
-      "durability": 121,
-      "mining_speed": -0.6,
-      "attack_damage": -0.3,
-      "attack_speed": -0.1,
+      "durability": 60,
+      "mining_speed": 0.6,
+      "attack_damage": 0.2,
+      "attack_speed": 0.1,
       "traits": [
         {
           "trait": "brittle",
@@ -32,10 +32,10 @@
     },
     "handle": {
       "mining_level": 0,
-      "durability": 96,
+      "durability": 60,
       "mining_speed": 1.0,
       "attack_damage": 0.3,
-      "attack_speed": -0.2,
+      "attack_speed": 0.2,
       "traits": [
         {
           "trait": "brittle",

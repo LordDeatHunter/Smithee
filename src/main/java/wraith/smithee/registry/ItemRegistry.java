@@ -197,7 +197,7 @@ public class ItemRegistry {
 
             }
             catch(Exception e) {
-                System.out.println("Found error with stats file '" + file.getName() + "'");
+                Smithee.LOGGER.error("Found error with stats file '" + file.getName() + "'");
             }
         }
     }

@@ -10,6 +10,7 @@ import net.minecraft.util.Identifier;
 import org.apache.commons.io.FileUtils;
 import wraith.smithee.Config;
 import wraith.smithee.Smithee;
+import wraith.smithee.SmitheeClient;
 import wraith.smithee.registry.ItemRegistry;
 
 import javax.imageio.ImageIO;
@@ -251,12 +252,27 @@ public class Utils {
     }
 
     public static boolean isToolPart(String path) {
+        /*
         for (String part : ItemRegistry.BASE_RECIPE_VALUES.keySet()) {
             if (path.endsWith("_" + part)) {
                 return true;
             }
         }
         return false;
+        */
+        String[] segments = path.split("/");
+        path = segments[segments.length - 1];
+        int maxI = Utils.getMaterialFromPathIndex(path);
+        segments = path.split("_");
+        if (maxI >= segments.length) {
+            return false;
+        }
+        String part = "";
+        for (int i = maxI; i < segments.length; i++) {
+            part += "_" + segments[i];
+        }
+        part = part.substring(1);
+        return ItemRegistry.BASE_RECIPE_VALUES.containsKey(part) || SmitheeClient.RENDERING_TOOL_PARTS.contains(path);
     }
 
     public static boolean isSmitheeTool(String path) {
