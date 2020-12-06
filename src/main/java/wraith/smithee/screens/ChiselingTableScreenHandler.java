@@ -4,7 +4,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.s2c.play.ScreenHandlerSlotUpdateS2CPacket;
 import net.minecraft.screen.ArrayPropertyDelegate;
@@ -38,7 +37,7 @@ public class ChiselingTableScreenHandler extends ScreenHandler {
         this.addProperties(this.delegate);
         this.inventory = inventory;
         this.addSlot(new ToolSlot(inventory, 0, 61, 41, new Identifier("c", "part_chisels"))); //Chisel
-        this.addSlot(new Slot(inventory, 1, 95, 41)); //Material
+        this.addSlot(new ToolSlot(inventory, 1, 95, 41, ItemRegistry.TOOL_PART_RECIPES.keySet())); //Material
         this.addSlot(new ToolOutputSlot(inventory, 2, 78, 66)); //Output
 
         for (int y = 0; y < 3; ++y) {

@@ -15,12 +15,12 @@ import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resource.Resource;
+import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockRenderView;
 import org.jetbrains.annotations.Nullable;
-import wraith.smithee.registry.ItemRegistry;
 import wraith.smithee.utils.Utils;
 
 import java.io.BufferedReader;
@@ -96,7 +96,7 @@ public class ItemBakedModel implements FabricBakedModel, BakedModel, UnbakedMode
 
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction face, Random random) {
-        return null;
+        return Collections.emptyList();
     }
 
     @Override
@@ -121,7 +121,7 @@ public class ItemBakedModel implements FabricBakedModel, BakedModel, UnbakedMode
 
     @Override
     public Sprite getSprite() {
-        return null;
+        return MinecraftClient.getInstance().getSpriteAtlas(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).apply(new Identifier("cobblestone"));
     }
 
     @Override

@@ -10,15 +10,22 @@ import wraith.smithee.items.tools.BaseSmitheeTool;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Set;
 
 public class ToolSlot extends Slot {
 
     private final boolean smithy;
-    private final HashSet<Item> compatibleTools = new HashSet<>();
+    private Set<Item> compatibleTools = new HashSet<>();
 
     public ToolSlot(Inventory inventory, int index, int x, int y) {
         super(inventory, index, x, y);
         this.smithy = true;
+    }
+
+    public ToolSlot(Inventory inventory, int index, int x, int y, Set<Item> items) {
+        super(inventory, index, x, y);
+        this.smithy = false;
+        this.compatibleTools = items;
     }
 
     public ToolSlot(Inventory inventory, int index, int x, int y, Item... items) {

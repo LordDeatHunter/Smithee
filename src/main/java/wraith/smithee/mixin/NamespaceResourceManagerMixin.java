@@ -8,17 +8,14 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import wraith.smithee.Config;
 import wraith.smithee.Smithee;
 import wraith.smithee.SmitheeClient;
-import wraith.smithee.TextureDatabase;
 import wraith.smithee.registry.ItemRegistry;
 import wraith.smithee.utils.Utils;
 
-import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 @Mixin(NamespaceResourceManager.class)
 public class NamespaceResourceManagerMixin {

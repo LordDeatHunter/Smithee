@@ -117,7 +117,7 @@ public class Utils {
             Enumeration<JarEntry> entries = jar.entries();
             while(entries.hasMoreElements()) {
                 JarEntry entry = entries.nextElement();
-                if (!entry.getName().startsWith(dir) || (!entry.getName().endsWith(".json") && !entry.getName().endsWith(".png"))) {
+                if (!entry.getName().startsWith(dir) || (!entry.getName().endsWith(".json") && !entry.getName().endsWith(".png") && !entry.getName().endsWith(".mcmeta"))) {
                     continue;
                 }
                 String[] segments = entry.getName().split("/");

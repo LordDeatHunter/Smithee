@@ -1,11 +1,9 @@
 package wraith.smithee.mixin;
 
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.CraftingResultInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.SmithingScreenHandler;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.Pair;
 import net.minecraft.util.registry.Registry;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -33,9 +31,14 @@ public class SmithingScreenHandlerMixin {
             return;
         }
         String[] segments = inputId.getPath().split("_");
+        String part = "";
+        for (int i = 1; i < segments.length; ++i) {
+            part += "_" + segments[i];
+        }
+        part = part.substring(1);
 
         HashSet<String> key = new HashSet<>();
-        key.add(inputId.getPath().split("_")[0]);
+        key.add(segments[0]);
         key.add(Registry.ITEM.getId(addition.getItem()).toString());
 
         if (!RecipesGenerator.RECIPES.containsKey(key)) {
@@ -48,7 +51,7 @@ public class SmithingScreenHandlerMixin {
         }
 
         if (addition.getCount() >= recipe.additionAmount) {
-            ItemStack output = new ItemStack(ItemRegistry.ITEMS.get(recipe.outputMaterial + "_" + segments[1] + "_" + segments[2]));
+            ItemStack output = new ItemStack(ItemRegistry.ITEMS.get(recipe.outputMaterial + "_" + part));
             Utils.setDamage(output, (int) input.getTag().getDouble("PartDamage"));
             ((ForgingScreenHandlerAccessor) this).getOutput().setStack(0, output);
             ci.cancel();
@@ -66,7 +69,7 @@ public class SmithingScreenHandlerMixin {
         String[] segments = inputId.getPath().split("_");
 
         HashSet<String> key = new HashSet<>();
-        key.add(inputId.getPath().split("_")[0]);
+        key.add(segments[0]);
         key.add(Registry.ITEM.getId(addition.getItem()).toString());
 
         if (!RecipesGenerator.RECIPES.containsKey(key)) {
@@ -98,7 +101,7 @@ public class SmithingScreenHandlerMixin {
         String[] segments = inputId.getPath().split("_");
 
         HashSet<String> key = new HashSet<>();
-        key.add(inputId.getPath().split("_")[0]);
+        key.add(segments[0]);
         key.add(Registry.ITEM.getId(addition.getItem()).toString());
 
         if (!RecipesGenerator.RECIPES.containsKey(key)) {
