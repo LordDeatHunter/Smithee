@@ -1,0 +1,8 @@
+{
+  "minecraft:end_stone": {
+    "output_material": "end_stone",
+    "material_value": 9,
+    "chiseling_level": 1,
+    "overrides": {}
+  }
+}

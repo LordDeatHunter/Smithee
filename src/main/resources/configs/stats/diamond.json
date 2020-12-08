@@ -5,7 +5,15 @@
 			"durability": 1150,
 			"mining_speed": 7.6,
 			"attack_damage": 3.0,
-			"attack_speed": 0.6
+			"attack_speed": 0.6,
+			"traits": [
+				{
+					"trait": "sharp",
+					"min_level": 50,
+					"max_level": 100,
+					"chance": 0.3
+				}
+			]
 		},
 		"binding": {
 			"mining_level": 0,

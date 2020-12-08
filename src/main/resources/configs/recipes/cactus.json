@@ -1,0 +1,8 @@
+{
+  "minecraft:cactus": {
+    "output_material": "cactus",
+    "material_value": 9,
+    "chiseling_level": 0,
+    "overrides": {}
+  }
+}

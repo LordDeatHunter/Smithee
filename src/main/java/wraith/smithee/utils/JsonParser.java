@@ -4,17 +4,17 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.tag.TagRegistry;
 import net.minecraft.item.Item;
-import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import wraith.smithee.Config;
 import wraith.smithee.properties.*;
-import wraith.smithee.properties.Properties;
-import wraith.smithee.recipes.ChiselingRemainder;
 import wraith.smithee.registry.ItemRegistry;
 
 import java.io.File;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class JsonParser {
 
@@ -40,35 +40,33 @@ public class JsonParser {
 
     }
 
-    public static void parseRecipes(Set<Map.Entry<String, JsonElement>> recipes, HashMap<Item, HashMap<String, ToolPartRecipe>> recipeList, HashMap<String, ChiselingRemainder> remains) {
+    public static void parseRecipes(Set<Map.Entry<String, JsonElement>> recipes, HashMap<Item, HashMap<String, ToolPartRecipe>> recipeList, HashMap<String, HashMap<Item, Integer>> remains) {
         for (Map.Entry<String, JsonElement> entry : recipes) {
             JsonObject recipe = entry.getValue().getAsJsonObject();
             String material = entry.getKey();
             String outputMaterial = recipe.get("output_material").getAsString();
             int chiselingLevel = recipe.get("chiseling_level").getAsInt();
-
-            if (!remains.containsKey(outputMaterial)) {
-                remains.put(outputMaterial, new ChiselingRemainder(new HashSet<>(), recipe.get("material_value").getAsInt()));
-            }
+            int worth = recipe.get("material_value").getAsInt();
 
             HashSet<Item> items = new HashSet<>();
             if (material.startsWith("#")) {
-                for (Item item : TagRegistry.item(new Identifier(material.substring(1))).values()) {
-                    items.add(item);
-                    remains.get(outputMaterial).remainders.add(item);
-                }
+                items.addAll(TagRegistry.item(new Identifier(material.substring(1))).values());
             } else {
-                Item item = Registry.ITEM.get(new Identifier(material));
-                items.add(item);
-                remains.get(outputMaterial).remainders.add(item);
+                items.add(Registry.ITEM.get(new Identifier(material)));
             }
             JsonObject overrides = recipe.get("overrides").getAsJsonObject();
             for (Item item : items) {
+                if (!remains.containsKey(outputMaterial)) {
+                    remains.put(outputMaterial, new HashMap<>());
+                }
+                remains.get(outputMaterial).put(item, worth);
                 recipeList.put(item, new HashMap<>());
                 for (String recipeType : ItemRegistry.BASE_RECIPE_VALUES.keySet()) {
                     int base = ItemRegistry.BASE_RECIPE_VALUES.get(recipeType);
                     recipeList.get(item).put(recipeType, new ToolPartRecipe(outputMaterial, base, chiselingLevel));
-                    if (overrides.has(recipeType)) {
+                    if (overrides.has("all")) {
+                        recipeList.get(item).get(recipeType).requiredAmount = (int) Utils.evaluateExpression(overrides.get("all").getAsString().replace("base", String.valueOf(base)));
+                    } else if (overrides.has(recipeType)) {
                         recipeList.get(item).get(recipeType).requiredAmount = (int) Utils.evaluateExpression(overrides.get(recipeType).getAsString().replace("base", String.valueOf(base)));
                     }
                 }

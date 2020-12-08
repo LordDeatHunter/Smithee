@@ -3,11 +3,9 @@ package wraith.smithee.registry;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.ibm.icu.impl.USerializedSet;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import wraith.smithee.Config;
 import wraith.smithee.ItemGroups;
@@ -18,7 +16,6 @@ import wraith.smithee.items.tool_parts.ToolPartItem;
 import wraith.smithee.items.tools.*;
 import wraith.smithee.properties.Properties;
 import wraith.smithee.properties.ToolPartRecipe;
-import wraith.smithee.recipes.ChiselingRemainder;
 import wraith.smithee.utils.JsonParser;
 import wraith.smithee.utils.Utils;
 
@@ -47,19 +44,19 @@ public class ItemRegistry {
 
     //Material -> [Tool_Type__Part_Type] -> Recipe
     public static final HashMap<Item, HashMap<String, ToolPartRecipe>> TOOL_PART_RECIPES = new HashMap<>();
-    //Material -> Remains
-    public static final HashMap<String, ChiselingRemainder> REMAINS = new HashMap<>();
+    //InputMaterial -> OutputItem -> Cost
+    public static final HashMap<String, HashMap<Item, Integer>> REMAINS = new HashMap<>();
 
     public static final HashMap<String, Integer> BASE_RECIPE_VALUES = new HashMap<String, Integer>(){{
-        put("pickaxe_head", 3);
-        put("hoe_head", 2);
-        put("axe_head", 3);
-        put("shovel_head", 1);
-        put("sword_head", 2);
+        put("pickaxe_head", 27);
+        put("hoe_head", 18);
+        put("axe_head", 27);
+        put("shovel_head", 9);
+        put("sword_head", 18);
 
-        put("binding", 1);
-        put("handle", 2);
-        put("sword_guard", 2);
+        put("binding", 9);
+        put("handle", 18);
+        put("sword_guard", 18);
     }};
 
     public static void addItems() {

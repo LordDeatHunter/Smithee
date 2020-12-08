@@ -9,10 +9,7 @@ import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import wraith.smithee.recipes.RecipesGenerator;
-import wraith.smithee.registry.BlockEntityRegistry;
-import wraith.smithee.registry.BlockRegistry;
-import wraith.smithee.registry.ItemRegistry;
-import wraith.smithee.registry.ScreenHandlerRegistry;
+import wraith.smithee.registry.*;
 import wraith.smithee.screens.AssemblyTableScreenHandler;
 import wraith.smithee.utils.JsonParser;
 import wraith.smithee.utils.Utils;
@@ -55,6 +52,7 @@ public class Smithee implements ModInitializer {
         BlockEntityRegistry.addBlockEntities();
         BlockEntityRegistry.registerBlockEntities();
         ScreenHandlerRegistry.registerScreenHandlers();
+        StatusEffectRegistry.registerStatusEffects();
 
         if (!json.has("regenerate_deleted_recipe_files") || json.get("regenerate_deleted_recipe_files").getAsBoolean()) {
             Utils.saveFilesFromJar("configs/recipes", "recipes", json.has("replace_old_recipe_files_when_regenerating") && json.get("replace_old_recipe_files_when_regenerating").getAsBoolean());

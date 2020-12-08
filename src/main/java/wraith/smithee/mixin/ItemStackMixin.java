@@ -11,6 +11,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -39,8 +40,8 @@ import wraith.smithee.registry.ItemRegistry;
 import wraith.smithee.utils.Utils;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
+import java.util.function.Consumer;
 
 @Mixin(ItemStack.class)
 public abstract class ItemStackMixin {
@@ -160,17 +161,14 @@ public abstract class ItemStackMixin {
     @ModifyVariable(method = "getTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;isSectionHidden(ILnet/minecraft/item/ItemStack$TooltipSection;)Z", ordinal = 3))
     public List<Text> getTooltip(List<Text> list, PlayerEntity player, TooltipContext context) {
         if (ItemRegistry.TOOL_PART_RECIPES.containsKey(getItem())) {
-            /*
-            HashMap<String, ToolPartRecipe> recipes = ItemRegistry.TOOL_PART_RECIPES.get(getItem());
-            if (Screen.hasShiftDown()) {
-                list.add(new LiteralText("§dTool material:"));
-                list.add(new LiteralText("§9Head - Takes " + recipes.get("head").requiredAmount));
-                list.add(new LiteralText("§9Binding - Takes " + recipes.get("binding").requiredAmount));
-                list.add(new LiteralText("§9Handle - Takes " + recipes.get("handle").requiredAmount));
-            } else {
-            }
-             */
             list.add(new LiteralText("§1[§5Tool material§1]"));
+            if (Screen.hasShiftDown()) {
+                HashMap<String, ToolPartRecipe> recipes = ItemRegistry.TOOL_PART_RECIPES.get(getItem());
+                int worth = ItemRegistry.REMAINS.get(recipes.get("pickaxe_head").outputMaterial).get(getItem());
+                list.add(new LiteralText("§9[§dWorth: §b" + worth + "§d]"));
+            } else {
+                list.add(new LiteralText("§3[§bSHIFT§3] for info."));
+            }
         }
         if (getItem() instanceof BaseSmitheeTool) {
             list.addAll(Trait.getTooltip(((ItemStack)(Object)this)));
@@ -180,20 +178,15 @@ public abstract class ItemStackMixin {
 
     @Inject(method = "inventoryTick", at = @At("HEAD"))
     public void inventoryTick(World world, Entity entity, int slot, boolean selected, CallbackInfo ci) {
-        if (getItem() instanceof BaseSmitheeTool && hasTag() && tag.contains("Parts")) {
-            CompoundTag tag = getSubTag("Parts");
-            evaluateTrait(tag.getString("HeadPart"), "head");
-            evaluateTrait(tag.getString("BindingPart"), "binding");
-            evaluateTrait(tag.getString("HandlePart"), "handle");
+        Trait.evaluateTraits(((ItemStack)(Object)this), world, null, null, null, entity, "ItemStack#inventoryTick");
+    }
+
+    @Inject(method = "damage(ILnet/minecraft/entity/LivingEntity;Ljava/util/function/Consumer;)V", at = @At("HEAD"), cancellable = true)
+    public <T extends LivingEntity> void damage(int amount, T entity, Consumer<T> breakCallback, CallbackInfo ci) {
+        HashMap<String, Object> result = Trait.evaluateTraits(((ItemStack)(Object)this), null, null, null, null, null, "ItemStack#damage");
+        if (result.containsKey("Cancel Item Damage") && (boolean)result.get("Cancel Item Damage")) {
+            ci.cancel();
         }
     }
 
-    private void evaluateTrait(String material, String part) {
-        HashSet<Trait> traits = ItemRegistry.PROPERTIES.get(material).traits.get(part);
-        for (Trait trait : traits) {
-            if ("ecological".equals(trait.traitName)) {
-                Trait.evaluateEcological(trait, (ItemStack)(Object)this);
-            }
-        }
-    }
 }

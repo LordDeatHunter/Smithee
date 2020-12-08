@@ -1,0 +1,14 @@
+{
+  "#c:warped_stems": {
+    "output_material": "warped",
+    "material_value": 81,
+    "chiseling_level": 0,
+    "overrides": {}
+  },
+  "minecraft:warped_planks": {
+    "output_material": "warped",
+    "material_value": 9,
+    "chiseling_level": 0,
+    "overrides": {}
+  }
+}

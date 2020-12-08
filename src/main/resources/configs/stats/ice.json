@@ -2,21 +2,29 @@
   "individual_parts": {
     "head": {
       "mining_level": 0,
-      "durability": 18,
+      "durability": 24,
       "mining_speed": 0.6,
       "attack_damage": 0.0,
-      "attack_speed": 0.6
+      "attack_speed": 0.6,
+      "traits": [
+        {
+          "trait": "chilling",
+          "min_level": 50,
+          "max_level": 100,
+          "chance": 1
+        }
+      ]
     },
     "binding": {
       "mining_level": 0,
-      "durability": 30,
+      "durability": 12,
       "mining_speed": 0.2,
       "attack_damage": 0.0,
       "attack_speed": 0.1
     },
     "handle": {
       "mining_level": 0,
-      "durability": 24,
+      "durability": 8,
       "mining_speed": 1.2,
       "attack_damage": 0.0,
       "attack_speed": 0.3

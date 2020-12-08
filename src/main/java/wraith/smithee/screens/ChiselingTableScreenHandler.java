@@ -4,6 +4,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.s2c.play.ScreenHandlerSlotUpdateS2CPacket;
 import net.minecraft.screen.ArrayPropertyDelegate;
@@ -20,7 +21,7 @@ import wraith.smithee.screens.slots.ToolOutputSlot;
 import wraith.smithee.screens.slots.ToolSlot;
 import wraith.smithee.utils.Utils;
 
-import java.util.HashMap;
+import java.util.*;
 
 public class ChiselingTableScreenHandler extends ScreenHandler {
 
@@ -125,20 +126,39 @@ public class ChiselingTableScreenHandler extends ScreenHandler {
                 return false;
             }
 
-            if (materialStack.getCount() < recipes.get(type).requiredAmount) {
+            int worth = ItemRegistry.REMAINS.get(recipes.get(type).outputMaterial).get(materialStack.getItem());
+            if (materialStack.getCount() * worth < recipes.get(type).requiredAmount) {
                 return false;
             }
 
             if (!inventory.getStack(2).isEmpty()) {
                 return false;
             }
+            int decAmount = (int) Math.ceil((float)recipes.get(type).requiredAmount / worth);
+            int remains = decAmount * worth - recipes.get(type).requiredAmount;
 
             ItemStack outputStack = new ItemStack(ItemRegistry.ITEMS.get(recipes.get(type).outputMaterial + "_" + type));
             outputStack.getOrCreateTag().putDouble("PartDamage", 0);
             inventory.setStack(2, outputStack);
-            inventory.getStack(1).decrement(recipes.get(type).requiredAmount);
+            inventory.getStack(1).decrement(decAmount);
 
             Utils.damage(inventory.getStack(0), 1);
+
+            HashMap<Item, Integer> remainders = ItemRegistry.REMAINS.get(recipes.get(type).outputMaterial);
+            ArrayList<Map.Entry<Item, Integer>> mapValues = new ArrayList<>(remainders.entrySet());
+            Collections.sort(mapValues, (o1, o2) -> o2.getValue().compareTo(o1.getValue()));
+
+            for (Map.Entry<Item, Integer> entry : mapValues) {
+                if (entry.getValue() <= remains) {
+                    int amount = remains / entry.getValue();
+                    amount = Math.min(entry.getKey().getMaxCount(), amount);
+                    remains -= amount * entry.getValue();
+                    serverPlayerEntity.inventory.offerOrDrop(serverPlayerEntity.world, new ItemStack(entry.getKey(), amount));
+                }
+                if (remains <= 0) {
+                    break;
+                }
+            }
 
             serverPlayerEntity.networkHandler.sendPacket(new ScreenHandlerSlotUpdateS2CPacket(syncId, 0, inventory.getStack(0)));
             serverPlayerEntity.networkHandler.sendPacket(new ScreenHandlerSlotUpdateS2CPacket(syncId, 1, inventory.getStack(1)));

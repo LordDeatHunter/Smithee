@@ -2,24 +2,48 @@
   "individual_parts": {
     "head": {
       "mining_level": 4,
-      "durability": 1514,
-      "mining_speed": 5.4,
+      "durability": 1158,
+      "mining_speed": 8.0,
       "attack_damage": 3.6,
-      "attack_speed": 0.6
+      "attack_speed": 0.6,
+      "traits": [
+        {
+          "trait": "adamant",
+          "min_level": 1,
+          "max_level": 1,
+          "chance": 0.05
+        }
+      ]
     },
     "binding": {
       "mining_level": 0,
-      "durability": 2725,
-      "mining_speed": 0.6,
+      "durability": 251,
+      "mining_speed": -0.2,
       "attack_damage": 0.2,
-      "attack_speed": 0.1
+      "attack_speed": 0.1,
+      "traits": [
+        {
+          "trait": "adamant",
+          "min_level": 1,
+          "max_level": 1,
+          "chance": 0.05
+        }
+      ]
     },
     "handle": {
       "mining_level": 0,
-      "durability": 1817,
-      "mining_speed": 2.2,
+      "durability": 352,
+      "mining_speed": -0.2,
       "attack_damage": 0.4,
-      "attack_speed": 0.3
+      "attack_speed": 0.3,
+      "traits": [
+        {
+          "trait": "adamant",
+          "min_level": 1,
+          "max_level": 1,
+          "chance": 0.05
+        }
+      ]
     }
   }
 }

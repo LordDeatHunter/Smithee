@@ -1,0 +1,8 @@
+{
+  "minecraft:bamboo": {
+    "output_material": "bamboo",
+    "material_value": 1,
+    "chiseling_level": 0,
+    "overrides": {}
+  }
+}

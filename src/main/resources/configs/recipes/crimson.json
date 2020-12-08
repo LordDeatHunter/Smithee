@@ -1,0 +1,14 @@
+{
+  "#c:crimson_stems": {
+    "output_material": "crimson",
+    "material_value": 81,
+    "chiseling_level": 0,
+    "overrides": {}
+  },
+  "minecraft:crimson_planks": {
+    "output_material": "crimson",
+    "material_value": 9,
+    "chiseling_level": 0,
+    "overrides": {}
+  }
+}

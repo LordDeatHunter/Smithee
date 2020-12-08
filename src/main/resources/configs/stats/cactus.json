@@ -12,7 +12,13 @@
 				"min_level": 1,
 				"max_level": 2,
 				"chance": 0.001
-			}
+			},
+		    {
+			    "trait": "sharp",
+			    "min_level": 50,
+			    "max_level": 100,
+			    "chance": 0.5
+		    }
 		]
     },
     "binding": {

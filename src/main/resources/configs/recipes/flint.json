@@ -1,0 +1,10 @@
+{
+  "minecraft:flint": {
+    "output_material": "flint",
+    "material_value": 1,
+    "chiseling_level": 0,
+    "overrides": {
+      "all": "(base / 9) * 2"
+    }
+  }
+}

@@ -3,6 +3,7 @@ package wraith.smithee.properties;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -34,9 +35,11 @@ public class Trait {
         put("ecological", new LiteralText("Ecological").setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0x866526))));
         put("midas_touch", new LiteralText("Midas Touch").setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0xe9b115))));
         put("brittle", new LiteralText("Brittle").setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0x6c6c6c))));
-        put("lucky", new LiteralText("Lucky").setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0x33ebcb))));
         put("magnetic", new LiteralText("Magnetic").setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0x33ebcb))));
         put("superheated", new LiteralText("SuperHeated").setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0x652828))));
+        put("sharp", new LiteralText("Sharp").setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0x87EFCC))));
+        put("chilling", new LiteralText("Chilling").setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0x08CDFD))));
+        put("adamant", new LiteralText("Adamant").setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0xBF0026))));
     }};
 
     public Trait(String traitName, int minLevel, int maxLevel, double chance) {
@@ -68,55 +71,105 @@ public class Trait {
         return tooltips;
     }
 
-    public static void evaluateBrittle(Trait trait, ItemStack stack) {
-        if (!"brittle".equals(trait.traitName) || stack == ItemStack.EMPTY || trait.chance == 0 || Utils.getRandomDoubleInRange(0, 100) > trait.chance * 100) {
-            return;
+    public static HashMap<String, Object> evaluateTraits(ItemStack stack, World world, BlockPos pos, BlockState state, @Nullable BlockEntity entity, Entity player, String source) {
+        HashMap<String, Object> returns = new HashMap<>();
+        if (!(stack.getItem() instanceof BaseSmitheeTool) || !stack.hasTag() || !stack.getTag().contains("Parts")) {
+            return returns;
         }
-        Utils.damage(stack, Utils.getRandomIntInRange(trait.minLevel, trait.maxLevel));
-    }
 
-    public static void evaluateMediasTouch(Trait trait, World world, BlockPos pos, @Nullable BlockEntity blockEntity) {
-        if (!"midas_touch".equals(trait.traitName) || trait.chance == 0 || Utils.getRandomDoubleInRange(0, 100) > trait.chance * 100) {
-            return;
-        }
-        Block.dropStack(world, pos, new ItemStack(Items.GOLD_NUGGET, Utils.getRandomIntInRange(trait.minLevel, trait.maxLevel)));
-    }
+        CompoundTag tag = stack.getTag().getCompound("Parts");
 
-    public static int evaluateFortune(String material, String part) {
-        HashSet<Trait> traits = ItemRegistry.PROPERTIES.get(material).traits.get(part);
-        for (Trait trait : traits) {
-            if ("lucky".equals(trait.traitName) && trait.chance != 0 && Utils.getRandomDoubleInRange(0, 100) <= trait.chance * 100) {
-                return Utils.getRandomIntInRange(trait.minLevel, trait.maxLevel);
+        HashMap<String, String> parts = new HashMap<>();
+        parts.put("head", tag.getString("HeadPart"));
+        parts.put("binding", tag.getString("BindingPart"));
+        parts.put("handle", tag.getString("HandlePart"));
+
+        HashSet<Trait> evaluateOnce = new HashSet<>();
+        HashSet<String> evaluateOnceString = new HashSet<>();
+        evaluateOnceString.add("magnetic");
+        for (String part : parts.keySet()) {
+            HashSet<Trait> traits = ItemRegistry.PROPERTIES.get(parts.get(part)).traits.get(part);
+            for (Trait trait : traits) {
+                if (evaluateOnceString.contains(trait.traitName)){
+                    evaluateOnce.add(trait);
+                } else {
+                    returns.putAll(Trait.evaluateTrait(trait, source, stack, state, world, pos, entity, player, returns));
+                }
             }
         }
-        return 0;
+        for (Trait trait : evaluateOnce) {
+            returns.putAll(evaluateTrait(trait, source, stack, state, world, pos, entity, player, returns));
+        }
+        return returns;
     }
 
-    public static void evaluateEcological(Trait trait, ItemStack stack) {
-        if (!"ecological".equals(trait.traitName) || trait.chance == 0 || Utils.getRandomDoubleInRange(0, 100) > trait.chance * 100) {
-            return;
+    public static HashMap<String, Object> evaluateTrait(Trait trait, String source, ItemStack stack, BlockState state, World world, BlockPos pos, @Nullable BlockEntity entity, Entity player, HashMap<String, Object> variables) {
+        HashMap<String, Object> returns = new HashMap<>();
+        if (stack == ItemStack.EMPTY || trait.chance == 0 || Utils.getRandomDoubleInRange(0, 100) > trait.chance * 100) {
+            return returns;
         }
-        Utils.repair(stack, 1);
-    }
-
-    public static void evaluateMagnetic(Trait trait, BlockState state, World world, BlockPos pos, @Nullable BlockEntity blockEntity, PlayerEntity player, ItemStack stack) {
-        if (!"magnetic".equals(trait.traitName) || trait.chance == 0 || Utils.getRandomDoubleInRange(0, 100) > trait.chance * 100) {
-            return;
+        switch(trait.traitName) {
+            case "midas_touch":
+                if (!"Block#afterBreak".equals(source)) {
+                    break;
+                }
+                returns.put("Cancel Exhaustion", false);
+                returns.put("Cancel Drops", false);
+                if (!world.isClient()) {
+                    List<ItemStack> changedDrops = Block.getDroppedStacks(state, (ServerWorld) world, pos, entity, player, stack);
+                    changedDrops.add(new ItemStack(Items.GOLD_NUGGET, Utils.getRandomIntInRange(trait.minLevel, trait.maxLevel)));
+                    returns.put("Drops", changedDrops);
+                }
+                break;
+            case "ecological":
+                if (!"ItemStack#inventoryTick".equals(source)) {
+                    break;
+                }
+                Utils.repair(stack, 1);
+                break;
+            case "superheated":
+                if (!"ItemEntity#isFireImmune".equals(source)) {
+                    break;
+                }
+                returns.put("Fire Immunity", true);
+                break;
+            case "brittle":
+                if (!"Block#afterBreak".equals(source)) {
+                    break;
+                }
+                Utils.damage(stack, Utils.getRandomIntInRange(trait.minLevel, trait.maxLevel));
+                break;
+            case "magnetic":
+                if (!"Block#afterBreak".equals(source)) {
+                    break;
+                }
+                returns.put("Cancel Exhaustion", false);
+                returns.put("Cancel Drops", true);
+                for (ItemStack drop : (List<ItemStack>)variables.getOrDefault("Drops", Block.getDroppedStacks(state, (ServerWorld) world, pos, entity, player, stack))) {
+                    ((PlayerEntity)player).inventory.offerOrDrop(world, drop);
+                }
+                break;
+            case "chilling":
+                if (!"LivingEntity#damage".equals(source)) {
+                    break;
+                }
+                returns.put("Damage Entity Effect Type", "frostbite");
+                returns.put("Damage Entity Effect Duration", Utils.getRandomIntInRange(trait.minLevel, trait.maxLevel));
+                break;
+            case "adamant":
+                if (!"ItemStack#damage".equals(source)) {
+                    break;
+                }
+                returns.put("Cancel Item Damage", true);
+                break;
+            case "sharp":
+                if (!"MobEntity#tryAttack".equals(source)) {
+                    break;
+                }
+                returns.put("Attack Damage Amount", (float)Utils.getRandomDoubleInRange(trait.minLevel, trait.maxLevel));
+                break;
         }
-        List<ItemStack> drops = Block.getDroppedStacks(state, (ServerWorld)world, pos, blockEntity, player, stack);
-        for(ItemStack drop : drops) {
-            player.inventory.offerOrDrop(world, drop);
-        }
-    }
-
-    public static boolean evaluateSuperheated(String material, String part) {
-        HashSet<Trait> traits = ItemRegistry.PROPERTIES.get(material).traits.get(part);
-        for (Trait trait : traits) {
-            if ("superheated".equals(trait.traitName) && trait.chance != 0 && Utils.getRandomDoubleInRange(0, 100) <= trait.chance * 100) {
-                return true;
-            }
-        }
-        return false;
+        return returns;
     }
 
     @Override

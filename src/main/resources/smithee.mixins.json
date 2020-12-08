@@ -12,10 +12,14 @@
     "ItemEntityMixin",
     "ItemRenderContextMixin",
     "ItemStackMixin",
+    "LivingEntityMixin",
     "MiningToolItemAccessor",
     "ModelLoaderMixin",
     "NamespaceResourceManagerMixin",
+    "PlayerEntityMixin",
     "SmithingScreenHandlerMixin",
+    "StatusEffectInvoker",
+    "StatusEffectMixin",
     "TextColorInvoker"
   ],
   "client": [
