@@ -20,7 +20,7 @@ import wraith.smithee.screens.AssemblyTableScreenHandler;
 
 public class AassemblyTableBlockEntity extends LockableContainerBlockEntity implements NamedScreenHandlerFactory, ImplementedInventory {
 
-    private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(4, ItemStack.EMPTY);
+    private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(5, ItemStack.EMPTY);
     private AssemblyTableScreenHandler handler;
 
     public AassemblyTableBlockEntity() {

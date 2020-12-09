@@ -160,7 +160,7 @@ public abstract class ItemStackMixin {
     @Environment(EnvType.CLIENT)
     @ModifyVariable(method = "getTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;isSectionHidden(ILnet/minecraft/item/ItemStack$TooltipSection;)Z", ordinal = 3))
     public List<Text> getTooltip(List<Text> list, PlayerEntity player, TooltipContext context) {
-        if (ItemRegistry.TOOL_PART_RECIPES.containsKey(getItem())) {
+        if (ItemRegistry.TOOL_PART_RECIPES.containsKey(getItem()) && ItemRegistry.TOOL_PART_RECIPES.get(getItem()).containsKey("pickaxe_head")) {
             list.add(new LiteralText("§1[§5Tool material§1]"));
             if (Screen.hasShiftDown()) {
                 HashMap<String, ToolPartRecipe> recipes = ItemRegistry.TOOL_PART_RECIPES.get(getItem());

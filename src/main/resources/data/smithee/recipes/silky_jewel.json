@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " . ",
+    ".#.",
+    " . "
+  ],
+  "key": {
+    ".": {
+      "item": "smithee:silky_cloth"
+    },
+    "#": {
+      "item": "minecraft:emerald"
+    }
+  },
+  "result": {
+    "item": "smithee:silky_jewel"
+  }
+}

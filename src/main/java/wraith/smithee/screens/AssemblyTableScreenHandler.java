@@ -11,6 +11,7 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import wraith.smithee.blocks.AassemblyTableBlockEntity;
 import wraith.smithee.items.tool_parts.ToolPartItem;
@@ -20,6 +21,8 @@ import wraith.smithee.registry.ItemRegistry;
 import wraith.smithee.registry.ScreenHandlerRegistry;
 import wraith.smithee.screens.slots.AssemblyTableOutputSlot;
 import wraith.smithee.screens.slots.PartSlot;
+import wraith.smithee.screens.slots.ToolSlot;
+import wraith.smithee.utils.Utils;
 
 import java.util.HashSet;
 
@@ -31,7 +34,7 @@ public class AssemblyTableScreenHandler extends ScreenHandler {
     private ItemStack result;
 
     public AssemblyTableScreenHandler(int syncId, PlayerInventory playerInventory) {
-        this(syncId, playerInventory, new SimpleInventory(4), ScreenHandlerContext.EMPTY);
+        this(syncId, playerInventory, new SimpleInventory(5), ScreenHandlerContext.EMPTY);
     }
 
     public AssemblyTableScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory, ScreenHandlerContext context) {
@@ -46,6 +49,7 @@ public class AssemblyTableScreenHandler extends ScreenHandler {
         this.addSlot(new PartSlot(inventory, 1, 55, 37, "binding", "sword_guard")); //Binding
         this.addSlot(new PartSlot(inventory, 2, 67, 17, "head")); //Head
         this.addSlot(new AssemblyTableOutputSlot(inventory, 3, 113, 38)); //Output
+        this.addSlot(new ToolSlot(inventory, 4, 113, 12, new Identifier("c", "tool_embossment"))); //Embossment
 
         for (int y = 0; y < 3; ++y) {
             for (int x = 0; x < 9; ++x) {

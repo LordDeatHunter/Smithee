@@ -3,18 +3,21 @@
     "output_material": "celestium",
     "material_value": 81,
     "chiseling_level": 1,
+    "can_emboss": false,
     "overrides": {}
   },
   "#c:celestium_ingots": {
     "output_material": "celestium",
     "material_value": 9,
     "chiseling_level": 1,
+    "can_emboss": false,
     "overrides": {}
   },
   "#c:celestium_nuggets": {
     "output_material": "celestium",
     "material_value": 1,
     "chiseling_level": 1,
+    "can_emboss": false,
     "overrides": {}
   }
 }

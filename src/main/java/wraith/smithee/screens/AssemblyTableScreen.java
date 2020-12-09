@@ -93,6 +93,14 @@ public class AssemblyTableScreen extends HandledScreen<ScreenHandler> {
         if (this.handler.slots.get(2).getStack().isEmpty()) {
             this.drawTexture(matrices, x + 67, y + 17, 176 + 32, 0, 16, 16);
         }
+        //Output
+        if (this.handler.slots.get(3).getStack().isEmpty()) {
+            this.drawTexture(matrices, x + 109, y + 34, 176, 16, 24, 24);
+        }
+        //Embossment
+        if (this.handler.slots.get(3).getStack().isEmpty()) {
+            this.drawTexture(matrices, x + 113, y + 12, 176 + 48, 0, 24, 24);
+        }
         this.nameInputField.render(matrices, mouseX, mouseY, delta);
 
     }

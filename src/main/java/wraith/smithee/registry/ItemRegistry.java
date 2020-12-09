@@ -44,6 +44,7 @@ public class ItemRegistry {
 
     //Material -> [Tool_Type__Part_Type] -> Recipe
     public static final HashMap<Item, HashMap<String, ToolPartRecipe>> TOOL_PART_RECIPES = new HashMap<>();
+
     //InputMaterial -> OutputItem -> Cost
     public static final HashMap<String, HashMap<Item, Integer>> REMAINS = new HashMap<>();
 
@@ -53,6 +54,7 @@ public class ItemRegistry {
         put("axe_head", 27);
         put("shovel_head", 9);
         put("sword_head", 18);
+        put("embossment", 405);
 
         put("binding", 9);
         put("handle", 18);
@@ -77,6 +79,9 @@ public class ItemRegistry {
                 Smithee.LOGGER.error("Error with material " + material);
             }
         }
+        ITEMS.put("lapis_lazuli_embossment", new Item(new Item.Settings().group(ItemGroups.SMITHEE_ITEMS)));
+        ITEMS.put("redstone_embossment", new Item(new Item.Settings().group(ItemGroups.SMITHEE_ITEMS)));
+        ITEMS.put("quartz_embossment", new Item(new Item.Settings().group(ItemGroups.SMITHEE_ITEMS)));
         HashSet<String> woods = new HashSet<String>(){{
             add("oak");
             add("dark_oak");

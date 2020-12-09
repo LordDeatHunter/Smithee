@@ -47,6 +47,8 @@ public class JsonParser {
             String outputMaterial = recipe.get("output_material").getAsString();
             int chiselingLevel = recipe.get("chiseling_level").getAsInt();
             int worth = recipe.get("material_value").getAsInt();
+            boolean canEmboss = recipe.has("can_emboss") && recipe.get("can_emobss").getAsBoolean();
+            boolean embossOnly = recipe.has("emboss_only") && recipe.get("emboss_only").getAsBoolean();
 
             HashSet<Item> items = new HashSet<>();
             if (material.startsWith("#")) {
@@ -61,7 +63,20 @@ public class JsonParser {
                 }
                 remains.get(outputMaterial).put(item, worth);
                 recipeList.put(item, new HashMap<>());
+                if (embossOnly) {
+                    int base = ItemRegistry.BASE_RECIPE_VALUES.get("embossment");
+                    recipeList.get(item).put("embossment", new ToolPartRecipe(outputMaterial, base, chiselingLevel));
+                    if (overrides.has("all") || overrides.has("embossment")) {
+                        recipeList.get(item).get("embososment").requiredAmount = (int) Utils.evaluateExpression(overrides.get("all").getAsString().replace("base", String.valueOf(base)));
+                    } else if (overrides.has("embossment")) {
+                        recipeList.get(item).get("embososment").requiredAmount = (int) Utils.evaluateExpression(overrides.get("embossment").getAsString().replace("base", String.valueOf(base)));
+                    }
+                    return;
+                }
                 for (String recipeType : ItemRegistry.BASE_RECIPE_VALUES.keySet()) {
+                    if ("embossment".equals(recipeType) && !canEmboss) {
+                        continue;
+                    }
                     int base = ItemRegistry.BASE_RECIPE_VALUES.get(recipeType);
                     recipeList.get(item).put(recipeType, new ToolPartRecipe(outputMaterial, base, chiselingLevel));
                     if (overrides.has("all")) {

@@ -100,10 +100,13 @@ public class ChiselingTableScreenHandler extends ScreenHandler {
         if (id < 5) {
             this.delegate.set(0, id);
             return true;
+        } else if (id == 5) {
+            this.delegate.set(0, 5);
+            this.delegate.set(1, 0);
         } else if (id < 9) {
-            this.delegate.set(1, id - 5);
+            this.delegate.set(1, id - 6);
             return true;
-        } if (!inventory.getStack(1).isEmpty()) {
+        } else if (!inventory.getStack(1).isEmpty()) {
             ServerPlayerEntity serverPlayerEntity;
             if (player instanceof ServerPlayerEntity) {
                 serverPlayerEntity = (ServerPlayerEntity) player;
@@ -112,6 +115,7 @@ public class ChiselingTableScreenHandler extends ScreenHandler {
             }
 
             ItemStack materialStack = inventory.getStack(1);
+
             if (!ItemRegistry.TOOL_PART_RECIPES.containsKey(materialStack.getItem())) {
                 return false;
             }
@@ -131,14 +135,22 @@ public class ChiselingTableScreenHandler extends ScreenHandler {
                 return false;
             }
 
-            if (!inventory.getStack(2).isEmpty()) {
+            if (!inventory.getStack(2).isEmpty() && inventory.getStack(2).getCount() >= inventory.getStack(2).getMaxCount()) {
                 return false;
             }
             int decAmount = (int) Math.ceil((float)recipes.get(type).requiredAmount / worth);
             int remains = decAmount * worth - recipes.get(type).requiredAmount;
 
-            ItemStack outputStack = new ItemStack(ItemRegistry.ITEMS.get(recipes.get(type).outputMaterial + "_" + type));
-            outputStack.getOrCreateTag().putDouble("PartDamage", 0);
+            ItemStack outputStack = inventory.getStack(2);
+            if (outputStack.isEmpty()) {
+                outputStack = new ItemStack(ItemRegistry.ITEMS.get(recipes.get(type).outputMaterial + "_" + type));
+                if (!"embossment".equals(type)) {
+                    outputStack.getOrCreateTag().putDouble("PartDamage", 0);
+                }
+            } else {
+                outputStack.increment(1);
+            }
+
             inventory.setStack(2, outputStack);
             inventory.getStack(1).decrement(decAmount);
 
@@ -146,7 +158,7 @@ public class ChiselingTableScreenHandler extends ScreenHandler {
 
             HashMap<Item, Integer> remainders = ItemRegistry.REMAINS.get(recipes.get(type).outputMaterial);
             ArrayList<Map.Entry<Item, Integer>> mapValues = new ArrayList<>(remainders.entrySet());
-            Collections.sort(mapValues, (o1, o2) -> o2.getValue().compareTo(o1.getValue()));
+            mapValues.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue()));
 
             for (Map.Entry<Item, Integer> entry : mapValues) {
                 if (entry.getValue() <= remains) {
@@ -175,7 +187,7 @@ public class ChiselingTableScreenHandler extends ScreenHandler {
             case 2:
                 return "handle";
             default:
-                return "head";
+                return getToolPage() == 5 ? "embossment" : "head";
         }
     }
 
@@ -189,6 +201,8 @@ public class ChiselingTableScreenHandler extends ScreenHandler {
                 return "sword";
             case 4:
                 return "hoe";
+            case 5:
+                return "embossment";
             default:
                 return "pickaxe";
         }

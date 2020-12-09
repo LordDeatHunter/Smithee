@@ -31,7 +31,7 @@ public class Smithee implements ModInitializer {
 
         Config.createMaterials(json.has("replace_material_list_when_regenerating") && json.get("replace_material_list_when_regenerating").getAsBoolean());
 
-        Utils.saveFilesFromJar("configs/templates", "templates", false);
+        Utils.saveFilesFromJar("configs/templates", "templates", true);
         if (!json.has("regenerate_deleted_palettes") || json.get("regenerate_deleted_palettes").getAsBoolean()) {
             Utils.saveFilesFromJar("configs/palettes", "palettes", json.has("replace_old_palettes_when_regenerating") && json.get("replace_old_palettes_when_regenerating").getAsBoolean());
         }
