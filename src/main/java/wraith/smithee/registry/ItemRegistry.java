@@ -30,6 +30,7 @@ public class ItemRegistry {
     public static final HashSet<Item> DISABLED_ITEMS = new HashSet<>();
     public static HashMap<String, Item> ITEMS = new HashMap<>();
     public static HashSet<String> MATERIALS = new HashSet<>();
+    public static final HashSet<String> EMBOSS_MATERIALS = new HashSet<>();
 
     public static HashSet<String> TOOL_TYPES = new HashSet<String>() {{
         add("pickaxe");
@@ -79,9 +80,13 @@ public class ItemRegistry {
                 Smithee.LOGGER.error("Error with material " + material);
             }
         }
-        ITEMS.put("lapis_lazuli_embossment", new Item(new Item.Settings().group(ItemGroups.SMITHEE_ITEMS)));
-        ITEMS.put("redstone_embossment", new Item(new Item.Settings().group(ItemGroups.SMITHEE_ITEMS)));
-        ITEMS.put("quartz_embossment", new Item(new Item.Settings().group(ItemGroups.SMITHEE_ITEMS)));
+        for (String material : EMBOSS_MATERIALS) {
+            ITEMS.put(material + "_embossment", new Item(new Item.Settings().group(ItemGroups.SMITHEE_ITEMS)));
+        }
+
+        ITEMS.put("silky_jewel", new Item(new Item.Settings().group(ItemGroups.SMITHEE_ITEMS)));
+        ITEMS.put("silky_cloth", new Item(new Item.Settings().group(ItemGroups.SMITHEE_ITEMS)));
+
         HashSet<String> woods = new HashSet<String>(){{
             add("oak");
             add("dark_oak");
@@ -167,6 +172,10 @@ public class ItemRegistry {
         JsonArray array = Config.getJsonObject(Config.readFile(new File("config/smithee/materials.json"))).get("materials").getAsJsonArray();
         for (JsonElement element : array) {
             MATERIALS.add(element.getAsString());
+        }
+        array = Config.getJsonObject(Config.readFile(new File("config/smithee/emboss_materials.json"))).get("materials").getAsJsonArray();
+        for (JsonElement element : array) {
+            EMBOSS_MATERIALS.add(element.getAsString());
         }
     }
 

@@ -46,10 +46,7 @@ public class NamespaceResourceManagerMixin {
             part += "_" + segments[i];
         }
         part = part.substring(1);
-        if (!ItemRegistry.MATERIALS.contains(material)) {
-            return;
-        }
-        if (!ItemRegistry.BASE_RECIPE_VALUES.containsKey(part) && !SmitheeClient.RENDERING_TOOL_PARTS.contains(pathWithoutExtension)) {
+        if ((!ItemRegistry.MATERIALS.contains(material) && !ItemRegistry.EMBOSS_MATERIALS.contains(material)) || (!ItemRegistry.BASE_RECIPE_VALUES.containsKey(part) && !SmitheeClient.RENDERING_TOOL_PARTS.contains(pathWithoutExtension) && !"embossment".equals(part) && !"chisel".equals(part))) {
             return;
         }
         File texture = new File("config/smithee/textures/" + path);
@@ -68,6 +65,5 @@ public class NamespaceResourceManagerMixin {
             cir.setReturnValue(new ResourceImpl(Smithee.MOD_ID, id, Utils.recolor(template, templatePalette, palette, pathWithoutExtension), null));
             cir.cancel();
         }
-
     }
 }

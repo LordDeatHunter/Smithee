@@ -3,22 +3,22 @@
     "head": {
       "mining_level": 3,
       "durability": 151,
-      "mining_speed": 5.4,
-      "attack_damage": 3.6,
+      "mining_speed": 14.0,
+      "attack_damage": 1.5,
       "attack_speed": 0.6
     },
     "binding": {
       "mining_level": 0,
-      "durability": 271,
-      "mining_speed": 0.6,
-      "attack_damage": 0.2,
+      "durability": 75,
+      "mining_speed": 0.0,
+      "attack_damage": 0.0,
       "attack_speed": 0.1
     },
     "handle": {
       "mining_level": 0,
-      "durability": 182,
-      "mining_speed": 2.2,
-      "attack_damage": 0.4,
+      "durability": 45,
+      "mining_speed": 1.0,
+      "attack_damage": 0.0,
       "attack_speed": 0.3
     }
   }

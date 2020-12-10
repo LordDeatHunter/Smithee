@@ -2,10 +2,8 @@ package wraith.smithee.utils;
 
 import com.udojava.evalex.Expression;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.item.*;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
 import org.apache.commons.io.FileUtils;
 import wraith.smithee.Config;
@@ -14,7 +12,6 @@ import wraith.smithee.SmitheeClient;
 import wraith.smithee.registry.ItemRegistry;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URISyntaxException;
@@ -331,7 +328,7 @@ public class Utils {
         String material = "";
         String[] segments = path.split("_");
         int i = 0;
-        while (!ItemRegistry.MATERIALS.contains(material) && i < segments.length) {
+        while (!ItemRegistry.MATERIALS.contains(material) && !ItemRegistry.EMBOSS_MATERIALS.contains(material) && i < segments.length) {
             if (i > 0) {
                 material += "_";
             }

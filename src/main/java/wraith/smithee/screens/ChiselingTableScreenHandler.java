@@ -126,7 +126,7 @@ public class ChiselingTableScreenHandler extends ScreenHandler {
                 type = toolPageToString() + "_head";
             }
 
-            if (!(inventory.getStack(0).getItem() instanceof Chisel) || ((Chisel)inventory.getStack(0).getItem()).getChiselingLevel() < recipes.get(type).chiselingLevel) {
+            if (!(inventory.getStack(0).getItem() instanceof Chisel) || !recipes.containsKey(type) || ((Chisel)inventory.getStack(0).getItem()).getChiselingLevel() < recipes.get(type).chiselingLevel) {
                 return false;
             }
 

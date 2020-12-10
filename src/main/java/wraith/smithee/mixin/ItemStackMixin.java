@@ -20,6 +20,7 @@ import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -29,6 +30,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import wraith.smithee.items.Chisel;
 import wraith.smithee.items.tool_parts.ToolPartItem;
 import wraith.smithee.items.tools.BaseSmitheePickaxe;
 import wraith.smithee.items.tools.BaseSmitheeSword;
@@ -83,7 +85,10 @@ public abstract class ItemStackMixin {
         if (getItem() instanceof BaseSmitheeTool && !(getItem() instanceof BaseSmitheeSword) && tag != null && tag.contains("SmitheeProperties")) {
             CompoundTag tag = getSubTag("SmitheeProperties");
             float mineSpeed = ((MiningToolItemAccessor) getItem()).getEffectiveBlocks().contains(state.getBlock()) ? tag.getFloat("MiningSpeed") : 1.0F;
-            if (getItem() instanceof AxeItem) {
+            if (getItem() instanceof PickaxeItem) {
+                Material material = state.getMaterial();
+                mineSpeed = material != Material.METAL && material != Material.REPAIR_STATION && material != Material.STONE ? mineSpeed : tag.getFloat("MiningSpeed");
+            } else if (getItem() instanceof AxeItem) {
                 mineSpeed = ((AxeItemAccessor) getItem()).getEffectiveMaterials().contains(state.getMaterial()) ? tag.getFloat("MiningSpeed") : mineSpeed;
             } else if (getItem() instanceof SwordItem) {
                 mineSpeed = (getItem().isEffectiveOn(state)) ? tag.getFloat("MiningSpeed") : mineSpeed;
@@ -135,7 +140,7 @@ public abstract class ItemStackMixin {
 
     @Inject(method = "hasCustomName", at = @At("HEAD"), cancellable = true)
     public void hasCustomName(CallbackInfoReturnable<Boolean> cir) {
-        if (getItem() instanceof BaseSmitheeTool) {
+        if (getItem() instanceof BaseSmitheeTool || getItem() instanceof Chisel || Registry.ITEM.getId(getItem()).getPath().endsWith("_embossment")) {
             cir.setReturnValue(false);
             cir.cancel();
         }
@@ -154,6 +159,8 @@ public abstract class ItemStackMixin {
         } else if (getItem() instanceof ToolPartItem) {
             ToolPartItem part = (ToolPartItem)getItem();
             cir.setReturnValue(new LiteralText(part.toString()));
+        } else if (getItem() instanceof Chisel || Registry.ITEM.getId(getItem()).getPath().endsWith("_embossment")) {
+            cir.setReturnValue(new LiteralText(Utils.capitalize(Registry.ITEM.getId(getItem()).getPath().split("/")[0].split("_"))));
         }
     }
 
@@ -162,7 +169,7 @@ public abstract class ItemStackMixin {
     public List<Text> getTooltip(List<Text> list, PlayerEntity player, TooltipContext context) {
         if (ItemRegistry.TOOL_PART_RECIPES.containsKey(getItem()) && ItemRegistry.TOOL_PART_RECIPES.get(getItem()).containsKey("pickaxe_head")) {
             list.add(new LiteralText("§1[§5Tool material§1]"));
-            if (Screen.hasShiftDown()) {
+            if (Screen.hasShiftDown() && ItemRegistry.REMAINS.containsKey(ItemRegistry.TOOL_PART_RECIPES.get(getItem()).get("pickaxe_head").outputMaterial)) {
                 HashMap<String, ToolPartRecipe> recipes = ItemRegistry.TOOL_PART_RECIPES.get(getItem());
                 int worth = ItemRegistry.REMAINS.get(recipes.get("pickaxe_head").outputMaterial).get(getItem());
                 list.add(new LiteralText("§9[§dWorth: §b" + worth + "§d]"));

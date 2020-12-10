@@ -15,34 +15,40 @@ import java.util.Scanner;
 public class Config {
 
     public static void createMaterials(boolean overwrite) {
-        HashSet<String> materials = new HashSet<String>(){{
-            add("oak");
-            add("spruce");
-            add("acacia");
-            add("dark_oak");
-            add("jungle");
-            add("birch");
-            add("warped");
-            add("crimson");
-            add("stone");
-            add("granite");
-            add("andesite");
-            add("diorite");
-            add("basalt");
-            add("blackstone");
-            add("end_stone");
-            add("prismarine");
-            add("bamboo");
-            add("bone");
-            add("flint");
-            add("ice");
-            add("cactus");
-            add("netherrack");
-            add("golden");
-            add("iron");
-            add("diamond");
-            add("netherite");
-        }};
+        HashSet<String> materials = new HashSet<>();
+        HashSet<String> embossMaterials = new HashSet<>();
+        materials.add("oak");
+        materials.add("spruce");
+        materials.add("acacia");
+        materials.add("dark_oak");
+        materials.add("jungle");
+        materials.add("birch");
+        materials.add("warped");
+        materials.add("crimson");
+        materials.add("stone");
+        materials.add("granite");
+        materials.add("andesite");
+        materials.add("diorite");
+        materials.add("basalt");
+        materials.add("blackstone");
+        materials.add("end_stone");
+        materials.add("prismarine");
+        materials.add("bamboo");
+        materials.add("bone");
+        materials.add("flint");
+        materials.add("ice");
+        materials.add("cactus");
+        materials.add("netherrack");
+        materials.add("golden");
+        materials.add("iron");
+        materials.add("diamond");
+        materials.add("netherite");
+
+        embossMaterials.add("lapis_lazuli");
+        embossMaterials.add("redstone");
+        embossMaterials.add("quartz");
+        embossMaterials.add("silky_jewel");
+
         if (FabricLoader.getInstance().isModLoaded("mythicmetals")) {
             materials.add("adamantite");
             materials.add("aetherium");
@@ -100,9 +106,14 @@ public class Config {
             materials.add("meteoric_steel");
         }
 
+        Config.createFile("config/smithee/materials.json", getMaterials(materials), overwrite);
+        Config.createFile("config/smithee/emboss_materials.json", getMaterials(embossMaterials), overwrite);
+    }
+
+    private static String getMaterials(HashSet<String> materials) {
         String defaultMaterials =
-            "{\n" +
-            "  \"materials\": [\n" ;
+                "{\n" +
+                        "  \"materials\": [\n" ;
 
         Iterator<String> it = materials.iterator();
         while (it.hasNext()) {
@@ -115,9 +126,8 @@ public class Config {
         }
         defaultMaterials +=
                 "  ]\n" +
-                "}";
-        String path = "config/smithee/materials.json";
-        Config.createFile(path, defaultMaterials, overwrite);
+                        "}";
+        return defaultMaterials;
     }
 
     public static JsonObject loadConfig() {

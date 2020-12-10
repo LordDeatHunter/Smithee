@@ -1,17 +1,17 @@
 {
-  "#c:gold_blocks": {
+  "minecraft:gold_block": {
     "output_material": "golden",
     "material_value": 81,
     "chiseling_level": 1,
     "overrides": {}
   },
-  "#c:gold_ingots": {
+  "minecraft:gold_ingot": {
     "output_material": "golden",
     "material_value": 9,
     "chiseling_level": 1,
     "overrides": {}
   },
-  "#c:gold_nuggets": {
+  "minecraft:gold_nugget": {
     "output_material": "golden",
     "material_value": 1,
     "chiseling_level": 1,

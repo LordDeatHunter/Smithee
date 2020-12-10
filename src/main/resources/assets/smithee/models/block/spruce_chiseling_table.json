@@ -3,7 +3,8 @@
 	"textures": {
 		"1": "minecraft:block/spruce_log_top",
 		"2": "minecraft:block/spruce_log",
-		"8": "smithee:block/chiseling_table_top"
+		"8": "smithee:block/chiseling_table_top",
+		"particle": "block/spruce_log"
 	},
 	"elements": [
 		{

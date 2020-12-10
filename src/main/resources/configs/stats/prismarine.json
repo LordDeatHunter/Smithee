@@ -8,10 +8,10 @@
       "attack_speed": 0.6,
       "traits": [
         {
-          "trait": "brittle",
+          "trait": "aquadynamic",
           "min_level": 1,
           "max_level": 1,
-          "chance": 0.1
+          "chance": 1
         }
       ]
     },
@@ -23,10 +23,10 @@
       "attack_speed": -0.1,
       "traits": [
         {
-          "trait": "brittle",
+          "trait": "aquadynamic",
           "min_level": 1,
           "max_level": 1,
-          "chance": 0.1
+          "chance": 1
         }
       ]
     },
@@ -38,10 +38,10 @@
       "attack_speed": -0.2,
       "traits": [
         {
-          "trait": "brittle",
+          "trait": "aquadynamic",
           "min_level": 1,
           "max_level": 1,
-          "chance": 0.1
+          "chance": 1
         }
       ]
     }

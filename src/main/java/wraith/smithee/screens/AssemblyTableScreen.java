@@ -54,13 +54,9 @@ public class AssemblyTableScreen extends HandledScreen<ScreenHandler> {
         super.tick();
         ItemStack tool = handler.slots.get(3).getStack();
         if (tool.getItem() instanceof BaseSmitheeTool) {
-            if (tool.hasTag() && tool.getTag().contains("SmitheeProperties") && tool.getTag().getCompound("SmitheeProperties").contains("CustomName")) {
-                this.nameInputField.setText(tool.getTag().getCompound("SmitheeProperties").getString("CustomName"));
-            } else {
-                if (!hadTool) {
-                    hadTool = true;
-                    this.nameInputField.setText(tool.getName().asString());
-                }
+            if (!hadTool) {
+                hadTool = true;
+                this.nameInputField.setText(tool.getName().asString());
             }
             canType = true;
         } else {
