@@ -1,0 +1,25 @@
+{
+  "material": "lapis_lazuli",
+  "type": "enchant",
+  "stackable": true,
+  "modifies": [
+    {
+      "gives": "minecraft:looting",
+      "gives_to": [
+        "sword"
+      ]
+    },
+    {
+      "gives": "minecraft:fortune",
+      "gives_to": [
+        "pickaxe",
+        "axe",
+        "shovel",
+        "hoe"
+      ]
+    }
+  ],
+  "incompatible": [
+    "silky_jewel"
+  ]
+}

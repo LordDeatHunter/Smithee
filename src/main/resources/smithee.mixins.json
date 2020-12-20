@@ -4,6 +4,7 @@
   "package": "wraith.smithee.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "AbstractBlockMixin",
     "AxeItemAccessor",
     "BlockMixin",
     "CraftingScreenHandlerMixin",

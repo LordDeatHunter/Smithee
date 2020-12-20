@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
@@ -14,13 +15,12 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import wraith.smithee.Smithee;
-import wraith.smithee.items.tools.BaseSmitheeTool;
 import wraith.smithee.utils.Utils;
-import net.minecraft.item.ItemStack;
 
 import java.util.Objects;
 
@@ -32,6 +32,8 @@ public class AssemblyTableScreen extends HandledScreen<ScreenHandler> {
     private TextFieldWidget nameInputField;
     private boolean canType = false;
     private boolean hadTool = false;
+    private boolean mouseClicked = false;
+    private int clickPos = -1;
 
     public AssemblyTableScreen(ScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
@@ -43,30 +45,18 @@ public class AssemblyTableScreen extends HandledScreen<ScreenHandler> {
     }
 
     @Override
+    public void tick() {
+        super.tick();
+        if (this.nameInputField.getText().equals(this.handler.getName())) {
+            this.nameInputField.setText(this.handler.getName());
+        }
+    }
+
+    @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         this.renderBackground(matrices);
         super.render(matrices, mouseX, mouseY, delta);
         this.drawMouseoverTooltip(matrices, mouseX, mouseY);
-    }
-
-    @Override
-    public void tick() {
-        super.tick();
-        ItemStack tool = handler.slots.get(3).getStack();
-        if (tool.getItem() instanceof BaseSmitheeTool) {
-            if (!hadTool) {
-                hadTool = true;
-                this.nameInputField.setText(tool.getName().asString());
-            }
-            canType = true;
-        } else {
-            if (hadTool) {
-                hadTool = false;
-                this.nameInputField.setText("");
-            }
-            this.nameInputField.setSelected(false);
-            canType = false;
-        }
     }
 
     @Override
@@ -79,27 +69,39 @@ public class AssemblyTableScreen extends HandledScreen<ScreenHandler> {
 
         //Hande
         if (this.handler.slots.get(0).getStack().isEmpty()) {
-            this.drawTexture(matrices, x + 43, y + 57, 176, 0, 16, 16);
+            this.drawTexture(matrices, x + 35, y + 57, 176, 0, 16, 16);
         }
         //Binding
         if (this.handler.slots.get(1).getStack().isEmpty()) {
-            this.drawTexture(matrices, x + 55, y + 37, 176 + 16, 0, 16, 16);
+            this.drawTexture(matrices, x + 47, y + 37, 176 + 16, 0, 16, 16);
         }
         //Head
         if (this.handler.slots.get(2).getStack().isEmpty()) {
-            this.drawTexture(matrices, x + 67, y + 17, 176 + 32, 0, 16, 16);
+            this.drawTexture(matrices, x + 59, y + 17, 176 + 32, 0, 16, 16);
         }
         //Output
         if (this.handler.slots.get(3).getStack().isEmpty()) {
-            this.drawTexture(matrices, x + 109, y + 34, 176, 16, 24, 24);
+            this.drawTexture(matrices, x + 109, y + 39, 176, 16, 24, 24);
         }
         //Embossment
-        if (this.handler.slots.get(3).getStack().isEmpty()) {
-            this.drawTexture(matrices, x + 113, y + 12, 176 + 48, 0, 24, 24);
+        if (this.handler.slots.get(4).getStack().isEmpty()) {
+            this.drawTexture(matrices, x + 113, y + 11, 176 + 48, 0, 16, 16);
         }
+
+        drawButton(matrices, x, y, 76, 42, 196, 40, mouseX, mouseY, 0, 20, 0);
+        drawButton(matrices, x, y, 116, 28, 210, 16, mouseX, mouseY, 0, 10, 1);
+
         this.nameInputField.render(matrices, mouseX, mouseY, delta);
 
     }
+
+    public void drawButton(MatrixStack matrices, int x, int y, int xm, int ym, int u, int v, int mouseX, int mouseY, int index, int size, int buttonType) {
+        if (mouseX >= x + xm && mouseY >= y + ym && mouseX < x + xm + size && mouseY < y + ym + size && this.clickPos == -1) {
+            u += mouseClicked ? -size : size;
+        }
+        this.drawTexture(matrices, x + xm, y + ym, u, v, size, size);
+    }
+
     @Override
     public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
         this.ignoreTypedCharacter = false;
@@ -164,8 +166,9 @@ public class AssemblyTableScreen extends HandledScreen<ScreenHandler> {
         if (canType) {
             PacketByteBuf data = new PacketByteBuf(Unpooled.buffer());
             CompoundTag tag = new CompoundTag();
-            tag.putString("tool_name", this.nameInputField.getText());
+            tag.putString("ToolName", this.nameInputField.getText());
             data.writeCompoundTag(tag);
+            handler.setName(this.nameInputField.getText());
             ClientSidePacketRegistry.INSTANCE.sendToServer(new Identifier(Smithee.MOD_ID, "rename_tool_assembly"), data);
         }
     }
@@ -184,5 +187,33 @@ public class AssemblyTableScreen extends HandledScreen<ScreenHandler> {
         this.children.add(this.nameInputField);
     }
 
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        this.mouseClicked = true;
+
+        boolean craft = mouseX >= x + 76 && mouseY >= y + 42 && mouseX < x + 76 + 20 && mouseY < y + 42 + 20;
+        boolean improve = mouseX >= x + 116 && mouseY >= y + 28 && mouseX < x + 116 + 10 && mouseY < y + 28 + 10;
+
+        if (this.clickPos == -1) {
+            this.clickPos = craft ? 0 : improve ? 1 : -1;
+        }
+
+        if (craft) {
+            MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+            MinecraftClient.getInstance().interactionManager.clickButton(this.handler.syncId, 0);
+        } else if (improve) {
+            MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+            MinecraftClient.getInstance().interactionManager.clickButton(this.handler.syncId, 1);
+        }
+
+        return super.mouseClicked(mouseX, mouseY, button);
+    }
+
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        this.clickPos = -1;
+        this.mouseClicked = false;
+        return super.mouseReleased(mouseX, mouseY, button);
+    }
 
 }

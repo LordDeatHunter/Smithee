@@ -1,5 +1,6 @@
 package wraith.smithee.utils;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.tag.TagRegistry;
@@ -8,13 +9,13 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import wraith.smithee.Config;
 import wraith.smithee.properties.*;
+import wraith.smithee.properties.Properties;
+import wraith.smithee.recipes.EmbossModifiers;
+import wraith.smithee.recipes.EmbossRecipe;
 import wraith.smithee.registry.ItemRegistry;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class JsonParser {
 
@@ -47,7 +48,7 @@ public class JsonParser {
             String outputMaterial = recipe.get("output_material").getAsString();
             int chiselingLevel = recipe.get("chiseling_level").getAsInt();
             int worth = recipe.get("material_value").getAsInt();
-            boolean canEmboss = recipe.has("can_emboss") && recipe.get("can_emobss").getAsBoolean();
+            boolean canEmboss = recipe.has("can_emboss") && recipe.get("can_emboss").getAsBoolean();
             boolean embossOnly = recipe.has("emboss_only") && recipe.get("emboss_only").getAsBoolean();
 
             HashSet<Item> items = new HashSet<>();
@@ -147,4 +148,29 @@ public class JsonParser {
         }
     }
 
+    public static void parseModifiers(JsonObject json, HashMap<String, EmbossRecipe> recipes) {
+        String material = json.get("material").getAsString();
+        String type = json.get("type").getAsString();
+        boolean stackable = json.get("stackable").getAsBoolean();
+        JsonArray array = json.get("modifies").getAsJsonArray();
+        ArrayList<EmbossModifiers> embossModifiers = new ArrayList<>();
+        for (JsonElement modifier : array) {
+            JsonObject obj = modifier.getAsJsonObject();
+            String gives = obj.get("gives").getAsString();
+            JsonArray givesToArray = obj.get("gives_to").getAsJsonArray();
+            HashSet<String> givesTo = new HashSet<>();
+            for (JsonElement element : givesToArray) {
+                givesTo.add(element.getAsString());
+            }
+            embossModifiers.add(new EmbossModifiers(gives, givesTo));
+        }
+        HashSet<String> incompatible = new HashSet<>();
+        if (json.has("incompatible")) {
+            array = json.get("incompatible").getAsJsonArray();
+            for (JsonElement inc : array) {
+                incompatible.add(inc.getAsString());
+            }
+        }
+        recipes.put(material, new EmbossRecipe(type, stackable, embossModifiers, incompatible));
+    }
 }

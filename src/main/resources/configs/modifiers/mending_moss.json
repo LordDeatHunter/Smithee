@@ -1,0 +1,17 @@
+{
+  "material": "mending_moss",
+  "type": "enchant",
+  "stackable": false,
+  "modifies": [
+    {
+      "gives": "minecraft:mending",
+      "gives_to": [
+        "sword",
+        "pickaxe",
+        "axe",
+        "shovel",
+        "hoe"
+      ]
+    }
+  ]
+}

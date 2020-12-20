@@ -16,6 +16,7 @@ import wraith.smithee.items.tool_parts.ToolPartItem;
 import wraith.smithee.items.tools.*;
 import wraith.smithee.properties.Properties;
 import wraith.smithee.properties.ToolPartRecipe;
+import wraith.smithee.recipes.EmbossRecipe;
 import wraith.smithee.utils.JsonParser;
 import wraith.smithee.utils.Utils;
 
@@ -45,6 +46,8 @@ public class ItemRegistry {
 
     //Material -> [Tool_Type__Part_Type] -> Recipe
     public static final HashMap<Item, HashMap<String, ToolPartRecipe>> TOOL_PART_RECIPES = new HashMap<>();
+
+    public static final HashMap<String, EmbossRecipe> EMBOSS_RECIPES = new HashMap<>();
 
     //InputMaterial -> OutputItem -> Cost
     public static final HashMap<String, HashMap<Item, Integer>> REMAINS = new HashMap<>();
@@ -228,6 +231,16 @@ public class ItemRegistry {
             catch(Exception e) {
                 Smithee.LOGGER.warn("Found error with recipes file '" + file.getName() + "'");
             }
+        }
+    }
+    public static void generateModifiers() {
+        File[] files = Config.getFiles("config/smithee/modifiers/");
+        if (files == null) {
+            return;
+        }
+        EMBOSS_RECIPES.clear();
+        for (File file : files) {
+            JsonParser.parseModifiers(Config.getJsonObject(Config.readFile(file)), EMBOSS_RECIPES);
         }
     }
 }

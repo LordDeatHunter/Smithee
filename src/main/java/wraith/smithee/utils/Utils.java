@@ -29,6 +29,30 @@ public class Utils {
         return new Identifier(Smithee.MOD_ID, id);
     }
 
+    private final static TreeMap<Integer, String> romanNumeralEncoding = new TreeMap<Integer, String>(){{
+        put(1000, "M");
+        put(900, "CM");
+        put(500, "D");
+        put(400, "CD");
+        put(100, "C");
+        put(90, "XC");
+        put(50, "L");
+        put(40, "XL");
+        put(10, "X");
+        put(9, "IX");
+        put(5, "V");
+        put(4, "IV");
+        put(1, "I");
+    }};
+
+    public static String toRoman(int number) {
+        int l =  romanNumeralEncoding.floorKey(number);
+        if ( number == l ) {
+            return romanNumeralEncoding.get(number);
+        }
+        return romanNumeralEncoding.get(l) + toRoman(number-l);
+    }
+
     public static ModelIdentifier inventoryModelID(String id) {
         return new ModelIdentifier(new Identifier(Smithee.MOD_ID, id), "inventory");
     }

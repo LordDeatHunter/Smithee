@@ -9,6 +9,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.Material;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
@@ -35,6 +36,7 @@ import wraith.smithee.items.tool_parts.ToolPartItem;
 import wraith.smithee.items.tools.BaseSmitheePickaxe;
 import wraith.smithee.items.tools.BaseSmitheeSword;
 import wraith.smithee.items.tools.BaseSmitheeTool;
+import wraith.smithee.properties.Modifier;
 import wraith.smithee.properties.Properties;
 import wraith.smithee.properties.ToolPartRecipe;
 import wraith.smithee.properties.Trait;
@@ -60,12 +62,37 @@ public abstract class ItemStackMixin {
 
     @Shadow public abstract boolean hasTag();
 
+    @Shadow public abstract int getCount();
+
     @Inject(method = "getMaxDamage", at = @At("HEAD"), cancellable = true)
     public void getMaxDamage(CallbackInfoReturnable<Integer> cir) {
         if (getItem() instanceof BaseSmitheeTool && tag != null && tag.contains("SmitheeProperties")) {
             CompoundTag tag = getSubTag("SmitheeProperties");
             cir.setReturnValue(tag.getInt("Durability"));
             cir.cancel();
+        }
+    }
+
+    @Inject(method = "isEnchantable", at = @At("HEAD"), cancellable = true)
+    public void isEnchantable(CallbackInfoReturnable<Boolean> cir) {
+        if (getItem() instanceof BaseSmitheeTool) {
+            cir.setReturnValue(false);
+            cir.cancel();
+        }
+    }
+
+    @Inject(method = "hasEnchantments", at = @At("HEAD"), cancellable = true)
+    public void hasEnchantments(CallbackInfoReturnable<Boolean> cir) {
+        if (getItem() instanceof BaseSmitheeTool) {
+            cir.setReturnValue(false);
+            cir.cancel();
+        }
+    }
+
+    @Inject(method = "addEnchantment", at = @At("HEAD"), cancellable = true)
+    public void addEnchantment(Enchantment enchantment, int level, CallbackInfo ci) {
+        if (getItem() instanceof BaseSmitheeTool) {
+            ci.cancel();
         }
     }
 
@@ -172,13 +199,22 @@ public abstract class ItemStackMixin {
             if (Screen.hasShiftDown() && ItemRegistry.REMAINS.containsKey(ItemRegistry.TOOL_PART_RECIPES.get(getItem()).get("pickaxe_head").outputMaterial)) {
                 HashMap<String, ToolPartRecipe> recipes = ItemRegistry.TOOL_PART_RECIPES.get(getItem());
                 int worth = ItemRegistry.REMAINS.get(recipes.get("pickaxe_head").outputMaterial).get(getItem());
-                list.add(new LiteralText("§9[§dWorth: §b" + worth + "§d]"));
+                list.add(new LiteralText("§9[§dIndividual Worth: §b" + worth + "§d]"));
+                list.add(new LiteralText("§9[§dTotal Worth: §b" + (worth * getCount()) + "§d]"));
             } else {
                 list.add(new LiteralText("§3[§bSHIFT§3] for info."));
             }
         }
         if (getItem() instanceof BaseSmitheeTool) {
+            CompoundTag tag = getSubTag("SmitheeProperties");
+            if (tag != null && tag.contains("Experience")) {
+                list.add(new LiteralText("§2Level §a" + tag.getInt("Level") + "."));
+                list.add(new LiteralText("§5Progress " + BaseSmitheeTool.getProgressString(tag.getInt("Experience"), tag.getInt("Level"))));
+            }
+            list.add(new LiteralText(""));
             list.addAll(Trait.getTooltip(((ItemStack)(Object)this)));
+            list.add(new LiteralText(""));
+            list.addAll(Modifier.getTooltip(((ItemStack)(Object)this)));
         }
         return list;
     }

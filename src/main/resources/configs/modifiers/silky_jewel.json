@@ -1,0 +1,18 @@
+{
+  "material": "silky_jewel",
+  "type": "enchant",
+  "stackable": false,
+  "modifies": [
+    {
+      "gives": "minecraft:silk_touch",
+      "gives_to": [
+        "pickaxe",
+        "axe",
+        "shovel"
+      ]
+    }
+  ],
+  "incompatible": [
+    "lapis_lazuli"
+  ]
+}

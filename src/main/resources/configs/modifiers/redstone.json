@@ -1,0 +1,15 @@
+{
+  "material": "redstone",
+  "type": "enchant",
+  "stackable": true,
+  "modifies": [
+    {
+      "gives": "minecraft:efficiency",
+      "gives_to": [
+        "pickaxe",
+        "axe",
+        "shovel"
+      ]
+    }
+  ]
+}

@@ -5,7 +5,6 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.SimpleNamedScreenHandlerFactory;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -51,7 +50,7 @@ public class AssemblyTable extends BlockWithEntity {
 
     @Override
     public NamedScreenHandlerFactory createScreenHandlerFactory(BlockState state, World world, BlockPos pos) {
-        return new SimpleNamedScreenHandlerFactory((i, playerInventory, playerEntity) -> new AssemblyTableScreenHandler(i, playerInventory, (AassemblyTableBlockEntity)world.getBlockEntity(pos), ScreenHandlerContext.create(world, pos)), TITLE);
+        return new SimpleNamedScreenHandlerFactory((i, playerInventory, playerEntity) -> new AssemblyTableScreenHandler(i, playerInventory, (AassemblyTableBlockEntity)world.getBlockEntity(pos)), TITLE);
     }
 
     @Override

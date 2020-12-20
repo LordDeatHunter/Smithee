@@ -1,7 +1,7 @@
 {
   "minecraft:quartz_block": {
     "output_material": "quartz",
-    "material_value": 81,
+    "material_value": 36,
     "chiseling_level": 1,
     "emboss_only": true,
     "overrides": {}

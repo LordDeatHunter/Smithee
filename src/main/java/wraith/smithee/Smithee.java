@@ -45,6 +45,7 @@ public class Smithee implements ModInitializer {
             Utils.saveFilesFromJar("configs/stats", "stats", json.has("replace_old_stat_files_when_regenerating") && json.get("replace_old_stat_files_when_regenerating").getAsBoolean());
         }
         ItemRegistry.generateProperties();
+        ItemRegistry.generateModifiers();
 
         ItemRegistry.addItems();
         ItemRegistry.registerItems();
@@ -56,6 +57,9 @@ public class Smithee implements ModInitializer {
 
         if (!json.has("regenerate_deleted_recipe_files") || json.get("regenerate_deleted_recipe_files").getAsBoolean()) {
             Utils.saveFilesFromJar("configs/recipes", "recipes", json.has("replace_old_recipe_files_when_regenerating") && json.get("replace_old_recipe_files_when_regenerating").getAsBoolean());
+        }
+        if (!json.has("regenerate_deleted_modifier_files") || json.get("regenerate_deleted_modifier_files").getAsBoolean()) {
+            Utils.saveFilesFromJar("configs/modifiers", "modifiers", json.has("replace_old_modifier_files_when_regenerating") && json.get("replace_old_modifier_files_when_regenerating").getAsBoolean());
         }
         if (!json.has("regenerate_deleted_smithing_files") || json.get("regenerate_deleted_smithing_files").getAsBoolean()) {
             Utils.saveFilesFromJar("configs/smithing", "smithing", json.has("replace_old_smithing_files_when_regenerating") && json.get("replace_old_smithing_files_when_regenerating").getAsBoolean());
@@ -74,8 +78,8 @@ public class Smithee implements ModInitializer {
     private void registerPacketHandlers() {
         ServerSidePacketRegistry.INSTANCE.register(new Identifier(MOD_ID, "rename_tool_assembly"), (packetContext, attachedData) -> {
             CompoundTag tag = attachedData.readCompoundTag();
-            if (packetContext.getPlayer().currentScreenHandler instanceof AssemblyTableScreenHandler && !packetContext.getPlayer().currentScreenHandler.slots.get(3).getStack().isEmpty()) {
-                packetContext.getPlayer().currentScreenHandler.slots.get(3).getStack().getSubTag("SmitheeProperties").putString("CustomName", tag.getString("tool_name"));
+            if (packetContext.getPlayer().currentScreenHandler instanceof AssemblyTableScreenHandler) {
+                ((AssemblyTableScreenHandler)packetContext.getPlayer().currentScreenHandler).setName(tag.getString("ToolName"));
             }
         });
     }

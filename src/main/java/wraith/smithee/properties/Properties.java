@@ -68,6 +68,13 @@ public class Properties {
         tag.putFloat("AttackSpeed", properties.attackSpeed);
         tag.putFloat("AttackDamage", properties.attackDamage);
         tag.putInt("Durability", properties.durability);
+        tag.putInt("Experience", 0);
+        tag.putInt("Level", 0);
+        CompoundTag modifiers = new CompoundTag();
+        modifiers.put("Slots", new CompoundTag());
+        modifiers.putInt("TraitSlots", 1);
+        modifiers.putInt("EnchantmentSlots", 0);
+        tag.put("Modifiers", modifiers);
 
         itemStack.putSubTag("SmitheeProperties", tag);
     }

@@ -1,0 +1,17 @@
+{
+  "material": "quartz",
+  "type": "enchant",
+  "stackable": true,
+  "modifies": [
+    {
+      "gives": "minecraft:sharpness",
+      "gives_to": [
+        "sword",
+        "pickaxe",
+        "axe",
+        "shovel",
+        "hoe"
+      ]
+    }
+  ]
+}

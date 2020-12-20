@@ -43,11 +43,14 @@ public class Config {
         materials.add("iron");
         materials.add("diamond");
         materials.add("netherite");
+        materials.add("mossy_cobblestone");
 
         embossMaterials.add("lapis_lazuli");
         embossMaterials.add("redstone");
         embossMaterials.add("quartz");
         embossMaterials.add("silky_jewel");
+        embossMaterials.add("mossy_cobblestone");
+        embossMaterials.add("mending_moss");
 
         if (FabricLoader.getInstance().isModLoaded("mythicmetals")) {
             materials.add("adamantite");
@@ -147,6 +150,8 @@ public class Config {
                         "  \"replace_old_palettes_when_regenerating\": false,\n" +
                         "  \"regenerate_deleted_texture_files\": true,\n" +
                         "  \"replace_old_texture_files_when_regenerating\": false,\n" +
+                        "  \"regenerate_deleted_modifier_files\": true,\n" +
+                        "  \"replace_old_modifier_files_when_regenerating\": false,\n" +
                         "  \"regenerate_material_list\": true,\n" +
                         "  \"replace_material_list_when_regenerating\": false\n" +
                         "}";

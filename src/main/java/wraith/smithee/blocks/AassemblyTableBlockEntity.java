@@ -9,14 +9,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.collection.DefaultedList;
 import wraith.smithee.Smithee;
 import wraith.smithee.registry.BlockEntityRegistry;
-import wraith.smithee.screens.ImplementedInventory;
 import wraith.smithee.screens.AssemblyTableScreenHandler;
+import wraith.smithee.screens.ImplementedInventory;
 
 public class AassemblyTableBlockEntity extends LockableContainerBlockEntity implements NamedScreenHandlerFactory, ImplementedInventory {
 
@@ -39,7 +38,7 @@ public class AassemblyTableBlockEntity extends LockableContainerBlockEntity impl
 
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
-        this.handler = new AssemblyTableScreenHandler(syncId, playerInventory, this, ScreenHandlerContext.EMPTY);
+        this.handler = new AssemblyTableScreenHandler(syncId, playerInventory, this);
         return handler;
     }
 
@@ -83,34 +82,19 @@ public class AassemblyTableBlockEntity extends LockableContainerBlockEntity impl
     @Override
     public ItemStack removeStack(int slot, int count) {
         ItemStack result = Inventories.splitStack(getItems(), slot, count);
-        boolean update = false;
-        if (slot < 3) {
-            if (!result.isEmpty()) {
-                markDirty();
-            }
-            else {
-                update = true;
-            }
-        }
-        if (update || slot == 3) {
-            handler.onContentChanged(this);
+        if (slot < 3 && !result.isEmpty()) {
+            markDirty();
         }
         return result;
     }
 
     @Override
     public void setStack(int slot, ItemStack stack) {
-        ItemStack oldStack = getItems().get(slot).copy();
         getItems().set(slot, stack);
         if (stack.getCount() > getMaxCountPerStack()) {
             stack.setCount(getMaxCountPerStack());
         }
-        boolean oldIsEmpty = oldStack == ItemStack.EMPTY;
-        boolean newIsEmpty = stack == ItemStack.EMPTY;
 
-        if (slot != 3 || (!oldIsEmpty && newIsEmpty)) {
-            handler.onContentChanged(this);
-        }
         markDirty();
     }
 
