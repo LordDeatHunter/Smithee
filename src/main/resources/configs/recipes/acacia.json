@@ -10,11 +10,5 @@
     "material_value": 9,
     "chiseling_level": 0,
     "overrides": {}
-  },
-  "smithee:acacia_shard": {
-    "output_material": "acacia",
-    "material_value": 1,
-    "chiseling_level": 0,
-    "overrides": {}
   }
 }

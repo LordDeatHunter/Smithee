@@ -1,4 +1,3 @@
-/*
 package wraith.smithee.mixin;
 
 import com.google.gson.JsonElement;
@@ -19,10 +18,9 @@ public class RecipeManagerMixin {
 
     @Inject(method = "apply", at = @At("HEAD"))
     public void apply(Map<Identifier, JsonElement> map, ResourceManager resourceManager, Profiler profiler, CallbackInfo ci) {
-        for (Identifier id : RecipesGenerator.RECIPES.keySet()) {
-            map.put(id, RecipesGenerator.RECIPES.get(id));
+        for (Identifier id : RecipesGenerator.VANILLA_RECIPES.keySet()) {
+            map.put(id, RecipesGenerator.VANILLA_RECIPES.get(id));
         }
     }
 
 }
-*/

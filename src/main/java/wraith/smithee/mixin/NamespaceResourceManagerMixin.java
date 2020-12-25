@@ -46,7 +46,7 @@ public class NamespaceResourceManagerMixin {
             part += "_" + segments[i];
         }
         part = part.substring(1);
-        if ((!ItemRegistry.MATERIALS.contains(material) && !ItemRegistry.EMBOSS_MATERIALS.contains(material)) || (!ItemRegistry.BASE_RECIPE_VALUES.containsKey(part) && !SmitheeClient.RENDERING_TOOL_PARTS.contains(pathWithoutExtension) && !"embossment".equals(part) && !"chisel".equals(part))) {
+        if ((!ItemRegistry.MATERIALS.contains(material) && !ItemRegistry.EMBOSS_MATERIALS.contains(material)) || (!ItemRegistry.BASE_RECIPE_VALUES.containsKey(part) && !SmitheeClient.RENDERING_TOOL_PARTS.contains(pathWithoutExtension) && !"embossment".equals(part) && !"chisel".equals(part) && !"shard".equals(part))) {
             return;
         }
         File texture = new File("config/smithee/textures/" + path);

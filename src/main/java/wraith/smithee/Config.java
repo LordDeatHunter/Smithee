@@ -152,6 +152,10 @@ public class Config {
                         "  \"replace_old_texture_files_when_regenerating\": false,\n" +
                         "  \"regenerate_deleted_modifier_files\": true,\n" +
                         "  \"replace_old_modifier_files_when_regenerating\": false,\n" +
+                        "  \"regenerate_deleted_chisel_files\": true,\n" +
+                        "  \"replace_old_chisel_files_when_regenerating\": false,\n" +
+                        "  \"regenerate_deleted_shard_files\": true,\n" +
+                        "  \"replace_old_shard_files_when_regenerating\": false,\n" +
                         "  \"regenerate_material_list\": true,\n" +
                         "  \"replace_material_list_when_regenerating\": false\n" +
                         "}";

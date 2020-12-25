@@ -39,10 +39,18 @@ public class Smithee implements ModInitializer {
             Utils.saveFilesFromJar("configs/textures", "textures", json.has("replace_old_texture_files_when_regenerating") && json.get("replace_old_texture_files_when_regenerating").getAsBoolean());
         }
 
+        if (!json.has("regenerate_deleted_shard_files") || json.get("regenerate_deleted_shard_files").getAsBoolean()) {
+            Utils.saveFilesFromJar("configs/shards", "shards", json.has("replace_old_shard_files_when_regenerating") && json.get("replace_old_shard_files_when_regenerating").getAsBoolean());
+        }
+        ItemRegistry.generateShards();
+
         ItemRegistry.addMaterials();
 
         if (!json.has("regenerate_deleted_stat_files") || json.get("regenerate_deleted_stat_files").getAsBoolean()) {
             Utils.saveFilesFromJar("configs/stats", "stats", json.has("replace_old_stat_files_when_regenerating") && json.get("replace_old_stat_files_when_regenerating").getAsBoolean());
+        }
+        if (!json.has("regenerate_deleted_chisel_files") || json.get("regenerate_deleted_chisel_files").getAsBoolean()) {
+            Utils.saveFilesFromJar("configs/chisels", "chisels", json.has("replace_old_chisel_files_when_regenerating") && json.get("replace_old_chisel_files_when_regenerating").getAsBoolean());
         }
         ItemRegistry.generateProperties();
         ItemRegistry.generateModifiers();

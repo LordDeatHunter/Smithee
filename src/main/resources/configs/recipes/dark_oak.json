@@ -10,11 +10,5 @@
     "material_value": 9,
     "chiseling_level": 0,
     "overrides": {}
-  },
-  "smithee:dark_oak_shard": {
-    "output_material": "dark_oak",
-    "material_value": 1,
-    "chiseling_level": 0,
-    "overrides": {}
   }
 }

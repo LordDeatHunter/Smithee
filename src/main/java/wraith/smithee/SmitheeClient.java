@@ -73,7 +73,7 @@ public class SmitheeClient implements ClientModInitializer {
                 CompoundTag remainsTag = tag.getCompound("remains").getCompound(id);
                 Set<String> items = remainsTag.getKeys();
                 for (String item : items) {
-                    ItemRegistry.REMAINS.get(id).put(Registry.ITEM.get(new Identifier(item)), remainsTag.getInt(item));
+                    ItemRegistry.REMAINS.get(id).put(new Identifier(item), remainsTag.getInt(item));
                 }
             }
         });

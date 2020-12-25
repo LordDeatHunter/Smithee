@@ -1,0 +1,42 @@
+{
+  "generate_new": [
+    "flint",
+    "oak",
+    "birch",
+    "spruce",
+    "dark_oak",
+    "acacia",
+    "warped",
+    "jungle",
+    "crimson",
+    "cactus",
+    "bone",
+    "stone",
+    "mossy_cobblestone",
+    "diorite",
+    "andesite",
+    "granite",
+    "basalt",
+    "blackstone",
+    "netherrack",
+    "prismarine",
+    "end_stone",
+    "bamboo",
+    "ice",
+    "diamond"
+  ],
+  "use_existing": [
+    {
+      "material": "iron",
+      "item": "minecraft:iron_nugget"
+    },
+    {
+      "material": "golden",
+      "item": "minecraft:gold_nugget"
+    },
+    {
+      "material": "flint",
+      "item": "minecraft:flint"
+    }
+  ]
+}

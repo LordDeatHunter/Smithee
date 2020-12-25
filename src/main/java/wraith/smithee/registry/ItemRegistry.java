@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import wraith.smithee.Config;
 import wraith.smithee.ItemGroups;
@@ -14,6 +15,7 @@ import wraith.smithee.items.Chisel;
 import wraith.smithee.items.tool_parts.Part;
 import wraith.smithee.items.tool_parts.ToolPartItem;
 import wraith.smithee.items.tools.*;
+import wraith.smithee.properties.ChiselingRecipe;
 import wraith.smithee.properties.Properties;
 import wraith.smithee.properties.ToolPartRecipe;
 import wraith.smithee.recipes.EmbossRecipe;
@@ -21,10 +23,7 @@ import wraith.smithee.utils.JsonParser;
 import wraith.smithee.utils.Utils;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class ItemRegistry {
 
@@ -32,6 +31,7 @@ public class ItemRegistry {
     public static HashMap<String, Item> ITEMS = new HashMap<>();
     public static HashSet<String> MATERIALS = new HashSet<>();
     public static final HashSet<String> EMBOSS_MATERIALS = new HashSet<>();
+    public static final HashMap<String, Identifier> SHARDS = new HashMap<>();
 
     public static HashSet<String> TOOL_TYPES = new HashSet<String>() {{
         add("pickaxe");
@@ -50,7 +50,7 @@ public class ItemRegistry {
     public static final HashMap<String, EmbossRecipe> EMBOSS_RECIPES = new HashMap<>();
 
     //InputMaterial -> OutputItem -> Cost
-    public static final HashMap<String, HashMap<Item, Integer>> REMAINS = new HashMap<>();
+    public static final HashMap<String, HashMap<Identifier, Integer>> REMAINS = new HashMap<>();
 
     public static final HashMap<String, Integer> BASE_RECIPE_VALUES = new HashMap<String, Integer>(){{
         put("pickaxe_head", 27);
@@ -67,7 +67,6 @@ public class ItemRegistry {
 
     public static void addItems() {
         for (String material : MATERIALS) {
-            ITEMS.put(material + "_chisel", new Chisel(new Item.Settings().maxDamage(100).group(ItemGroups.SMITHEE_ITEMS), 5));
             try {
                 int durability;
                 for (String tool : TOOL_TYPES) {
@@ -85,6 +84,10 @@ public class ItemRegistry {
         }
         for (String material : EMBOSS_MATERIALS) {
             ITEMS.put(material + "_embossment", new Item(new Item.Settings().group(ItemGroups.SMITHEE_ITEMS)));
+        }
+
+        for (ChiselingRecipe recipe : generateChiselingStats()) {
+            ITEMS.put(recipe.material + "_chisel", new Chisel(new Item.Settings().maxDamage(recipe.durability).group(ItemGroups.SMITHEE_ITEMS), recipe.level));
         }
 
         ITEMS.put("silky_jewel", new Item(new Item.Settings().group(ItemGroups.SMITHEE_ITEMS)));
@@ -116,21 +119,6 @@ public class ItemRegistry {
         ITEMS.put("base_smithee_shovel", new BaseSmitheeShovel(new Item.Settings().group(ItemGroups.SMITHEE_PARTS)));
         ITEMS.put("base_smithee_hoe", new BaseSmitheeHoe(new Item.Settings().group(ItemGroups.SMITHEE_PARTS)));
         ITEMS.put("base_smithee_sword", new BaseSmitheeSword(new Item.Settings().group(ItemGroups.SMITHEE_PARTS)));
-
-        ITEMS.put("flint_chisel", new Chisel(new Item.Settings().maxDamage(6).group(ItemGroups.SMITHEE_ITEMS), 0));
-
-        ITEMS.put("oak_shard", new Item(new Item.Settings().group(ItemGroups.SMITHEE_ITEMS)));
-        ITEMS.put("dark_oak_shard", new Item(new Item.Settings().group(ItemGroups.SMITHEE_ITEMS)));
-        ITEMS.put("birch_shard", new Item(new Item.Settings().group(ItemGroups.SMITHEE_ITEMS)));
-        ITEMS.put("acacia_shard", new Item(new Item.Settings().group(ItemGroups.SMITHEE_ITEMS)));
-        ITEMS.put("jungle_shard", new Item(new Item.Settings().group(ItemGroups.SMITHEE_ITEMS)));
-        ITEMS.put("spruce_shard", new Item(new Item.Settings().group(ItemGroups.SMITHEE_ITEMS)));
-        ITEMS.put("stone_shard", new Item(new Item.Settings().group(ItemGroups.SMITHEE_ITEMS)));
-        ITEMS.put("andesite_shard", new Item(new Item.Settings().group(ItemGroups.SMITHEE_ITEMS)));
-        ITEMS.put("diorite_shard", new Item(new Item.Settings().group(ItemGroups.SMITHEE_ITEMS)));
-        ITEMS.put("granite_shard", new Item(new Item.Settings().group(ItemGroups.SMITHEE_ITEMS)));
-        ITEMS.put("netherrack_shard", new Item(new Item.Settings().group(ItemGroups.SMITHEE_ITEMS)));
-        ITEMS.put("diamond_shard", new Item(new Item.Settings().group(ItemGroups.SMITHEE_ITEMS)));
     }
 
     public static void setDisabledItems() {
@@ -216,12 +204,31 @@ public class ItemRegistry {
         }
     }
 
+    public static ArrayList<ChiselingRecipe> generateChiselingStats() {
+        File[] files = Config.getFiles("config/smithee/chisels/");
+        ArrayList<ChiselingRecipe> stats = new ArrayList<>();
+        if (files == null) {
+            return stats;
+        }
+        for(File file : files) {
+            JsonArray json = Config.getJsonObject(Config.readFile(file)).get("chisels").getAsJsonArray();
+            try {
+                JsonParser.parseChiselingStats(json, stats);
+            }
+            catch(Exception e) {
+                Smithee.LOGGER.warn("Found error with chiseling file '" + file.getName() + "'");
+            }
+        }
+        return stats;
+    }
+
     public static void generateRecipes() {
+        TOOL_PART_RECIPES.clear();
+        REMAINS.clear();
         File[] files = Config.getFiles("config/smithee/recipes/");
         if (files == null) {
-            return ;
+            return;
         }
-        TOOL_PART_RECIPES.clear();
         for(File file : files) {
             JsonObject json = Config.getJsonObject(Config.readFile(file));
             try {
@@ -241,6 +248,17 @@ public class ItemRegistry {
         EMBOSS_RECIPES.clear();
         for (File file : files) {
             JsonParser.parseModifiers(Config.getJsonObject(Config.readFile(file)), EMBOSS_RECIPES);
+        }
+    }
+
+    public static void generateShards() {
+        File[] files = Config.getFiles("config/smithee/shards/");
+        if (files == null) {
+            return;
+        }
+        SHARDS.clear();
+        for (File file : files) {
+            JsonParser.parseShards(Config.getJsonObject(Config.readFile(file)), SHARDS);
         }
     }
 }

@@ -1,7 +1,13 @@
 {
   "minecraft:prismarine": {
     "output_material": "prismarine",
-    "material_value": 9,
+    "material_value": 8,
+    "chiseling_level": 1,
+    "overrides": {}
+  },
+  "minecraft:prismarine_shard": {
+    "output_material": "prismarine",
+    "material_value": 2,
     "chiseling_level": 1,
     "overrides": {}
   }

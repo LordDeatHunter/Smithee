@@ -1,6 +1,8 @@
 package wraith.smithee.recipes;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import net.minecraft.util.Identifier;
 import wraith.smithee.Config;
 
 import java.io.File;
@@ -10,6 +12,7 @@ import java.util.HashSet;
 public class RecipesGenerator {
 
     public static HashMap<HashSet<String>, SmithingRecipe> RECIPES = new HashMap<>();
+    public static HashMap<Identifier, JsonObject> VANILLA_RECIPES = new HashMap<>();
 
     public static void generateRecipes() {
         File[] files = Config.getFiles("config/smithee/smithing/");
@@ -27,6 +30,56 @@ public class RecipesGenerator {
             RECIPES.put(key, new SmithingRecipe(input, addition, additionAmount, output));
         }
     }
+
+    public static JsonObject generateChiselRecipeJson(Identifier headItem, Identifier output) {
+        JsonObject json = new JsonObject();
+
+        json.addProperty("type", "minecraft:crafting_shaped");
+
+        JsonArray jsonArray = new JsonArray();
+        jsonArray.add(" #");
+        jsonArray.add("/ ");
+        json.add("pattern", jsonArray);
+
+        JsonObject obj = new JsonObject();
+        JsonObject key = new JsonObject();
+
+        obj.addProperty("item", headItem.toString());
+        key.add("#", obj);
+
+        obj = new JsonObject();
+        obj.addProperty("item", "minecraft:stick");
+        key.add("/", obj);
+
+        json.add("key", key);
+
+        obj = new JsonObject();
+        obj.addProperty("item", output.toString());
+        obj.addProperty("count", 1);
+        json.add("result", obj);
+
+        return json;
+    }
+
+    public static JsonObject generateSmithingJson(Identifier base, Identifier addition, Identifier output) {
+        JsonObject json = new JsonObject();
+        json.addProperty("type", "minecraft:smithing");
+
+        JsonObject obj = new JsonObject();
+        obj.addProperty("item", base.toString());
+        json.add("base", obj);
+
+        obj = new JsonObject();
+        obj.addProperty("item", addition.toString());
+        json.add("addition", obj);
+
+        obj = new JsonObject();
+        obj.addProperty("item", output.toString());
+        json.add("result", obj);
+
+        return json;
+    }
+
 
     //public static HashMap<Identifier, JsonObject> RECIPES = new HashMap<>();
 

@@ -20,6 +20,7 @@
     "NamespaceResourceManagerMixin",
     "PlayerEntityMixin",
     "PlayerManagerMixin",
+    "RecipeManagerMixin",
     "SmithingScreenHandlerMixin",
     "StatusEffectInvoker",
     "StatusEffectMixin",

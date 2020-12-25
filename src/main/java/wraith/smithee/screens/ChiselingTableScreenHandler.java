@@ -4,7 +4,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.s2c.play.ScreenHandlerSlotUpdateS2CPacket;
 import net.minecraft.screen.ArrayPropertyDelegate;
@@ -13,6 +12,7 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 import wraith.smithee.items.Chisel;
 import wraith.smithee.properties.ToolPartRecipe;
 import wraith.smithee.registry.ItemRegistry;
@@ -21,7 +21,9 @@ import wraith.smithee.screens.slots.ToolOutputSlot;
 import wraith.smithee.screens.slots.ToolSlot;
 import wraith.smithee.utils.Utils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ChiselingTableScreenHandler extends ScreenHandler {
 
@@ -37,7 +39,7 @@ public class ChiselingTableScreenHandler extends ScreenHandler {
         this.delegate = delegate;
         this.addProperties(this.delegate);
         this.inventory = inventory;
-        this.addSlot(new ToolSlot(inventory, 0, 61, 41, new Identifier("c", "part_chisels"))); //Chisel
+        this.addSlot(new ToolSlot(inventory, 0, 61, 41, Chisel.class)); //Chisel
         this.addSlot(new ToolSlot(inventory, 1, 95, 41, ItemRegistry.TOOL_PART_RECIPES.keySet())); //Material
         this.addSlot(new ToolOutputSlot(inventory, 2, 78, 66)); //Output
 
@@ -130,7 +132,7 @@ public class ChiselingTableScreenHandler extends ScreenHandler {
                 return false;
             }
 
-            int worth = ItemRegistry.REMAINS.get(recipes.get(type).outputMaterial).get(materialStack.getItem());
+            int worth = ItemRegistry.REMAINS.get(recipes.get(type).outputMaterial).get(Registry.ITEM.getId(materialStack.getItem()));
             if (materialStack.getCount() * worth < recipes.get(type).requiredAmount) {
                 return false;
             }
@@ -156,16 +158,16 @@ public class ChiselingTableScreenHandler extends ScreenHandler {
 
             Utils.damage(inventory.getStack(0), 1);
 
-            HashMap<Item, Integer> remainders = ItemRegistry.REMAINS.get(recipes.get(type).outputMaterial);
-            ArrayList<Map.Entry<Item, Integer>> mapValues = new ArrayList<>(remainders.entrySet());
+            HashMap<Identifier, Integer> remainders = ItemRegistry.REMAINS.get(recipes.get(type).outputMaterial);
+            ArrayList<Map.Entry<Identifier, Integer>> mapValues = new ArrayList<>(remainders.entrySet());
             mapValues.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue()));
 
-            for (Map.Entry<Item, Integer> entry : mapValues) {
+            for (Map.Entry<Identifier, Integer> entry : mapValues) {
                 if (entry.getValue() <= remains) {
                     int amount = remains / entry.getValue();
-                    amount = Math.min(entry.getKey().getMaxCount(), amount);
+                    amount = Math.min(Registry.ITEM.get(entry.getKey()).getMaxCount(), amount);
                     remains -= amount * entry.getValue();
-                    serverPlayerEntity.inventory.offerOrDrop(serverPlayerEntity.world, new ItemStack(entry.getKey(), amount));
+                    serverPlayerEntity.inventory.offerOrDrop(serverPlayerEntity.world, new ItemStack(Registry.ITEM.get(entry.getKey()), amount));
                 }
                 if (remains <= 0) {
                     break;

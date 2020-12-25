@@ -8,12 +8,7 @@
   "authors": [
     "LordDeatHunter"
   ],
-  "contact": {
-    "homepage": "",
-    "sources": ""
-  },
-
-  "license": "CC0-1.0",
+  "license": "MIT",
   "icon": "assets/smithee/Smithee.png",
 
   "environment": "*",

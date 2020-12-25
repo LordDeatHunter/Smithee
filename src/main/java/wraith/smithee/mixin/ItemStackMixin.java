@@ -31,6 +31,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import wraith.smithee.Smithee;
 import wraith.smithee.items.Chisel;
 import wraith.smithee.items.tool_parts.ToolPartItem;
 import wraith.smithee.items.tools.BaseSmitheePickaxe;
@@ -175,6 +176,7 @@ public abstract class ItemStackMixin {
 
     @Inject(method = "getName", at = @At("HEAD"), cancellable = true)
     public void getName(CallbackInfoReturnable<Text> cir) {
+        boolean isSmithee = Registry.ITEM.getId(getItem()).getNamespace().equals(Smithee.MOD_ID);
         if (getItem() instanceof BaseSmitheeTool) {
             if (tag != null && tag.contains("SmitheeProperties") && tag.getCompound("SmitheeProperties").contains("CustomName")) {
                 cir.setReturnValue(new LiteralText(tag.getCompound("SmitheeProperties").getString("CustomName")));
@@ -186,7 +188,7 @@ public abstract class ItemStackMixin {
         } else if (getItem() instanceof ToolPartItem) {
             ToolPartItem part = (ToolPartItem)getItem();
             cir.setReturnValue(new LiteralText(part.toString()));
-        } else if (getItem() instanceof Chisel || Registry.ITEM.getId(getItem()).getPath().endsWith("_embossment")) {
+        } else if (getItem() instanceof Chisel || (isSmithee && (Registry.ITEM.getId(getItem()).getPath().endsWith("_embossment") || Registry.ITEM.getId(getItem()).getPath().endsWith("_shard")))) {
             cir.setReturnValue(new LiteralText(Utils.capitalize(Registry.ITEM.getId(getItem()).getPath().split("/")[0].split("_"))));
         }
     }
@@ -198,7 +200,7 @@ public abstract class ItemStackMixin {
             list.add(new LiteralText("§1[§5Tool material§1]"));
             if (Screen.hasShiftDown() && ItemRegistry.REMAINS.containsKey(ItemRegistry.TOOL_PART_RECIPES.get(getItem()).get("pickaxe_head").outputMaterial)) {
                 HashMap<String, ToolPartRecipe> recipes = ItemRegistry.TOOL_PART_RECIPES.get(getItem());
-                int worth = ItemRegistry.REMAINS.get(recipes.get("pickaxe_head").outputMaterial).get(getItem());
+                int worth = ItemRegistry.REMAINS.get(recipes.get("pickaxe_head").outputMaterial).get(Registry.ITEM.getId(getItem()));
                 list.add(new LiteralText("§9[§dIndividual Worth: §b" + worth + "§d]"));
                 list.add(new LiteralText("§9[§dTotal Worth: §b" + (worth * getCount()) + "§d]"));
             } else {

@@ -1,0 +1,142 @@
+{
+  "chisels": [
+    {
+      "material": "flint",
+      "durability": 4,
+      "level": 0
+    },
+    {
+      "material": "oak",
+      "durability": 4,
+      "level": 0
+    },
+    {
+      "material": "birch",
+      "durability": 4,
+      "level": 0
+    },
+    {
+      "material": "spruce",
+      "durability": 4,
+      "level": 0
+    },
+    {
+      "material": "dark_oak",
+      "durability": 4,
+      "level": 0
+    },
+    {
+      "material": "acacia",
+      "durability": 4,
+      "level": 0
+    },
+    {
+      "material": "jungle",
+      "durability": 4,
+      "level": 0
+    },
+    {
+      "material": "cactus",
+      "durability": 4,
+      "level": 0
+    },
+    {
+      "material": "bone",
+      "durability": 4,
+      "level": 1
+    },
+    {
+      "material": "stone",
+      "durability": 4,
+      "level": 1
+    },
+    {
+      "recipe_type": "mossy_cobblestone",
+      "material": "stone",
+      "durability": 4,
+      "level": 1
+    },
+    {
+      "material": "granite",
+      "durability": 4,
+      "level": 1
+    },
+    {
+      "material": "diorite",
+      "durability": 4,
+      "level": 1
+    },
+    {
+      "material": "andesite",
+      "durability": 4,
+      "level": 1
+    },
+    {
+      "material": "netherrack",
+      "durability": 4,
+      "level": 1
+    },
+    {
+      "material": "prismarine",
+      "durability": 4,
+      "level": 1
+    },
+    {
+      "material": "end_stone",
+      "durability": 4,
+      "level": 1
+    },
+    {
+      "material": "basalt",
+      "durability": 4,
+      "level": 1
+    },
+    {
+      "material": "blackstone",
+      "durability": 4,
+      "level": 1
+    },
+    {
+      "material": "warped",
+      "durability": 4,
+      "level": 0
+    },
+    {
+      "material": "bamboo",
+      "durability": 4,
+      "level": 0
+    },
+    {
+      "material": "ice",
+      "durability": 2,
+      "level": 1
+    },
+    {
+      "material": "crimson",
+      "durability": 4,
+      "level": 0
+    },
+    {
+      "material": "golden",
+      "durability": 8,
+      "level": 0
+    },
+    {
+      "material": "iron",
+      "durability": 128,
+      "level": 0
+    },
+    {
+      "material": "diamond",
+      "durability": 256,
+      "level": 3
+    },
+    {
+      "smithing_input": "diamond",
+      "smithing_addition": "minecraft:netherite_ingot",
+      "material": "netherite",
+      "durability": 384,
+      "level": 4
+    }
+  ]
+}

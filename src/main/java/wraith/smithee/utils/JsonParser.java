@@ -8,10 +8,12 @@ import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import wraith.smithee.Config;
-import wraith.smithee.properties.*;
+import wraith.smithee.ItemGroups;
 import wraith.smithee.properties.Properties;
+import wraith.smithee.properties.*;
 import wraith.smithee.recipes.EmbossModifiers;
 import wraith.smithee.recipes.EmbossRecipe;
+import wraith.smithee.recipes.RecipesGenerator;
 import wraith.smithee.registry.ItemRegistry;
 
 import java.io.File;
@@ -41,13 +43,19 @@ public class JsonParser {
 
     }
 
-    public static void parseRecipes(Set<Map.Entry<String, JsonElement>> recipes, HashMap<Item, HashMap<String, ToolPartRecipe>> recipeList, HashMap<String, HashMap<Item, Integer>> remains) {
+    public static void parseRecipes(Set<Map.Entry<String, JsonElement>> recipes, HashMap<Item, HashMap<String, ToolPartRecipe>> recipeList, HashMap<String, HashMap<Identifier, Integer>> remains) {
+        int minLevel = -1;
         for (Map.Entry<String, JsonElement> entry : recipes) {
             JsonObject recipe = entry.getValue().getAsJsonObject();
             String material = entry.getKey();
             String outputMaterial = recipe.get("output_material").getAsString();
             int chiselingLevel = recipe.get("chiseling_level").getAsInt();
             int worth = recipe.get("material_value").getAsInt();
+            if (minLevel == -1) {
+                minLevel = chiselingLevel;
+            } else {
+                minLevel = Math.min(minLevel, chiselingLevel);
+            }
             boolean canEmboss = recipe.has("can_emboss") && recipe.get("can_emboss").getAsBoolean();
             boolean embossOnly = recipe.has("emboss_only") && recipe.get("emboss_only").getAsBoolean();
 
@@ -62,8 +70,15 @@ public class JsonParser {
                 if (!remains.containsKey(outputMaterial)) {
                     remains.put(outputMaterial, new HashMap<>());
                 }
-                remains.get(outputMaterial).put(item, worth);
+                remains.get(outputMaterial).put(Registry.ITEM.getId(item), worth);
+                if (ItemRegistry.SHARDS.containsKey(outputMaterial)) {
+                    remains.get(outputMaterial).put(ItemRegistry.SHARDS.get(outputMaterial), 1);
+                }
+                Item shard = Registry.ITEM.get(ItemRegistry.SHARDS.get(outputMaterial));
                 recipeList.put(item, new HashMap<>());
+                if (!recipeList.containsKey(shard)) {
+                    recipeList.put(shard, new HashMap<>());
+                }
                 if (embossOnly) {
                     int base = ItemRegistry.BASE_RECIPE_VALUES.get("embossment");
                     recipeList.get(item).put("embossment", new ToolPartRecipe(outputMaterial, base, chiselingLevel));
@@ -80,6 +95,9 @@ public class JsonParser {
                     }
                     int base = ItemRegistry.BASE_RECIPE_VALUES.get(recipeType);
                     recipeList.get(item).put(recipeType, new ToolPartRecipe(outputMaterial, base, chiselingLevel));
+                    if (!recipeList.get(shard).containsKey(recipeType)) {
+                        recipeList.get(shard).put(recipeType, new ToolPartRecipe(outputMaterial, base, chiselingLevel));
+                    }
                     if (overrides.has("all")) {
                         recipeList.get(item).get(recipeType).requiredAmount = (int) Utils.evaluateExpression(overrides.get("all").getAsString().replace("base", String.valueOf(base)));
                     } else if (overrides.has(recipeType)) {
@@ -172,5 +190,40 @@ public class JsonParser {
             }
         }
         recipes.put(material, new EmbossRecipe(type, stackable, embossModifiers, incompatible));
+    }
+
+    public static void parseChiselingStats(JsonArray json, ArrayList<ChiselingRecipe> stats) {
+        //foreach doesn't work here, please spare me from this misery.
+        for (int i = 0; i < json.size(); ++i) {
+            JsonObject chiselStat = json.get(i).getAsJsonObject();
+            int level = chiselStat.get("level").getAsInt();
+            int durability = chiselStat.get("durability").getAsInt();
+            String material = chiselStat.get("material").getAsString();
+            stats.add(new ChiselingRecipe(level, durability, material));
+
+            if (chiselStat.has("smithing_input") && chiselStat.has("smithing_addition")) {
+                String input = chiselStat.get("smithing_input").getAsString();
+                Identifier addition = new Identifier(chiselStat.get("smithing_addition").getAsString());
+                RecipesGenerator.VANILLA_RECIPES.put(Utils.ID(material + "_chisel"), RecipesGenerator.generateSmithingJson(Utils.ID(input + "_chisel"), addition, Utils.ID(material + "_chisel")));
+            } else {
+                Identifier head = ItemRegistry.SHARDS.get(material);
+                RecipesGenerator.VANILLA_RECIPES.put(Utils.ID(material + "_chisel"), RecipesGenerator.generateChiselRecipeJson(head, Utils.ID(material + "_chisel")));
+            }
+        }
+    }
+
+    public static void parseShards(JsonObject jsonObject, HashMap<String, Identifier> shards) {
+        JsonArray array = jsonObject.get("generate_new").getAsJsonArray();
+        for (JsonElement element : array) {
+            String id = element.getAsString();
+            shards.put(id, Utils.ID(id + "_shard"));
+            ItemRegistry.ITEMS.put(id + "_shard", new Item(new Item.Settings().group(ItemGroups.SMITHEE_ITEMS)));
+        }
+        array = jsonObject.get("use_existing").getAsJsonArray();
+        for (JsonElement element : array) {
+            JsonObject obj = element.getAsJsonObject();
+            String material = obj.get("material").getAsString();
+            shards.put(material, new Identifier(obj.get("item").getAsString()));
+        }
     }
 }

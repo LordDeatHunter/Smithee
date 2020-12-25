@@ -8,6 +8,7 @@ import net.minecraft.network.ClientConnection;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.PlayerManager;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -43,10 +44,9 @@ public class PlayerManagerMixin {
         CompoundTag remainsTag  = new CompoundTag();
         for (String input : ItemRegistry.REMAINS.keySet()) {
             CompoundTag remains = new CompoundTag();
-            for (Item item : ItemRegistry.REMAINS.get(input).keySet()) {
-                String id = Registry.ITEM.getId(item).toString();
-                int worth = ItemRegistry.REMAINS.get(input).get(item);
-                remains.putInt(id, worth);
+            for (Identifier id : ItemRegistry.REMAINS.get(input).keySet()) {
+                int worth = ItemRegistry.REMAINS.get(input).get(id);
+                remains.putInt(id.toString(), worth);
             }
             remainsTag.put(input, remains);
         }
