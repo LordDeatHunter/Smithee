@@ -39,18 +39,18 @@ public class ChiselingTableScreenHandler extends ScreenHandler {
         this.delegate = delegate;
         this.addProperties(this.delegate);
         this.inventory = inventory;
-        this.addSlot(new ToolSlot(inventory, 0, 61, 41, Chisel.class)); //Chisel
-        this.addSlot(new ToolSlot(inventory, 1, 95, 41, ItemRegistry.TOOL_PART_RECIPES.keySet())); //Material
-        this.addSlot(new ToolOutputSlot(inventory, 2, 78, 66)); //Output
+        this.addSlot(new ToolSlot(inventory, 0, 81, 41, Chisel.class)); //Chisel
+        this.addSlot(new ToolSlot(inventory, 1, 115, 41, ItemRegistry.TOOL_PART_RECIPES.keySet())); //Material
+        this.addSlot(new ToolOutputSlot(inventory, 2, 98, 66)); //Output
 
         for (int y = 0; y < 3; ++y) {
             for (int x = 0; x < 9; ++x) {
-                this.addSlot(new Slot(playerInventory, x + y * 9 + 9, 8 + x * 18, 90 + y * 18));
+                this.addSlot(new Slot(playerInventory, x + y * 9 + 9, 28 + x * 18, 90 + y * 18));
             }
         }
 
         for (int x = 0; x < 9; ++x) {
-            this.addSlot(new Slot(playerInventory, x, 8 + x * 18, 148));
+            this.addSlot(new Slot(playerInventory, x, 28 + x * 18, 148));
         }
 
     }

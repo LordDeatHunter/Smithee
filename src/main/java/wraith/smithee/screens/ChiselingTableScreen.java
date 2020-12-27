@@ -23,10 +23,11 @@ public class ChiselingTableScreen extends HandledScreen<ScreenHandler> {
     public ChiselingTableScreen(ScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
         this.handler = (ChiselingTableScreenHandler) handler;
-        this.backgroundWidth = 176;
+        this.backgroundWidth = 176 + 40;
         this.backgroundHeight = 171;
         this.playerInventoryTitleY = this.backgroundHeight - 94;
-        this.titleX += 20;
+        this.playerInventoryTitleX += 20;
+        this.titleX += 40;
     }
 
     @Override
@@ -41,37 +42,38 @@ public class ChiselingTableScreen extends HandledScreen<ScreenHandler> {
     protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.client.getTextureManager().bindTexture(TEXTURE);
-        this.drawTexture(matrices, x, y, 0, 0, this.backgroundWidth, this.backgroundHeight);
+        int x = this.x + 20;
+        this.drawTexture(matrices, x, y, 20, 0, this.backgroundWidth - 40, this.backgroundHeight);
 
         //Chisel
         if (this.handler.slots.get(0).getStack().isEmpty()) {
-            this.drawTexture(matrices, x + 61, y + 41, 176, 0, 16, 16);
+            this.drawTexture(matrices, x + 61, y + 41, 196, 0, 16, 16);
         }
         //Material
         boolean hasMaterial = true;
         if (this.handler.slots.get(1).getStack().isEmpty()) {
             hasMaterial = false;
-            this.drawTexture(matrices, x + 95, y + 41, 176 + 16, 0, 16, 16);
+            this.drawTexture(matrices, x + 95, y + 41, 196 + 16, 0, 16, 16);
         }
         //Output
         if (this.handler.slots.get(2).getStack().isEmpty()) {
-            this.drawTexture(matrices, x + 78, y + 66, 176 + 32, 0, 16, 16);
+            this.drawTexture(matrices, x + 78, y + 66, 196 + 32, 0, 16, 16);
         }
 
         //Craft
-        drawButton(matrices, x, y, 76, 16, 196, 16, mouseX, mouseY, 0, 0);
+        drawButton(matrices, x, y, 76, 16, 216, 16, mouseX, mouseY, 0, 0);
         //Tools
-        drawButton(matrices, x, y, -20, 2, 196, 36, mouseX, mouseY, 0, 1);
-        drawButton(matrices, x, y, -20, 22, 196, 56, mouseX, mouseY, 1, 1);
-        drawButton(matrices, x, y, -20, 42, 196, 76, mouseX, mouseY, 2, 1);
-        drawButton(matrices, x, y, -20, 62, 196, 96, mouseX, mouseY, 3, 1);
-        drawButton(matrices, x, y, -20, 82, 196, 116, mouseX, mouseY, 4, 1);
-        drawButton(matrices, x, y, -20, 102, 196, 216, mouseX, mouseY, 5, 1);
+        drawButton(matrices, x, y, -20, 2, 216, 36, mouseX, mouseY, 0, 1);
+        drawButton(matrices, x, y, -20, 22, 216, 56, mouseX, mouseY, 1, 1);
+        drawButton(matrices, x, y, -20, 42, 216, 76, mouseX, mouseY, 2, 1);
+        drawButton(matrices, x, y, -20, 62, 216, 96, mouseX, mouseY, 3, 1);
+        drawButton(matrices, x, y, -20, 82, 216, 116, mouseX, mouseY, 4, 1);
+        drawButton(matrices, x, y, -20, 102, 216, 216, mouseX, mouseY, 5, 1);
         //Parts
         if (this.handler.getToolPage() != 5) {
-            drawButton(matrices, x, y, backgroundWidth, 2, 196, 136, mouseX, mouseY, 0, 2);
-            drawButton(matrices, x, y, backgroundWidth, 22, 196, 156, mouseX, mouseY, 1, 2);
-            drawButton(matrices, x, y, backgroundWidth, 42, 196, 196, mouseX, mouseY, 2, 2);
+            drawButton(matrices, x, y, backgroundWidth - 40, 2, 216, 136, mouseX, mouseY, 0, 2);
+            drawButton(matrices, x, y, backgroundWidth - 40, 22, 216, 156, mouseX, mouseY, 1, 2);
+            drawButton(matrices, x, y, backgroundWidth - 40, 42, 216, 196, mouseX, mouseY, 2, 2);
         }
 
         if (hasMaterial) {
@@ -112,18 +114,20 @@ public class ChiselingTableScreen extends HandledScreen<ScreenHandler> {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         this.mouseClicked = true;
 
-        boolean tool1 = mouseX >= x - 20 && mouseY >= y + 2 && mouseX < x && mouseY < y + 22 && this.handler.getToolPage() != 0;
-        boolean tool2 = mouseX >= x - 20 && mouseY >= y + 22 && mouseX < x && mouseY < y + 22 + 20 && this.handler.getToolPage() != 1;
-        boolean tool3 = mouseX >= x - 20 && mouseY >= y + 42 && mouseX < x && mouseY < y + 42 + 20 && this.handler.getToolPage() != 2;
-        boolean tool4 = mouseX >= x - 20 && mouseY >= y + 62 && mouseX < x && mouseY < y + 62 + 20 && this.handler.getToolPage() != 3;
-        boolean tool5 = mouseX >= x - 20 && mouseY >= y + 82 && mouseX < x && mouseY < y + 82 + 20 && this.handler.getToolPage() != 4;
+        int x = this.x + 20;
+
+        boolean tool1 = mouseX >= x - 20 && mouseY >= y + 2   && mouseX < x && mouseY < y + 22       && this.handler.getToolPage() != 0;
+        boolean tool2 = mouseX >= x - 20 && mouseY >= y + 22  && mouseX < x && mouseY < y + 22 + 20  && this.handler.getToolPage() != 1;
+        boolean tool3 = mouseX >= x - 20 && mouseY >= y + 42  && mouseX < x && mouseY < y + 42 + 20  && this.handler.getToolPage() != 2;
+        boolean tool4 = mouseX >= x - 20 && mouseY >= y + 62  && mouseX < x && mouseY < y + 62 + 20  && this.handler.getToolPage() != 3;
+        boolean tool5 = mouseX >= x - 20 && mouseY >= y + 82  && mouseX < x && mouseY < y + 82 + 20  && this.handler.getToolPage() != 4;
         boolean tool6 = mouseX >= x - 20 && mouseY >= y + 102 && mouseX < x && mouseY < y + 102 + 20 && this.handler.getToolPage() != 5;
 
         this.clickPos = tool1 ? 0 : tool2 ? 1 : tool3 ? 2 : tool4 ? 3 : tool5 ? 4 : tool6 ? 5 : -1;
 
-        boolean part1 = mouseX >= x + backgroundWidth && mouseY >= y + 2 && mouseX < x + backgroundWidth + 20 && mouseY < y + 22 && this.handler.getPartPage() != 0 && this.handler.getToolPage() != 5;
-        boolean part2 = mouseX >= x + backgroundWidth && mouseY >= y + 22 && mouseX < x + backgroundWidth + 20 && mouseY < y + 42 && this.handler.getPartPage() != 1 && this.handler.getToolPage() != 5;
-        boolean part3 = mouseX >= x + backgroundWidth && mouseY >= y + 42 && mouseX < x + backgroundWidth + 20 && mouseY < y + 62 && this.handler.getPartPage() != 2 && this.handler.getToolPage() != 5;
+        boolean part1 = mouseX >= x + backgroundWidth - 40 && mouseY >= y + 2  && mouseX < x + backgroundWidth - 20 && mouseY < y + 22 && this.handler.getPartPage() != 0 && this.handler.getToolPage() != 5;
+        boolean part2 = mouseX >= x + backgroundWidth - 40 && mouseY >= y + 22 && mouseX < x + backgroundWidth - 20 && mouseY < y + 42 && this.handler.getPartPage() != 1 && this.handler.getToolPage() != 5;
+        boolean part3 = mouseX >= x + backgroundWidth - 40 && mouseY >= y + 42 && mouseX < x + backgroundWidth - 20 && mouseY < y + 62 && this.handler.getPartPage() != 2 && this.handler.getToolPage() != 5;
 
         if (this.clickPos == -1) {
             this.clickPos = part1 ? 5 : part2 ? 6 : part3 ? 7 : -1;
