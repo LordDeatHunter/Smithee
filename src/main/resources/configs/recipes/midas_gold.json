@@ -1,17 +1,17 @@
 {
-  "#c:midas_gold_blocks": {
+  "#mythicmetals:midas_gold_blocks": {
     "output_material": "midas_gold",
     "material_value": 81,
     "chiseling_level": 1,
     "overrides": {}
   },
-  "#c:midas_gold_ingots": {
+  "#mythicmetals:midas_gold_ingots": {
     "output_material": "midas_gold",
     "material_value": 9,
     "chiseling_level": 1,
     "overrides": {}
   },
-  "#c:midas_gold_nuggets": {
+  "#mythicmetals:midas_gold_nuggets": {
     "output_material": "midas_gold",
     "material_value": 1,
     "chiseling_level": 1,

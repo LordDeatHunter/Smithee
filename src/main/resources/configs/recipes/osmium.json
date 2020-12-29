@@ -2,19 +2,19 @@
   "#c:osmium_blocks": {
     "output_material": "osmium",
     "material_value": 81,
-    "chiseling_level": 1,
+    "chiseling_level": 3,
     "overrides": {}
   },
   "#c:osmium_ingots": {
     "output_material": "osmium",
     "material_value": 9,
-    "chiseling_level": 1,
+    "chiseling_level": 3,
     "overrides": {}
   },
   "#c:osmium_nuggets": {
     "output_material": "osmium",
     "material_value": 1,
-    "chiseling_level": 1,
+    "chiseling_level": 3,
     "overrides": {}
   }
 }

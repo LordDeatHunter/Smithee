@@ -42,58 +42,57 @@
     },
     {
       "material": "bone",
-      "durability": 4,
+      "durability": 8,
       "level": 1
     },
     {
       "material": "stone",
-      "durability": 4,
+      "durability": 12,
       "level": 1
     },
     {
-      "recipe_type": "mossy_cobblestone",
-      "material": "stone",
-      "durability": 4,
+      "material": "mossy_cobblestone",
+      "durability": 12,
       "level": 1
     },
     {
       "material": "granite",
-      "durability": 4,
+      "durability": 12,
       "level": 1
     },
     {
       "material": "diorite",
-      "durability": 4,
+      "durability": 12,
       "level": 1
     },
     {
       "material": "andesite",
-      "durability": 4,
+      "durability": 12,
       "level": 1
     },
     {
       "material": "netherrack",
-      "durability": 4,
+      "durability": 8,
       "level": 1
     },
     {
       "material": "prismarine",
-      "durability": 4,
+      "durability": 12,
       "level": 1
     },
     {
       "material": "end_stone",
-      "durability": 4,
+      "durability": 12,
       "level": 1
     },
     {
       "material": "basalt",
-      "durability": 4,
+      "durability": 12,
       "level": 1
     },
     {
       "material": "blackstone",
-      "durability": 4,
+      "durability": 12,
       "level": 1
     },
     {
@@ -123,19 +122,19 @@
     },
     {
       "material": "iron",
-      "durability": 128,
-      "level": 0
+      "durability": 24,
+      "level": 2
     },
     {
       "material": "diamond",
-      "durability": 256,
+      "durability": 32,
       "level": 3
     },
     {
       "smithing_input": "diamond",
       "smithing_addition": "minecraft:netherite_ingot",
       "material": "netherite",
-      "durability": 384,
+      "durability": 48,
       "level": 4
     }
   ]

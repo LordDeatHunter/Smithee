@@ -1,20 +1,20 @@
 {
-  "#c:aetherium_blocks": {
+  "#mythicmetals:aetherium_blocks": {
     "output_material": "aetherium",
     "material_value": 81,
-    "chiseling_level": 1,
+    "chiseling_level": 4,
     "overrides": {}
   },
-  "#c:aetherium_ingots": {
+  "#mythicmetals:aetherium_ingots": {
     "output_material": "aetherium",
     "material_value": 9,
-    "chiseling_level": 1,
+    "chiseling_level": 4,
     "overrides": {}
   },
-  "#c:aetherium_nuggets": {
+  "#mythicmetals:aetherium_nuggets": {
     "output_material": "aetherium",
     "material_value": 1,
-    "chiseling_level": 1,
+    "chiseling_level": 4,
     "overrides": {}
   }
 }

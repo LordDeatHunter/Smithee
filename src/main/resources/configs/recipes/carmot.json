@@ -1,20 +1,20 @@
 {
-  "#c:carmot_blocks": {
+  "#mythicmetals:carmot_blocks": {
     "output_material": "carmot",
     "material_value": 81,
-    "chiseling_level": 1,
+    "chiseling_level": 2,
     "overrides": {}
   },
-  "#c:carmot_ingots": {
+  "#mythicmetals:carmot_ingots": {
     "output_material": "carmot",
     "material_value": 9,
-    "chiseling_level": 1,
+    "chiseling_level": 2,
     "overrides": {}
   },
-  "#c:carmot_nuggets": {
+  "#mythicmetals:carmot_nuggets": {
     "output_material": "carmot",
     "material_value": 1,
-    "chiseling_level": 1,
+    "chiseling_level": 2,
     "overrides": {}
   }
 }

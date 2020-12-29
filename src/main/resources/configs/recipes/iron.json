@@ -2,19 +2,19 @@
   "minecraft:iron_block": {
     "output_material": "iron",
     "material_value": 81,
-    "chiseling_level": 1,
+    "chiseling_level": 2,
     "overrides": {}
   },
   "minecraft:iron_ingot": {
     "output_material": "iron",
     "material_value": 9,
-    "chiseling_level": 1,
+    "chiseling_level": 2,
     "overrides": {}
   },
   "minecraft:iron_nugget": {
     "output_material": "iron",
     "material_value": 1,
-    "chiseling_level": 1,
+    "chiseling_level": 2,
     "overrides": {}
   }
 }

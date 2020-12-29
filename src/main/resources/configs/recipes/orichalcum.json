@@ -2,19 +2,19 @@
   "#c:orichalcum_blocks": {
     "output_material": "orichalcum",
     "material_value": 81,
-    "chiseling_level": 1,
+    "chiseling_level": 4,
     "overrides": {}
   },
   "#c:orichalcum_ingots": {
     "output_material": "orichalcum",
     "material_value": 9,
-    "chiseling_level": 1,
+    "chiseling_level": 4,
     "overrides": {}
   },
   "#c:orichalcum_nuggets": {
     "output_material": "orichalcum",
     "material_value": 1,
-    "chiseling_level": 1,
+    "chiseling_level": 4,
     "overrides": {}
   }
 }

@@ -1,20 +1,20 @@
 {
-  "#c:banglum_blocks": {
+  "#mythicmetals:banglum_blocks": {
     "output_material": "banglum",
     "material_value": 81,
-    "chiseling_level": 1,
+    "chiseling_level": 2,
     "overrides": {}
   },
-  "#c:banglum_ingots": {
+  "#mythicmetals:banglum_ingots": {
     "output_material": "banglum",
     "material_value": 9,
-    "chiseling_level": 1,
+    "chiseling_level": 2,
     "overrides": {}
   },
-  "#c:banglum_nuggets": {
+  "#mythicmetals:banglum_nuggets": {
     "output_material": "banglum",
     "material_value": 1,
-    "chiseling_level": 1,
+    "chiseling_level": 2,
     "overrides": {}
   }
 }

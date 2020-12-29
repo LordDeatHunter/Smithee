@@ -2,13 +2,13 @@
   "minecraft:diamond_block": {
     "output_material": "diamond",
     "material_value": 81,
-    "chiseling_level": 1,
+    "chiseling_level": 3,
     "overrides": {}
   },
   "minecraft:diamond": {
     "output_material": "diamond",
     "material_value": 9,
-    "chiseling_level": 1,
+    "chiseling_level": 3,
     "overrides": {}
   }
 }

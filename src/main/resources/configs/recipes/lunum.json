@@ -2,19 +2,19 @@
   "#c:lunum_blocks": {
     "output_material": "lunum",
     "material_value": 81,
-    "chiseling_level": 1,
+    "chiseling_level": 4,
     "overrides": {}
   },
   "#c:lunum_ingots": {
     "output_material": "lunum",
     "material_value": 9,
-    "chiseling_level": 1,
+    "chiseling_level": 4,
     "overrides": {}
   },
   "#c:lunum_nuggets": {
     "output_material": "lunum",
     "material_value": 1,
-    "chiseling_level": 1,
+    "chiseling_level": 4,
     "overrides": {}
   }
 }

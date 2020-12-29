@@ -2,7 +2,7 @@
   "minecraft:ice": {
     "output_material": "ice",
     "material_value": 9,
-    "chiseling_level": 0,
+    "chiseling_level": 1,
     "overrides": {}
   }
 }

@@ -1,0 +1,174 @@
+{
+  "chisels": [
+    {
+      "material": "adamantite",
+      "durability": 34,
+      "level": 4
+    },
+    {
+      "material": "aetherium",
+      "durability": 37,
+      "level": 4
+    },
+    {
+      "material": "aquarium",
+      "durability": 26,
+      "level": 2
+    },
+    {
+      "material": "argonium",
+      "durability": 20,
+      "level": 3
+    },
+    {
+      "material": "banglum",
+      "durability": 24,
+      "level": 2
+    },
+    {
+      "material": "brass",
+      "durability": 2,
+      "level": 1
+    },
+    {
+      "material": "bronze",
+      "durability": 28,
+      "level": 2
+    },
+    {
+      "material": "carmot",
+      "durability": 22,
+      "level": 2
+    },
+    {
+      "material": "celestium",
+      "durability": 42,
+      "level": 4
+    },
+    {
+      "material": "copper",
+      "durability": 8,
+      "level": 1
+    },
+    {
+      "material": "discordium",
+      "durability": 30,
+      "level": 3
+    },
+    {
+      "material": "durasteel",
+      "durability": 31,
+      "level": 3
+    },
+    {
+      "material": "electrum",
+      "durability": 10,
+      "level": 1
+    },
+    {
+      "material": "etherite",
+      "durability": 46,
+      "level": 4
+    },
+    {
+      "material": "kyber",
+      "durability": 30,
+      "level": 2
+    },
+    {
+      "material": "metallurgium",
+      "durability": 64,
+      "level": 5
+    },
+    {
+      "material": "midas_gold",
+      "durability": 10,
+      "level": 1
+    },
+    {
+      "material": "mythril",
+      "durability": 32,
+      "level": 4
+    },
+    {
+      "material": "orichalcum",
+      "durability": 48,
+      "level": 4
+    },
+    {
+      "material": "osmium",
+      "durability": 31,
+      "level": 3
+    },
+    {
+      "material": "prometheum",
+      "durability": 47,
+      "level": 3
+    },
+    {
+      "material": "platinum",
+      "durability": 26,
+      "level": 2
+    },
+    {
+      "material": "quadrillum",
+      "durability": 27,
+      "level": 2
+    },
+    {
+      "material": "quicksilver",
+      "durability": 34,
+      "level": 3
+    },
+    {
+      "material": "runite",
+      "durability": 31,
+      "level": 3
+    },
+    {
+      "material": "slowsilver",
+      "durability": 28,
+      "level": 2
+    },
+    {
+      "material": "starrite",
+      "durability": 30,
+      "level": 3
+    },
+    {
+      "material": "silver",
+      "durability": 8,
+      "level": 1
+    },
+    {
+      "material": "steel",
+      "durability": 28,
+      "level": 3
+    },
+    {
+      "material": "stormyx",
+      "durability": 30,
+      "level": 2
+    },
+    {
+      "material": "tantalite",
+      "durability": 28,
+      "level": 2
+    },
+    {
+      "material": "tin",
+      "durability": 6,
+      "level": 1
+    },
+    {
+      "material": "truesilver",
+      "durability": 31,
+      "level": 3
+    },
+    {
+      "material": "ur",
+      "durability": 28,
+      "level": 3
+    }
+  ]
+}

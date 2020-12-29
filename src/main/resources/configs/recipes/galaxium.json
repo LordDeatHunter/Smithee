@@ -2,19 +2,19 @@
   "#c:galaxium_blocks": {
     "output_material": "galaxium",
     "material_value": 81,
-    "chiseling_level": 1,
+    "chiseling_level": 6,
     "overrides": {}
   },
   "#c:galaxium_ingots": {
     "output_material": "galaxium",
     "material_value": 9,
-    "chiseling_level": 1,
+    "chiseling_level": 6,
     "overrides": {}
   },
   "#c:galaxium_nuggets": {
     "output_material": "galaxium",
     "material_value": 1,
-    "chiseling_level": 1,
+    "chiseling_level": 6,
     "overrides": {}
   }
 }
