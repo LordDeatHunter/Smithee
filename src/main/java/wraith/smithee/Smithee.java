@@ -18,6 +18,7 @@ public class Smithee implements ModInitializer {
 
     public static final String MOD_ID = "smithee";
     public static final Logger LOGGER = LogManager.getLogger();
+    public static boolean DISABLE_TOOLS = false;
 
     @Override
     public void onInitialize() {
@@ -26,6 +27,7 @@ public class Smithee implements ModInitializer {
         JsonObject json = Config.loadConfig();
 
         if (json.has("disable_vanilla_tools") && json.get("disable_vanilla_tools").getAsBoolean()) {
+            DISABLE_TOOLS = true;
             ItemRegistry.setDisabledItems();
         }
 
@@ -52,6 +54,7 @@ public class Smithee implements ModInitializer {
         if (!json.has("regenerate_deleted_chisel_files") || json.get("regenerate_deleted_chisel_files").getAsBoolean()) {
             Utils.saveFilesFromJar("configs/chisels", "chisels", json.has("replace_old_chisel_files_when_regenerating") && json.get("replace_old_chisel_files_when_regenerating").getAsBoolean());
         }
+        ItemRegistry.generateChiselingStats();
         ItemRegistry.generateProperties();
         ItemRegistry.generateModifiers();
 
@@ -93,7 +96,11 @@ public class Smithee implements ModInitializer {
     }
 
     private void registerEvents() {
-        ServerWorldEvents.LOAD.register((server, world) -> ItemRegistry.generateRecipes());
+        ServerWorldEvents.LOAD.register((server, world) -> {
+            if (!server.isDedicated()) {
+                ItemRegistry.generateRecipes();
+            }
+        });
     }
 
 }

@@ -3,18 +3,14 @@ package wraith.smithee;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
-import net.minecraft.item.Item;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
-import wraith.smithee.properties.ToolPartRecipe;
 import wraith.smithee.registry.ItemRegistry;
 import wraith.smithee.registry.ScreenRegistry;
 import wraith.smithee.utils.Utils;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Set;
 
 public class SmitheeClient implements ClientModInitializer {
 
@@ -48,7 +44,11 @@ public class SmitheeClient implements ClientModInitializer {
 
     private void registerPacketHandlers() {
         ClientSidePacketRegistry.INSTANCE.register(Utils.ID("connect_packet"), (packetContext, attachedData) -> {
+            if(MinecraftClient.getInstance().getNetworkHandler().getConnection().isLocal()) {
+                return;
+            }
             CompoundTag tag = attachedData.readCompoundTag();
+            /*
             ItemRegistry.TOOL_PART_RECIPES.clear();
             Set<String> ids = tag.getCompound("recipes").getKeys();
 
@@ -76,6 +76,63 @@ public class SmitheeClient implements ClientModInitializer {
                     ItemRegistry.REMAINS.get(id).put(new Identifier(item), remainsTag.getInt(item));
                 }
             }
+             */
+
+            ItemRegistry.DISABLED_ITEMS.clear();
+            Smithee.DISABLE_TOOLS = tag.getBoolean("disable_tools");
+            if (Smithee.DISABLE_TOOLS){
+                ItemRegistry.setDisabledItems();
+            }
+            CompoundTag subtag;
+            String[] contents;
+            int i;
+            subtag = tag.getCompound("shards");
+            contents = new String[subtag.getSize()];
+            i = 0;
+            for (String name : subtag.getKeys()) {
+                contents[i] = subtag.getString(name);
+                ++i;
+            }
+            ItemRegistry.generateShards(contents);
+
+            ItemRegistry.addMaterials(tag.getString("materials"), tag.getString("emboss_materials"));
+
+            i = 0;
+            subtag = tag.getCompound("chisels");
+            contents = new String[subtag.getSize()];
+            for (String name : subtag.getKeys()) {
+                contents[i] = subtag.getString(name);
+                ++i;
+            }
+            ItemRegistry.generateChiselingStats(contents);
+
+            subtag = tag.getCompound("stats");
+            HashMap<String, String> contentsMap = new HashMap<>();
+            for (String name : subtag.getKeys()) {
+                contentsMap.put(name, subtag.getString(name));
+            }
+            ItemRegistry.generateProperties(contentsMap);
+
+            subtag = tag.getCompound("modifiers");
+            contents = new String[subtag.getSize()];
+            i = 0;
+            for (String name : subtag.getKeys()) {
+                contents[i] = subtag.getString(name);
+                ++i;
+            }
+            ItemRegistry.generateModifiers(contents);
+
+            subtag = tag.getCompound("recipes");
+            contents = new String[subtag.getSize()];
+            i = 0;
+            for (String name : subtag.getKeys()) {
+                contents[i] = subtag.getString(name);
+                ++i;
+            }
+            ItemRegistry.generateRecipes(contents);
+
+            ItemRegistry.addItems();
+            ItemRegistry.registerNewItems();
         });
     }
 

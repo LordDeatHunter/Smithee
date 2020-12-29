@@ -67,7 +67,6 @@ public class Config {
             materials.add("durasteel");
             materials.add("electrum");
             materials.add("etherite");
-            materials.add("ferrite");
             materials.add("kyber");
             materials.add("metallurgium");
             materials.add("midas_gold");

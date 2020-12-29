@@ -32,6 +32,7 @@ public class ItemRegistry {
     public static HashSet<String> MATERIALS = new HashSet<>();
     public static final HashSet<String> EMBOSS_MATERIALS = new HashSet<>();
     public static final HashMap<String, Identifier> SHARDS = new HashMap<>();
+    public static final ArrayList<ChiselingRecipe> CHISELING_RECIPES = new ArrayList<>();
 
     public static HashSet<String> TOOL_TYPES = new HashSet<String>() {{
         add("pickaxe");
@@ -86,7 +87,7 @@ public class ItemRegistry {
             ITEMS.put(material + "_embossment", new Item(new Item.Settings().group(ItemGroups.SMITHEE_ITEMS)));
         }
 
-        for (ChiselingRecipe recipe : generateChiselingStats()) {
+        for (ChiselingRecipe recipe : CHISELING_RECIPES) {
             ITEMS.put(recipe.material + "_chisel", new Chisel(new Item.Settings().maxDamage(recipe.durability).group(ItemGroups.SMITHEE_ITEMS), recipe.level));
         }
 
@@ -122,6 +123,8 @@ public class ItemRegistry {
     }
 
     public static void setDisabledItems() {
+        DISABLED_ITEMS.clear();
+
         DISABLED_ITEMS.add(Items.WOODEN_AXE);
         DISABLED_ITEMS.add(Items.WOODEN_PICKAXE);
         DISABLED_ITEMS.add(Items.WOODEN_SHOVEL);
@@ -159,6 +162,19 @@ public class ItemRegistry {
         DISABLED_ITEMS.add(Items.NETHERITE_HOE);
     }
 
+    public static void registerItems() {
+        for (String id : ITEMS.keySet()) {
+            Registry.register(Registry.ITEM, Utils.ID(id), ITEMS.get(id));
+        }
+    }
+    public static void registerNewItems() {
+        for (String id : ITEMS.keySet()) {
+            if (!Registry.ITEM.containsId(Utils.ID(id))) {
+                Registry.register(Registry.ITEM, Utils.ID(id), ITEMS.get(id));
+            }
+        }
+    }
+
     public static void addMaterials() {
         JsonArray array = Config.getJsonObject(Config.readFile(new File("config/smithee/materials.json"))).get("materials").getAsJsonArray();
         for (JsonElement element : array) {
@@ -169,10 +185,14 @@ public class ItemRegistry {
             EMBOSS_MATERIALS.add(element.getAsString());
         }
     }
-
-    public static void registerItems() {
-        for (String id : ITEMS.keySet()) {
-            Registry.register(Registry.ITEM, Utils.ID(id), ITEMS.get(id));
+    public static void addMaterials(String materials, String emboss) {
+        JsonArray array = Config.getJsonObject(materials).get("materials").getAsJsonArray();
+        for (JsonElement element : array) {
+            MATERIALS.add(element.getAsString());
+        }
+        array = Config.getJsonObject(emboss).get("materials").getAsJsonArray();
+        for (JsonElement element : array) {
+            EMBOSS_MATERIALS.add(element.getAsString());
         }
     }
 
@@ -203,32 +223,58 @@ public class ItemRegistry {
             }
         }
     }
+    public static void generateProperties(HashMap<String, String> contents) {
+        if (contents == null || contents.size() == 0) {
+            return;
+        }
+        for(Map.Entry<String, String> content : contents.entrySet()) {
+            JsonObject json = Config.getJsonObject(content.getValue());
 
-    public static ArrayList<ChiselingRecipe> generateChiselingStats() {
+            String name = content.getKey();
+            PROPERTIES.put(name, new Properties());
+
+            JsonObject parts = json.get("individual_parts").getAsJsonObject();
+            PROPERTIES.get(name).traits.put("head", new HashSet<>());
+            PROPERTIES.get(name).traits.put("binding", new HashSet<>());
+            PROPERTIES.get(name).traits.put("handle", new HashSet<>());
+            JsonParser.parseIndividualPart(parts.get("head").getAsJsonObject(), PROPERTIES.get(name), "head");
+            JsonParser.parseIndividualPart(parts.get("binding").getAsJsonObject(), PROPERTIES.get(name), "binding");
+            JsonParser.parseIndividualPart(parts.get("handle").getAsJsonObject(), PROPERTIES.get(name), "handle");
+        }
+    }
+
+    public static void generateChiselingStats() {
         File[] files = Config.getFiles("config/smithee/chisels/");
-        ArrayList<ChiselingRecipe> stats = new ArrayList<>();
         if (files == null) {
-            return stats;
+            return;
         }
         for(File file : files) {
             JsonArray json = Config.getJsonObject(Config.readFile(file)).get("chisels").getAsJsonArray();
             try {
-                JsonParser.parseChiselingStats(json, stats);
+                JsonParser.parseChiselingStats(json, CHISELING_RECIPES);
             }
             catch(Exception e) {
                 Smithee.LOGGER.warn("Found error with chiseling file '" + file.getName() + "'");
             }
         }
-        return stats;
+    }
+    public static void generateChiselingStats(String[] contents) {
+        if (contents == null || contents.length == 0) {
+            return;
+        }
+        for (String content : contents) {
+            JsonArray json = Config.getJsonObject(content).get("chisels").getAsJsonArray();
+            JsonParser.parseChiselingStats(json, CHISELING_RECIPES);
+        }
     }
 
     public static void generateRecipes() {
-        TOOL_PART_RECIPES.clear();
-        REMAINS.clear();
         File[] files = Config.getFiles("config/smithee/recipes/");
         if (files == null) {
             return;
         }
+        TOOL_PART_RECIPES.clear();
+        REMAINS.clear();
         for(File file : files) {
             JsonObject json = Config.getJsonObject(Config.readFile(file));
             try {
@@ -240,6 +286,17 @@ public class ItemRegistry {
             }
         }
     }
+    public static void generateRecipes(String[] contents) {
+        if (contents == null || contents.length == 0) {
+            return;
+        }
+        for (String content : contents) {
+            JsonObject json = Config.getJsonObject(content);
+            Set<Map.Entry<String, JsonElement>> recipes = json.entrySet();
+            JsonParser.parseRecipes(recipes, TOOL_PART_RECIPES, REMAINS);
+        }
+    }
+
     public static void generateModifiers() {
         File[] files = Config.getFiles("config/smithee/modifiers/");
         if (files == null) {
@@ -248,6 +305,15 @@ public class ItemRegistry {
         EMBOSS_RECIPES.clear();
         for (File file : files) {
             JsonParser.parseModifiers(Config.getJsonObject(Config.readFile(file)), EMBOSS_RECIPES);
+        }
+    }
+    public static void generateModifiers(String[] contents) {
+        if (contents == null || contents.length == 0) {
+            return;
+        }
+        SHARDS.clear();
+        for (String content : contents) {
+            JsonParser.parseModifiers(Config.getJsonObject(content), EMBOSS_RECIPES);
         }
     }
 
@@ -259,6 +325,15 @@ public class ItemRegistry {
         SHARDS.clear();
         for (File file : files) {
             JsonParser.parseShards(Config.getJsonObject(Config.readFile(file)), SHARDS);
+        }
+    }
+    public static void generateShards(String[] contents) {
+        if (contents == null || contents.length == 0) {
+            return;
+        }
+        SHARDS.clear();
+        for (String content : contents) {
+            JsonParser.parseShards(Config.getJsonObject(content), SHARDS);
         }
     }
 }
