@@ -97,9 +97,7 @@ public class Smithee implements ModInitializer {
 
     private void registerEvents() {
         ServerWorldEvents.LOAD.register((server, world) -> {
-            if (!server.isDedicated()) {
-                ItemRegistry.generateRecipes();
-            }
+            ItemRegistry.generateRecipes();
         });
     }
 

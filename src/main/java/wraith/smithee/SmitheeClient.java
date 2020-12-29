@@ -44,7 +44,7 @@ public class SmitheeClient implements ClientModInitializer {
 
     private void registerPacketHandlers() {
         ClientSidePacketRegistry.INSTANCE.register(Utils.ID("connect_packet"), (packetContext, attachedData) -> {
-            if(MinecraftClient.getInstance().getNetworkHandler().getConnection().isLocal()) {
+            if (MinecraftClient.getInstance().isInSingleplayer()) {
                 return;
             }
             CompoundTag tag = attachedData.readCompoundTag();

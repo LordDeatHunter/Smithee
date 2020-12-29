@@ -210,8 +210,8 @@ public abstract class ItemStackMixin {
         if (getItem() instanceof BaseSmitheeTool) {
             CompoundTag tag = getSubTag("SmitheeProperties");
             if (tag != null && tag.contains("Experience")) {
-                list.add(new LiteralText("§2Level §a" + tag.getInt("Level") + "."));
-                list.add(new LiteralText("§5Progress " + BaseSmitheeTool.getProgressString(tag.getInt("Experience"), tag.getInt("Level"))));
+                list.add(new LiteralText("§2Level §a" + tag.getLong("Level") + "."));
+                list.add(new LiteralText("§5Progress " + BaseSmitheeTool.getProgressString(tag.getLong("Experience"), tag.getLong("Level"))));
             }
             list.add(new LiteralText(""));
             list.addAll(Trait.getTooltip(((ItemStack)(Object)this)));

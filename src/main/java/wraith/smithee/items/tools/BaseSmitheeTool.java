@@ -9,9 +9,9 @@ import net.minecraft.world.World;
 
 public interface BaseSmitheeTool {
 
-    static int getLevel(int experience) {
-        int xp = 100;
-        int level = 0;
+    static long getLevel(long experience) {
+        long xp = 100;
+        long level = 0;
         while (xp < experience) {
             xp += calculateXp(xp, level);
             ++level;
@@ -19,13 +19,13 @@ public interface BaseSmitheeTool {
         return level;
     }
 
-    static double calculateXp(int xp, int level) {
+    static double calculateXp(long xp, long level) {
         return level < 15 ? Math.pow(Math.pow(xp, 0.3D) * 3, 2) + 100 : xp * 15;
     }
 
-    static int getNeededExperience(int level) {
-        int xp = 100;
-        int lvl = 0;
+    static long getNeededExperience(long level) {
+        long xp = 100;
+        long lvl = 0;
         while (lvl < level) {
             xp += calculateXp(xp, lvl);
             ++lvl;
@@ -33,8 +33,8 @@ public interface BaseSmitheeTool {
         return xp;
     }
 
-    static String getProgressString(int experience, int level) {
-        int xp = getNeededExperience(level);
+    static String getProgressString(long experience, long level) {
+        long xp = getNeededExperience(level);
         double collected = (double)experience/(double)xp;
         String filled = "";
         for (int i = 0; i < collected * 10; ++i) {
@@ -59,26 +59,26 @@ public interface BaseSmitheeTool {
         if (!tag.contains("Experience")) {
             tag.putInt("Experience", 0);
         }
-        int vanillaxp = user.totalExperience;
-        int lvl = 0;
+        long vanillaxp = user.totalExperience;
+        long lvl = 0;
         while (lvl < user.experienceLevel) {
             vanillaxp += getVanillaExperienceRequirement(lvl);
             ++lvl;
         }
 
-        int xp = tag.getInt("Experience");
-        int fraction = vanillaxp;
+        long xp = tag.getLong("Experience");
+        long fraction = vanillaxp;
         if (vanillaxp >= 100) {
             fraction = vanillaxp / 5;
         }
         xp += fraction;
-        user.addExperience(-fraction);
-        tag.putInt("Experience", xp);
-        int curLevel = tag.getInt("Level");
-        tag.putInt("Level", getLevel(xp));
-        if (tag.getInt("Level") != curLevel) {
+        user.addExperience((int) -fraction);
+        tag.putLong("Experience", xp);
+        long curLevel = tag.getLong("Level");
+        tag.putLong("Level", getLevel(xp));
+        if (tag.getLong("Level") != curLevel) {
             CompoundTag modifiers = tag.getCompound("Modifiers");
-            int diff = tag.getInt("Level") - curLevel;
+            int diff = (int) (tag.getLong("Level") - curLevel);
             modifiers.putInt("EnchantmentSlots", modifiers.getInt("EnchantmentSlots") + diff);
             tag.put("Modifiers", modifiers);
         }
@@ -86,7 +86,7 @@ public interface BaseSmitheeTool {
         return TypedActionResult.success(stack, world.isClient());
     }
 
-    static int getVanillaExperienceRequirement(int level) {
+    static long getVanillaExperienceRequirement(long level) {
         if (level >= 30) {
             return 112 + (level - 30) * 9;
         } else {

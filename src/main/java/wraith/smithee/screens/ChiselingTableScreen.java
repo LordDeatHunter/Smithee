@@ -117,10 +117,10 @@ public class ChiselingTableScreen extends HandledScreen<ScreenHandler> {
         int x = this.x + 20;
 
         boolean tool1 = mouseX >= x - 20 && mouseY >= y + 2   && mouseX < x && mouseY < y + 22       && this.handler.getToolPage() != 0;
-        boolean tool2 = mouseX >= x - 20 && mouseY >= y + 22  && mouseX < x && mouseY < y + 22 + 20  && this.handler.getToolPage() != 1;
-        boolean tool3 = mouseX >= x - 20 && mouseY >= y + 42  && mouseX < x && mouseY < y + 42 + 20  && this.handler.getToolPage() != 2;
-        boolean tool4 = mouseX >= x - 20 && mouseY >= y + 62  && mouseX < x && mouseY < y + 62 + 20  && this.handler.getToolPage() != 3;
-        boolean tool5 = mouseX >= x - 20 && mouseY >= y + 82  && mouseX < x && mouseY < y + 82 + 20  && this.handler.getToolPage() != 4;
+        boolean tool2 = mouseX >= x - 20 && mouseY >= y + 22  && mouseX < x && mouseY < y + 22  + 20 && this.handler.getToolPage() != 1;
+        boolean tool3 = mouseX >= x - 20 && mouseY >= y + 42  && mouseX < x && mouseY < y + 42  + 20 && this.handler.getToolPage() != 2;
+        boolean tool4 = mouseX >= x - 20 && mouseY >= y + 62  && mouseX < x && mouseY < y + 62  + 20 && this.handler.getToolPage() != 3;
+        boolean tool5 = mouseX >= x - 20 && mouseY >= y + 82  && mouseX < x && mouseY < y + 82  + 20 && this.handler.getToolPage() != 4;
         boolean tool6 = mouseX >= x - 20 && mouseY >= y + 102 && mouseX < x && mouseY < y + 102 + 20 && this.handler.getToolPage() != 5;
 
         this.clickPos = tool1 ? 0 : tool2 ? 1 : tool3 ? 2 : tool4 ? 3 : tool5 ? 4 : tool6 ? 5 : -1;
