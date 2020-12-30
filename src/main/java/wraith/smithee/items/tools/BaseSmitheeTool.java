@@ -59,6 +59,13 @@ public interface BaseSmitheeTool {
         if (!tag.contains("Experience")) {
             tag.putInt("Experience", 0);
         }
+        if (!tag.contains("Level")) {
+            tag.putInt("Level", 0);
+        }
+        long curLevel = tag.getLong("Level");
+        if (curLevel >= 28) {
+            return TypedActionResult.fail(stack);
+        }
         long vanillaxp = user.totalExperience;
         long lvl = 0;
         while (lvl < user.experienceLevel) {
@@ -74,7 +81,6 @@ public interface BaseSmitheeTool {
         xp += fraction;
         user.addExperience((int) -fraction);
         tag.putLong("Experience", xp);
-        long curLevel = tag.getLong("Level");
         tag.putLong("Level", getLevel(xp));
         if (tag.getLong("Level") != curLevel) {
             CompoundTag modifiers = tag.getCompound("Modifiers");

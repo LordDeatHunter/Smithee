@@ -130,9 +130,8 @@ public class SmitheeClient implements ClientModInitializer {
                 ++i;
             }
             ItemRegistry.generateRecipes(contents);
-
-            ItemRegistry.addItems();
-            ItemRegistry.registerNewItems();
+            //ItemRegistry.addItems();
+            //ItemRegistry.registerNewItems();
         });
     }
 

@@ -32,14 +32,14 @@ public class Trait {
     public double chance;
 
     public static final HashMap<String, Text> TRAIT_TEXT = new HashMap<String, Text>(){{
-        put("ecological", new LiteralText("Ecological").setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0x866526))));
+        put("ecological",  new LiteralText("Ecological") .setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0x866526))));
         put("midas_touch", new LiteralText("Midas Touch").setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0xe9b115))));
-        put("brittle", new LiteralText("Brittle").setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0x6c6c6c))));
-        put("magnetic", new LiteralText("Magnetic").setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0x33ebcb))));
+        put("brittle",     new LiteralText("Brittle")    .setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0x6c6c6c))));
+        put("magnetic",    new LiteralText("Magnetic")   .setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0x33ebcb))));
         put("superheated", new LiteralText("SuperHeated").setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0x6A040F))));//0x652828))));
-        put("sharp", new LiteralText("Sharp").setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0x87EFCC))));
-        put("chilling", new LiteralText("Chilling").setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0x08CDFD))));
-        put("adamant", new LiteralText("Adamant").setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0xBF0026))));
+        put("sharp",       new LiteralText("Sharp")      .setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0x87EFCC))));
+        put("chilling",    new LiteralText("Chilling")   .setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0x08CDFD))));
+        put("adamant",     new LiteralText("Adamant")    .setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0xBF0026))));
         put("aquadynamic", new LiteralText("Aquadynamic").setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0xA2D2FF))));
     }};
 

@@ -1,0 +1,14 @@
+{
+  "betterend:terminite_blocks": {
+    "output_material": "terminite",
+    "material_value": 81,
+    "chiseling_level": 3,
+    "overrides": {}
+  },
+  "betterend:terminite_ingot": {
+    "output_material": "terminite",
+    "material_value": 9,
+    "chiseling_level": 3,
+    "overrides": {}
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "betterend:aeternium_blocks": {
+    "output_material": "aeternium",
+    "material_value": 81,
+    "chiseling_level": 5,
+    "overrides": {}
+  },
+  "betterend:aeternium_ingot": {
+    "output_material": "aeternium",
+    "material_value": 9,
+    "chiseling_level": 5,
+    "overrides": {}
+  }
+}

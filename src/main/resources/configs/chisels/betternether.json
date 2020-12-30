@@ -1,0 +1,27 @@
+{
+  "requires_mod": "betternether",
+  "chisels": [
+    {
+      "material": "nether_ruby",
+      "durability": 31,
+      "level": 3
+    },
+    {
+      "material": "nether_reed",
+      "durability": 4,
+      "level": 0
+    },
+    {
+      "material": "cincinnasite",
+      "durability": 30,
+      "level": 3
+    },
+    {
+      "smithing_input": "cincinnasite",
+      "smithing_addition": "minecraft:diamond",
+      "material": "cincinnasite_diamond",
+      "durability": 34,
+      "level": 3
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "requires_mod": "diamold",
+  "generate_new": [
+    "diamold"
+  ],
+  "use_existing": []
+}

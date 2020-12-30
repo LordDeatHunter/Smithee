@@ -1,0 +1,12 @@
+{
+  "requires_mod": "byg",
+  "chisels": [
+    {
+      "smithing_input": "netherite",
+      "smithing_addition": "byg:pendorite_scraps",
+      "material": "pendorite",
+      "durability": 56,
+      "level": 5
+    }
+  ]
+}

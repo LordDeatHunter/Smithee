@@ -1,0 +1,15 @@
+{
+  "requires_mod": "betterend",
+  "chisels": [
+    {
+      "material": "terminite",
+      "durability": 32,
+      "level": 3
+    },
+    {
+      "material": "aeternium",
+      "durability": 54,
+      "level": 5
+    }
+  ]
+}

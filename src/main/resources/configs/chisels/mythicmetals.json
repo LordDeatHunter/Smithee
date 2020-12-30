@@ -1,4 +1,5 @@
 {
+  "requires_mod": "mythicmetals",
   "chisels": [
     {
       "material": "adamantite",

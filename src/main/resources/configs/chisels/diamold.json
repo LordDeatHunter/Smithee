@@ -1,0 +1,10 @@
+{
+  "requires_mod": "diamold",
+  "chisels": [
+    {
+      "material": "diamold",
+      "durability": 32,
+      "level": 3
+    }
+  ]
+}

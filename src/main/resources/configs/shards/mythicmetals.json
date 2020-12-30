@@ -1,0 +1,142 @@
+{
+  "requires_mod": "mythicmetals",
+  "generate_new": [],
+  "use_existing": [
+    {
+      "material": "adamantite",
+      "item": "mythicmetals:adamantite_nugget"
+    },
+    {
+      "material": "aetherium",
+      "item": "mythicmetals:aetherium_nugget"
+    },
+    {
+      "material": "aquarium",
+      "item": "mythicmetals:aquarium_nugget"
+    },
+    {
+      "material": "argonium",
+      "item": "mythicmetals:argonium_nugget"
+    },
+    {
+      "material": "banglum",
+      "item": "mythicmetals:banglum_nugget"
+    },
+    {
+      "material": "brass",
+      "item": "mythicmetals:brass_nugget"
+    },
+    {
+      "material": "bronze",
+      "item": "mythicmetals:bronze_nugget"
+    },
+    {
+      "material": "carmot",
+      "item": "mythicmetals:carmot_nugget"
+    },
+    {
+      "material": "celestium",
+      "item": "mythicmetals:celestium_nugget"
+    },
+    {
+      "material": "copper",
+      "item": "mythicmetals:copper_nugget"
+    },
+    {
+      "material": "discordium",
+      "item": "mythicmetals:discordium_nugget"
+    },
+    {
+      "material": "durasteel",
+      "item": "mythicmetals:durasteel_nugget"
+    },
+    {
+      "material": "electrum",
+      "item": "mythicmetals:electrum_nugget"
+    },
+    {
+      "material": "etherite",
+      "item": "mythicmetals:aetherium_nugget"
+    },
+    {
+      "material": "kyber",
+      "item": "mythicmetals:kyber_nugget"
+    },
+    {
+      "material": "metallurgium",
+      "item": "mythicmetals:metallurgium_nugget"
+    },
+    {
+      "material": "midas_gold",
+      "item": "mythicmetals:midas_gold_nugget"
+    },
+    {
+      "material": "mythril",
+      "item": "mythicmetals:mythril_nugget"
+    },
+    {
+      "material": "orichalcum",
+      "item": "mythicmetals:orichalcum_nugget"
+    },
+    {
+      "material": "osmium",
+      "item": "mythicmetals:osmium_nugget"
+    },
+    {
+      "material": "prometheum",
+      "item": "mythicmetals:prometheum_nugget"
+    },
+    {
+      "material": "platinum",
+      "item": "mythicmetals:platinum_nugget"
+    },
+    {
+      "material": "quadrillum",
+      "item": "mythicmetals:quadrillum_nugget"
+    },
+    {
+      "material": "quicksilver",
+      "item": "mythicmetals:quicksilver_nugget"
+    },
+    {
+      "material": "runite",
+      "item": "mythicmetals:runite_nugget"
+    },
+    {
+      "material": "slowsilver",
+      "item": "mythicmetals:slowsilver_nugget"
+    },
+    {
+      "material": "starrite",
+      "item": "mythicmetals:starrite_nugget"
+    },
+    {
+      "material": "silver",
+      "item": "mythicmetals:silver_nugget"
+    },
+    {
+      "material": "steel",
+      "item": "mythicmetals:steel_nugget"
+    },
+    {
+      "material": "stormyx",
+      "item": "mythicmetals:stormyx_nugget"
+    },
+    {
+      "material": "tantalite",
+      "item": "mythicmetals:tantalite_nugget"
+    },
+    {
+      "material": "tin",
+      "item": "mythicmetals:tin_nugget"
+    },
+    {
+      "material": "truesilver",
+      "item": "mythicmetals:truesilver_nugget"
+    },
+    {
+      "material": "ur",
+      "item": "mythicmetals:ur_nugget"
+    }
+  ]
+}

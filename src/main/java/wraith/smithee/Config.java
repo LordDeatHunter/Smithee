@@ -107,7 +107,30 @@ public class Config {
             materials.add("lunum");
             materials.add("meteoric_steel");
         }
-
+        if (FabricLoader.getInstance().isModLoaded("techreborn")) {
+            materials.add("bronze");
+        }
+        if (FabricLoader.getInstance().isModLoaded("diamold")) {
+            materials.add("diamold");
+        }
+        if (FabricLoader.getInstance().isModLoaded("byg")) {
+            materials.add("pendorite");
+        }
+        if (FabricLoader.getInstance().isModLoaded("betterend")) {
+            materials.add("terminite");
+            materials.add("aeternium");
+        }
+        if (FabricLoader.getInstance().isModLoaded("betternether")) {
+            materials.add("nether_ruby");
+            materials.add("nether_reed");
+            materials.add("cincinnasite");
+            materials.add("cincinnasite_diamond");
+        }
+        /*
+        if (FabricLoader.getInstance().isModLoaded("appliedenergistics2")) {
+            materials.add("certus_quartz");
+        }
+         */
         Config.createFile("config/smithee/materials.json", getMaterials(materials), overwrite);
         Config.createFile("config/smithee/emboss_materials.json", getMaterials(embossMaterials), overwrite);
     }

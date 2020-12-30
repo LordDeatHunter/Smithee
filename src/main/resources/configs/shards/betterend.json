@@ -1,0 +1,8 @@
+{
+  "requires_mod": "betterend",
+  "generate_new": [
+    "terminite",
+    "aeternium"
+  ],
+  "use_existing": []
+}

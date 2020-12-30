@@ -3,6 +3,7 @@ package wraith.smithee.registry;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
@@ -86,7 +87,6 @@ public class ItemRegistry {
         for (String material : EMBOSS_MATERIALS) {
             ITEMS.put(material + "_embossment", new Item(new Item.Settings().group(ItemGroups.SMITHEE_ITEMS)));
         }
-
         for (ChiselingRecipe recipe : CHISELING_RECIPES) {
             ITEMS.put(recipe.material + "_chisel", new Chisel(new Item.Settings().maxDamage(recipe.durability).group(ItemGroups.SMITHEE_ITEMS), recipe.level));
         }
@@ -120,6 +120,9 @@ public class ItemRegistry {
         ITEMS.put("base_smithee_shovel", new BaseSmitheeShovel(new Item.Settings().group(ItemGroups.SMITHEE_PARTS)));
         ITEMS.put("base_smithee_hoe", new BaseSmitheeHoe(new Item.Settings().group(ItemGroups.SMITHEE_PARTS)));
         ITEMS.put("base_smithee_sword", new BaseSmitheeSword(new Item.Settings().group(ItemGroups.SMITHEE_PARTS)));
+
+        ITEMS.put("items_creative_icon", new Item(new Item.Settings()));
+        ITEMS.put("parts_creative_icon", new Item(new Item.Settings()));
     }
 
     public static void setDisabledItems() {
@@ -249,7 +252,11 @@ public class ItemRegistry {
             return;
         }
         for(File file : files) {
-            JsonArray json = Config.getJsonObject(Config.readFile(file)).get("chisels").getAsJsonArray();
+            JsonObject obj = Config.getJsonObject(Config.readFile(file));
+            if (obj.has("requires_mod") && !FabricLoader.getInstance().isModLoaded(obj.get("requires_mod").getAsString())) {
+                continue;
+            }
+            JsonArray json = obj.get("chisels").getAsJsonArray();
             try {
                 JsonParser.parseChiselingStats(json, CHISELING_RECIPES);
             }
@@ -263,7 +270,11 @@ public class ItemRegistry {
             return;
         }
         for (String content : contents) {
-            JsonArray json = Config.getJsonObject(content).get("chisels").getAsJsonArray();
+            JsonObject obj = Config.getJsonObject(content);
+            if (obj.has("requires_mod") && !FabricLoader.getInstance().isModLoaded(obj.get("requires_mod").getAsString())) {
+                continue;
+            }
+            JsonArray json = obj.get("chisels").getAsJsonArray();
             JsonParser.parseChiselingStats(json, CHISELING_RECIPES);
         }
     }
@@ -324,7 +335,11 @@ public class ItemRegistry {
         }
         SHARDS.clear();
         for (File file : files) {
-            JsonParser.parseShards(Config.getJsonObject(Config.readFile(file)), SHARDS);
+            JsonObject obj = Config.getJsonObject(Config.readFile(file));
+            if (obj.has("requires_mod") && !FabricLoader.getInstance().isModLoaded(obj.get("requires_mod").getAsString())) {
+                continue;
+            }
+            JsonParser.parseShards(obj, SHARDS);
         }
     }
     public static void generateShards(String[] contents) {
@@ -333,7 +348,11 @@ public class ItemRegistry {
         }
         SHARDS.clear();
         for (String content : contents) {
-            JsonParser.parseShards(Config.getJsonObject(content), SHARDS);
+            JsonObject obj = Config.getJsonObject(content);
+            if (obj.has("requires_mod") && !FabricLoader.getInstance().isModLoaded(obj.get("requires_mod").getAsString())) {
+                continue;
+            }
+            JsonParser.parseShards(obj, SHARDS);
         }
     }
 }

@@ -1,0 +1,14 @@
+{
+  "betternether:nether_reeds_block": {
+    "output_material": "nether_reed",
+    "material_value": 4,
+    "chiseling_level": 0,
+    "overrides": {}
+  },
+  "betternether:nether_reed": {
+    "output_material": "nether_reed",
+    "material_value": 1,
+    "chiseling_level": 0,
+    "overrides": {}
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "requires_mod": "betternether",
+  "generate_new": [
+    "nether_ruby",
+    "nether_reed",
+    "cincinnasite",
+    "cincinnasite_diamond"
+  ],
+  "use_existing": []
+}

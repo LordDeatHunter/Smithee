@@ -359,6 +359,14 @@ public class Utils {
             material += segments[i];
             ++i;
         }
-        return i;
+        if (i == segments.length) {
+            return i;
+        }
+        int j = i;
+        do {
+            material += "_" + segments[j];
+            ++j;
+        } while (!ItemRegistry.MATERIALS.contains(material) && !ItemRegistry.EMBOSS_MATERIALS.contains(material) && j < segments.length);
+        return j == segments.length ? i : j;
     }
 }

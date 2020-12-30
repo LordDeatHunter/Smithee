@@ -12,6 +12,7 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.registry.Registry;
+import wraith.smithee.Smithee;
 import wraith.smithee.blocks.AassemblyTableBlockEntity;
 import wraith.smithee.items.tool_parts.ToolPartItem;
 import wraith.smithee.items.tools.BaseSmitheeTool;
@@ -137,8 +138,10 @@ public class AssemblyTableScreenHandler extends ScreenHandler {
             }
             material = material.substring(1);
             if (!ItemRegistry.EMBOSS_RECIPES.containsKey(material)) {
+                Smithee.LOGGER.info("CONTAINS " + material);
                 return false;
             }
+            Smithee.LOGGER.info("TRUE");
             EmbossRecipe recipe = ItemRegistry.EMBOSS_RECIPES.get(material);
             CompoundTag mainTag = tool.getSubTag("SmitheeProperties");
             if (!mainTag.contains("Modifiers")) {
