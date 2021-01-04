@@ -7,6 +7,7 @@
   "block.smithee.acacia_assembly_table": "Acacia Assembly Table",
 
   "block.smithee.stone_disassembly_table": "Stone Disassembly Table",
+  "block.smithee.netherrack_disassembly_table": "Stone Disassembly Table",
   "block.smithee.cobblestone_disassembly_table": "Cobblestone Disassembly Table",
   "block.smithee.mossy_cobblestone_disassembly_table": "Mossy Cobblestone Disassembly Table",
   "block.smithee.diorite_disassembly_table": "Diorite Disassembly Table",
@@ -28,6 +29,7 @@
   "item.smithee.acacia_assembly_table": "Acacia Assembly Table",
 
   "item.smithee.stone_disassembly_table": "Stone Disassembly Table",
+  "item.smithee.netherrack_disassembly_table": "Netherrack Disassembly Table",
   "item.smithee.cobblestone_disassembly_table": "Cobblestone Disassembly Table",
   "item.smithee.mossy_cobblestone_disassembly_table": "Mossy Cobblestone Disassembly Table",
   "item.smithee.diorite_disassembly_table": "Diorite Disassembly Table",
@@ -46,6 +48,9 @@
   "item.smithee.base_smithee_shovel": "Base Smithee Shovel",
   "item.smithee.base_smithee_hoe": "Base Smithee Hoe",
   "item.smithee.base_smithee_sword": "Base Smithee Sword",
+
+  "item.smithee.silky_jewel": "Silky Jewel",
+  "item.smithee.silky_cloth": "Silky Cloth",
 
   "itemGroup.smithee.parts": "Smithee Parts",
   "itemGroup.smithee.blocks": "Smithee Blocks",

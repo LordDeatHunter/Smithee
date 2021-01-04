@@ -24,6 +24,7 @@ import wraith.smithee.registry.ScreenHandlerRegistry;
 import wraith.smithee.screens.slots.AssemblyTableOutputSlot;
 import wraith.smithee.screens.slots.PartSlot;
 import wraith.smithee.screens.slots.ToolSlot;
+import wraith.smithee.utils.Utils;
 
 import java.util.HashSet;
 
@@ -132,17 +133,15 @@ public class AssemblyTableScreenHandler extends ScreenHandler {
 
             String[] segments = Registry.ITEM.getId(emboss.getItem()).getPath().split("/");
             segments = segments[segments.length - 1].split("_");
-            String material = "";
+            StringBuilder material = new StringBuilder();
             for (int i = 0; i < segments.length - 1; ++i) {
-                material += "_" + segments[i];
+                material.append("_").append(segments[i]);
             }
-            material = material.substring(1);
-            if (!ItemRegistry.EMBOSS_RECIPES.containsKey(material)) {
-                Smithee.LOGGER.info("CONTAINS " + material);
+            material = new StringBuilder(material.substring(1));
+            if (!ItemRegistry.EMBOSS_RECIPES.containsKey(material.toString())) {
                 return false;
             }
-            Smithee.LOGGER.info("TRUE");
-            EmbossRecipe recipe = ItemRegistry.EMBOSS_RECIPES.get(material);
+            EmbossRecipe recipe = ItemRegistry.EMBOSS_RECIPES.get(material.toString());
             CompoundTag mainTag = tool.getSubTag("SmitheeProperties");
             if (!mainTag.contains("Modifiers")) {
                 return false;
@@ -157,11 +156,11 @@ public class AssemblyTableScreenHandler extends ScreenHandler {
                         return false;
                     }
                 }
-                if (!recipe.stackable && slots.getKeys().contains(material)) {
+                if (!recipe.stackable && slots.getKeys().contains(material.toString())) {
                     return false;
                 }
 
-                slots.putInt(material, slots.contains(material) ? slots.getInt(material) + 1 : 1);
+                slots.putInt(material.toString(), slots.contains(material.toString()) ? slots.getInt(material.toString()) + 1 : 1);
 
                 emboss.decrement(1);
                 if ("enchant".equals(recipe.type)) {
@@ -181,61 +180,115 @@ public class AssemblyTableScreenHandler extends ScreenHandler {
             serverPlayerEntity.networkHandler.sendPacket(new ScreenHandlerSlotUpdateS2CPacket(syncId, 3, tool));
             serverPlayerEntity.networkHandler.sendPacket(new ScreenHandlerSlotUpdateS2CPacket(syncId, 4, emboss));
         } else if (id == 0) {
-
-            if (inventory.getStack(3) != ItemStack.EMPTY) {
+            boolean handleEmpty = inventory.getStack(0).isEmpty();
+            boolean bindingEmpty = inventory.getStack(1).isEmpty();
+            boolean headEmpty = inventory.getStack(2).isEmpty();
+            boolean slotEmpty = inventory.getStack(3).isEmpty();
+            boolean canCraftNew = !handleEmpty && !bindingEmpty && !headEmpty && slotEmpty;
+            boolean canChangeParts = (!handleEmpty || !bindingEmpty || !headEmpty) && !slotEmpty;
+            if (!canCraftNew && !canChangeParts) {
                 return false;
-            }
-
-            if (inventory.getStack(0).isEmpty() ||
-                inventory.getStack(1).isEmpty() ||
-                inventory.getStack(2).isEmpty()) {
-                    return false;
             }
 
             ItemStack handle = inventory.getStack(0);
             ItemStack binding = inventory.getStack(1);
             ItemStack head = inventory.getStack(2);
 
-            HashSet<String> recipe = new HashSet<String>(){{
-                add(((ToolPartItem)handle.getItem()).part.recipeString());
-                add(((ToolPartItem)binding.getItem()).part.recipeString());
-                add(((ToolPartItem)head.getItem()).part.recipeString());
-            }};
+            HashSet<String> recipe = new HashSet<>();
+            if (!handleEmpty) {
+                recipe.add(((ToolPartItem)handle.getItem()).part.recipeString());
+            }
+            if (!bindingEmpty) {
+                recipe.add(((ToolPartItem)binding.getItem()).part.recipeString());
+            }
+            if (!headEmpty) {
+                recipe.add(((ToolPartItem)head.getItem()).part.recipeString());
+            }
 
-            if (!ToolPartRecipe.TOOL_ASSEMBLY_RECIPES.contains(recipe)){
+            if (!ToolPartRecipe.TOOL_ASSEMBLY_RECIPES.contains(recipe) && slotEmpty) {
                 return false;
             }
 
-            ItemStack itemStack = new ItemStack(ItemRegistry.ITEMS.get("base_smithee_" + ((ToolPartItem)head.getItem()).part.toolType));
+            ItemStack itemStack = inventory.getStack(3);
+            if (canCraftNew) {
+                itemStack = new ItemStack(ItemRegistry.ITEMS.get("base_smithee_" + ((ToolPartItem) head.getItem()).part.toolType));
+            }
             CompoundTag tag = itemStack.getOrCreateSubTag("Parts");
-            tag.putString("HeadPart", ((ToolPartItem)head.getItem()).part.materialName);
-            tag.putString("BindingPart", ((ToolPartItem)binding.getItem()).part.materialName);
-            tag.putString("HandlePart", ((ToolPartItem)handle.getItem()).part.materialName);
-            itemStack.putSubTag("Parts", tag);
 
-            Properties.setProperties(itemStack, Properties.getProperties(itemStack));
+            int headDurability = 0;
+            int bindingDurability = 0;
+            int handleDurability = 0;
+            if (!tag.isEmpty()) {
+                headDurability = ItemRegistry.PROPERTIES.get(tag.getString("HeadPart")).partProperties.get("head").durability;
+                bindingDurability = ItemRegistry.PROPERTIES.get(tag.getString("BindingPart")).partProperties.get("binding").durability;
+                handleDurability = ItemRegistry.PROPERTIES.get(tag.getString("HandlePart")).partProperties.get("handle").durability;
+            }
+            int maxDurability = itemStack.getMaxDamage();
+            int currentDamage = itemStack.getDamage();
+            int summedDurability = headDurability + bindingDurability + handleDurability;
 
             double headDamage = 0;
-            if (head.hasTag() && head.getTag().contains("PartDamage")) {
-                headDamage = head.getTag().getDouble("PartDamage");
-            }
             double bindingDamage = 0;
-            if (binding.hasTag() && binding.getTag().contains("PartDamage")) {
-                bindingDamage = binding.getTag().getDouble("PartDamage");
-            }
             double handleDamage = 0;
-            if (handle.hasTag() && handle.getTag().contains("PartDamage")) {
-                handleDamage = handle.getTag().getDouble("PartDamage");
-            }
-            double totalDamage = headDamage + bindingDamage + handleDamage;
-            int totalDurability = ItemRegistry.PROPERTIES.get(((ToolPartItem)head.getItem()).part.materialName).partProperties.get("head").durability;
-            totalDurability += ItemRegistry.PROPERTIES.get(((ToolPartItem)binding.getItem()).part.materialName).partProperties.get("binding").durability;
-            totalDurability += ItemRegistry.PROPERTIES.get(((ToolPartItem)handle.getItem()).part.materialName).partProperties.get("handle").durability;
 
-            itemStack.setDamage((int) Math.ceil((totalDamage * itemStack.getMaxDamage())/totalDurability));
-            if (itemStack.getDamage() >= itemStack.getMaxDamage()) {
-                itemStack = ItemStack.EMPTY;
+            String toolType = Utils.getToolType(itemStack.getItem());
+            if (!headEmpty) {
+                if (head.hasTag() && head.getTag().contains("PartDamage")) {
+                    headDamage = head.getTag().getDouble("PartDamage");
+                }
+                if (!slotEmpty) {
+                    String material = tag.getString("HeadPart");
+                    ItemStack oldPart = new ItemStack(ItemRegistry.ITEMS.get(material + "_" + toolType + "_head"));
+
+                    double adjustedHeadDurability = (double)(headDurability * maxDurability) / (double)summedDurability;
+                    double damagePercent = ((double)currentDamage / (double)maxDurability);
+                    oldPart.getTag().putDouble("PartDamage", damagePercent);
+                    Utils.setDamage(oldPart, (int) (damagePercent * adjustedHeadDurability));
+
+                    player.inventory.offerOrDrop(player.world, oldPart);
+                }
+                tag.putString("HeadPart", ((ToolPartItem) head.getItem()).part.materialName);
             }
+            if (!bindingEmpty) {
+                if (binding.hasTag() && binding.getTag().contains("PartDamage")) {
+                    bindingDamage = binding.getTag().getDouble("PartDamage");
+                }
+                if (!slotEmpty) {
+                    String material = tag.getString("BindingPart");
+                    String type = "sword".equals(toolType) ? "_sword_guard" : "_binding";
+                    ItemStack oldPart = new ItemStack(ItemRegistry.ITEMS.get(material + type));
+
+                    double adjustedBindingDurability = (double)(bindingDurability * maxDurability) / (double)summedDurability;
+                    double damagePercent = ((double)currentDamage / (double)maxDurability);
+                    oldPart.getTag().putDouble("PartDamage", damagePercent);
+                    Utils.setDamage(oldPart, (int) (damagePercent * adjustedBindingDurability));
+
+                    player.inventory.offerOrDrop(player.world, oldPart);
+                }
+                tag.putString("BindingPart", ((ToolPartItem) binding.getItem()).part.materialName);
+            }
+            if (!handleEmpty) {
+                if (handle.hasTag() && handle.getTag().contains("PartDamage")) {
+                    handleDamage = handle.getTag().getDouble("PartDamage");
+                }
+                if (!slotEmpty) {
+                    String material = tag.getString("HandlePart");
+                    ItemStack oldPart = new ItemStack(ItemRegistry.ITEMS.get(material + "_handle"));
+
+                    double adjustedHandleDurability = (double)(handleDurability * maxDurability) / (double)summedDurability;
+                    double damagePercent = ((double)currentDamage / (double)maxDurability);
+                    oldPart.getTag().putDouble("PartDamage", damagePercent);
+                    Utils.setDamage(oldPart, (int) (damagePercent * adjustedHandleDurability));
+
+                    player.inventory.offerOrDrop(player.world, oldPart);
+                }
+                tag.putString("HandlePart", ((ToolPartItem) handle.getItem()).part.materialName);
+            }
+            itemStack.putSubTag("Parts", tag);
+            Properties.setProperties(itemStack, Properties.getProperties(itemStack));
+            double totalDamage = headDamage + bindingDamage + handleDamage;
+
+            Utils.damage(itemStack, (int) totalDamage);
 
             inventory.setStack(3, itemStack);
             inventory.getStack(0).decrement(1);

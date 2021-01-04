@@ -10,6 +10,7 @@ import net.minecraft.network.packet.s2c.play.ScreenHandlerSlotUpdateS2CPacket;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
+import wraith.smithee.items.tools.BaseSmitheeSword;
 import wraith.smithee.utils.Utils;
 import wraith.smithee.blocks.DisassemblyTableBlockEntity;
 import wraith.smithee.items.tools.BaseSmitheeTool;
@@ -110,28 +111,33 @@ public class DisassemblyTableScreenHandler extends ScreenHandler {
             }
             tag = tag.getCompound("Parts");
             String tool = Utils.getToolType(stack.getItem());
+            String bindingType = stack.getItem() instanceof BaseSmitheeSword ? "_sword_guard" : "_binding";
             ItemStack head = new ItemStack(ItemRegistry.ITEMS.get(tag.getString("HeadPart") + "_" + tool + "_head"));
-            ItemStack binding = new ItemStack(ItemRegistry.ITEMS.get(tag.getString("BindingPart") + "_binding"));
+            ItemStack binding = new ItemStack(ItemRegistry.ITEMS.get(tag.getString("BindingPart") + bindingType));
             ItemStack handle = new ItemStack(ItemRegistry.ITEMS.get(tag.getString("HandlePart") + "_handle"));
 
-            double damage;
             int headDurability = ItemRegistry.PROPERTIES.get(tag.getString("HeadPart")).partProperties.get("head").durability;
             int bindingDurability = ItemRegistry.PROPERTIES.get(tag.getString("BindingPart")).partProperties.get("binding").durability;
             int handleDurability = ItemRegistry.PROPERTIES.get(tag.getString("HandlePart")).partProperties.get("handle").durability;
-            int normalDurability = headDurability + bindingDurability + handleDurability;
+            int maxDurability = stack.getMaxDamage();
+            int summedDurability = headDurability + bindingDurability + handleDurability;
+            int currentDamage = stack.getDamage();
 
-            damage = ((double)(stack.getDamage() * normalDurability) / stack.getMaxDamage());
-            damage *= ((double)headDurability / (double)normalDurability);
+            double adjustedHeadDurability = (double)(headDurability * maxDurability) / (double)summedDurability;
+            double adjustedBindingDurability = (double)(bindingDurability * maxDurability) / (double)summedDurability;
+            double adjustedHandleDurability = (double)(handleDurability * maxDurability) / (double)summedDurability;
+
+            double damage;
+
+            damage = ((double)currentDamage / (double)maxDurability) * adjustedHeadDurability;
             head.getTag().putDouble("PartDamage", damage);
             Utils.setDamage(head, (int) damage);
 
-            damage = ((double)(stack.getDamage() * normalDurability) / stack.getMaxDamage());
-            damage *= ((double)bindingDurability / (double)normalDurability);
+            damage = ((double)currentDamage / (double)maxDurability) * adjustedBindingDurability;
             binding.getTag().putDouble("PartDamage", damage);
             Utils.setDamage(binding, (int) damage);
 
-            damage = ((double)(stack.getDamage() * normalDurability) / stack.getMaxDamage());
-            damage *= ((double)handleDurability / (double)normalDurability);
+            damage = ((double)currentDamage / (double)maxDurability) * adjustedHandleDurability;
             handle.getTag().putDouble("PartDamage", damage);
             Utils.setDamage(handle, (int) damage);
 

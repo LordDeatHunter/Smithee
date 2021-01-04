@@ -45,6 +45,7 @@ import wraith.smithee.registry.ItemRegistry;
 import wraith.smithee.utils.Utils;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -213,10 +214,20 @@ public abstract class ItemStackMixin {
                 list.add(new LiteralText("§2Level §a" + tag.getLong("Level") + "."));
                 list.add(new LiteralText("§5Progress " + BaseSmitheeTool.getProgressString(tag.getLong("Experience"), tag.getLong("Level"))));
             }
-            list.add(new LiteralText(""));
-            list.addAll(Trait.getTooltip(((ItemStack)(Object)this)));
-            list.add(new LiteralText(""));
-            list.addAll(Modifier.getTooltip(((ItemStack)(Object)this)));
+            HashSet<Text> traits = Trait.getTooltip(((ItemStack)(Object)this));
+            if (!traits.isEmpty()) {
+                list.add(new LiteralText(""));
+                list.addAll(traits);
+            }
+            HashSet<Text> modifiers = Modifier.getTooltip(((ItemStack)(Object)this));
+            if (!modifiers.isEmpty()) {
+                list.add(new LiteralText(""));
+                list.addAll(modifiers);
+            }
+        }
+        if (getItem() instanceof Chisel) {
+            Chisel chisel = (Chisel) getItem();
+            list.add(new LiteralText("§9[§dChisel Level: §b" + chisel.getChiselingLevel() + "§d]"));
         }
         return list;
     }

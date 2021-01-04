@@ -4,6 +4,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.s2c.play.ScreenHandlerSlotUpdateS2CPacket;
 import net.minecraft.screen.ArrayPropertyDelegate;
@@ -102,11 +103,11 @@ public class ChiselingTableScreenHandler extends ScreenHandler {
         if (id < 5) {
             this.delegate.set(0, id);
             return true;
-        } else if (id == 5) {
-            this.delegate.set(0, 5);
+        } else if (id == 5 || id == 6) {
+            this.delegate.set(0, id);
             this.delegate.set(1, 0);
-        } else if (id < 9) {
-            this.delegate.set(1, id - 6);
+        } else if (id < 10) {
+            this.delegate.set(1, id - 7);
             return true;
         } else if (!inventory.getStack(1).isEmpty()) {
             ServerPlayerEntity serverPlayerEntity;
@@ -124,29 +125,44 @@ public class ChiselingTableScreenHandler extends ScreenHandler {
             HashMap<String, ToolPartRecipe> recipes = ItemRegistry.TOOL_PART_RECIPES.get(materialStack.getItem());
 
             String type = partPageToString();
-            if ("head".equals(type)) {
+            boolean isShard = "shard".equals(type);
+            if (isShard) {
+                type = "pickaxe_head";
+            } else if ("head".equals(type)) {
                 type = toolPageToString() + "_head";
             }
-
-            if (!(inventory.getStack(0).getItem() instanceof Chisel) || !recipes.containsKey(type) || ((Chisel)inventory.getStack(0).getItem()).getChiselingLevel() < recipes.get(type).chiselingLevel) {
+            boolean isRecipe = recipes.containsKey(type);
+            if (!(inventory.getStack(0).getItem() instanceof Chisel)) {
                 return false;
             }
-
+            if (!isRecipe && this.delegate.get(0) != 6) {
+                return false;
+            }
+            if (isRecipe && ((Chisel)inventory.getStack(0).getItem()).getChiselingLevel() < recipes.get(type).chiselingLevel) {
+                return false;
+            }
             int worth = ItemRegistry.REMAINS.get(recipes.get(type).outputMaterial).get(Registry.ITEM.getId(materialStack.getItem()));
-            if (materialStack.getCount() * worth < recipes.get(type).requiredAmount) {
+            int requiredAmount = 1;
+            if (!isShard) {
+                requiredAmount = recipes.get(type).requiredAmount;
+            }
+            if (!isRecipe && materialStack.getCount() * worth < requiredAmount) {
                 return false;
             }
-
             if (!inventory.getStack(2).isEmpty() && inventory.getStack(2).getCount() >= inventory.getStack(2).getMaxCount()) {
                 return false;
             }
-            int decAmount = (int) Math.ceil((float)recipes.get(type).requiredAmount / worth);
-            int remains = decAmount * worth - recipes.get(type).requiredAmount;
+            int decAmount = (int) Math.ceil((float)requiredAmount / worth);
+            int remains = decAmount * worth - requiredAmount;
 
             ItemStack outputStack = inventory.getStack(2);
             if (outputStack.isEmpty()) {
-                outputStack = new ItemStack(ItemRegistry.ITEMS.get(recipes.get(type).outputMaterial + "_" + type));
-                if (!"embossment".equals(type)) {
+                if (isShard) {
+                    outputStack = new ItemStack(Registry.ITEM.get(ItemRegistry.SHARDS.get(recipes.get(type).outputMaterial)));
+                } else {
+                    outputStack = new ItemStack(ItemRegistry.ITEMS.get(recipes.get(type).outputMaterial + "_" + type));
+                }
+                if (!"embossment".equals(type) && !isShard) {
                     outputStack.getOrCreateTag().putDouble("PartDamage", 0);
                 }
             } else {
@@ -158,19 +174,21 @@ public class ChiselingTableScreenHandler extends ScreenHandler {
 
             Utils.damage(inventory.getStack(0), 1);
 
-            HashMap<Identifier, Integer> remainders = ItemRegistry.REMAINS.get(recipes.get(type).outputMaterial);
-            ArrayList<Map.Entry<Identifier, Integer>> mapValues = new ArrayList<>(remainders.entrySet());
-            mapValues.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue()));
+            if (!isShard) {
+                HashMap<Identifier, Integer> remainders = ItemRegistry.REMAINS.get(recipes.get(type).outputMaterial);
+                ArrayList<Map.Entry<Identifier, Integer>> mapValues = new ArrayList<>(remainders.entrySet());
+                mapValues.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue()));
 
-            for (Map.Entry<Identifier, Integer> entry : mapValues) {
-                if (entry.getValue() <= remains) {
-                    int amount = remains / entry.getValue();
-                    amount = Math.min(Registry.ITEM.get(entry.getKey()).getMaxCount(), amount);
-                    remains -= amount * entry.getValue();
-                    serverPlayerEntity.inventory.offerOrDrop(serverPlayerEntity.world, new ItemStack(Registry.ITEM.get(entry.getKey()), amount));
-                }
-                if (remains <= 0) {
-                    break;
+                for (Map.Entry<Identifier, Integer> entry : mapValues) {
+                    if (entry.getValue() <= remains) {
+                        int amount = remains / entry.getValue();
+                        amount = Math.min(Registry.ITEM.get(entry.getKey()).getMaxCount(), amount);
+                        remains -= amount * entry.getValue();
+                        serverPlayerEntity.inventory.offerOrDrop(serverPlayerEntity.world, new ItemStack(Registry.ITEM.get(entry.getKey()), amount));
+                    }
+                    if (remains <= 0) {
+                        break;
+                    }
                 }
             }
 
@@ -189,7 +207,13 @@ public class ChiselingTableScreenHandler extends ScreenHandler {
             case 2:
                 return "handle";
             default:
-                return getToolPage() == 5 ? "embossment" : "head";
+                if (getToolPage() == 5) {
+                    return "embossment";
+                } else if (getToolPage() == 6) {
+                    return "shard";
+                } else {
+                    return "head";
+                }
         }
     }
 
@@ -205,6 +229,8 @@ public class ChiselingTableScreenHandler extends ScreenHandler {
                 return "hoe";
             case 5:
                 return "embossment";
+            case 6:
+                return "shard";
             default:
                 return "pickaxe";
         }

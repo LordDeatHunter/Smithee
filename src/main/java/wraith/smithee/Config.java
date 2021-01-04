@@ -136,23 +136,21 @@ public class Config {
     }
 
     private static String getMaterials(HashSet<String> materials) {
-        String defaultMaterials =
-                "{\n" +
-                        "  \"materials\": [\n" ;
+        StringBuilder defaultMaterials =
+                new StringBuilder("{\n" +
+                        "  \"materials\": [\n");
 
         Iterator<String> it = materials.iterator();
         while (it.hasNext()) {
             String material = it.next();
-            defaultMaterials += "    \"" + material + "\"";
+            defaultMaterials.append("    \"").append(material).append("\"");
             if (it.hasNext()) {
-                defaultMaterials += ",";
+                defaultMaterials.append(",");
             }
-            defaultMaterials += "\n";
+            defaultMaterials.append("\n");
         }
-        defaultMaterials +=
-                "  ]\n" +
-                        "}";
-        return defaultMaterials;
+        defaultMaterials.append("  ]\n" + "}");
+        return defaultMaterials.toString();
     }
 
     public static JsonObject loadConfig() {
@@ -203,10 +201,8 @@ public class Config {
         if (contents == null || "".equals(contents)) {
             return;
         }
-        try {
-            FileWriter writer = new FileWriter(file);
+        try (FileWriter writer = new FileWriter(file)) {
             writer.write(contents);
-            writer.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -214,8 +210,7 @@ public class Config {
 
     public static String readFile(File file) {
         String output = "";
-        try {
-            Scanner scanner = new Scanner(file);
+        try (Scanner scanner = new Scanner(file)) {
             scanner.useDelimiter("\\Z");
             output = scanner.next();
         } catch (FileNotFoundException e) {

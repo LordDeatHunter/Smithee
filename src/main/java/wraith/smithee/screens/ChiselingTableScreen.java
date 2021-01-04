@@ -69,8 +69,9 @@ public class ChiselingTableScreen extends HandledScreen<ScreenHandler> {
         drawButton(matrices, x, y, -20, 62, 216, 96, mouseX, mouseY, 3, 1);
         drawButton(matrices, x, y, -20, 82, 216, 116, mouseX, mouseY, 4, 1);
         drawButton(matrices, x, y, -20, 102, 216, 216, mouseX, mouseY, 5, 1);
+        drawButton(matrices, x, y, -20, 122, 216, 236, mouseX, mouseY, 6, 1);
         //Parts
-        if (this.handler.getToolPage() != 5) {
+        if (this.handler.getToolPage() != 5 && this.handler.getToolPage() != 6) {
             drawButton(matrices, x, y, backgroundWidth - 40, 2, 216, 136, mouseX, mouseY, 0, 2);
             drawButton(matrices, x, y, backgroundWidth - 40, 22, 216, 156, mouseX, mouseY, 1, 2);
             drawButton(matrices, x, y, backgroundWidth - 40, 42, 216, 196, mouseX, mouseY, 2, 2);
@@ -84,7 +85,10 @@ public class ChiselingTableScreen extends HandledScreen<ScreenHandler> {
             }
             if (ItemRegistry.TOOL_PART_RECIPES.containsKey(this.handler.slots.get(1).getStack().getItem()) && ItemRegistry.TOOL_PART_RECIPES.get(this.handler.slots.get(1).getStack().getItem()).containsKey(key)) {
                 int amount = ItemRegistry.TOOL_PART_RECIPES.get(this.handler.slots.get(1).getStack().getItem()).get(key).requiredAmount;
+                int chiselLevel = ItemRegistry.TOOL_PART_RECIPES.get(this.handler.slots.get(1).getStack().getItem()).get(key).chiselingLevel;
                 this.textRenderer.draw(matrices, "Cost: " + amount, x + 100, y + 70, 0x000000);
+                this.textRenderer.draw(matrices, "Chisel Level:", x + 102, y + 24, 0x000000);
+                this.textRenderer.draw(matrices, String.valueOf(chiselLevel), x + 102, y + 14, 0x000000);
             }
         }
     }
@@ -122,12 +126,13 @@ public class ChiselingTableScreen extends HandledScreen<ScreenHandler> {
         boolean tool4 = mouseX >= x - 20 && mouseY >= y + 62  && mouseX < x && mouseY < y + 62  + 20 && this.handler.getToolPage() != 3;
         boolean tool5 = mouseX >= x - 20 && mouseY >= y + 82  && mouseX < x && mouseY < y + 82  + 20 && this.handler.getToolPage() != 4;
         boolean tool6 = mouseX >= x - 20 && mouseY >= y + 102 && mouseX < x && mouseY < y + 102 + 20 && this.handler.getToolPage() != 5;
+        boolean tool7 = mouseX >= x - 20 && mouseY >= y + 122 && mouseX < x && mouseY < y + 122 + 20 && this.handler.getToolPage() != 6;
 
-        this.clickPos = tool1 ? 0 : tool2 ? 1 : tool3 ? 2 : tool4 ? 3 : tool5 ? 4 : tool6 ? 5 : -1;
+        this.clickPos = tool1 ? 0 : tool2 ? 1 : tool3 ? 2 : tool4 ? 3 : tool5 ? 4 : tool6 ? 5 : tool7 ? 6 : -1;
 
-        boolean part1 = mouseX >= x + backgroundWidth - 40 && mouseY >= y + 2  && mouseX < x + backgroundWidth - 20 && mouseY < y + 22 && this.handler.getPartPage() != 0 && this.handler.getToolPage() != 5;
-        boolean part2 = mouseX >= x + backgroundWidth - 40 && mouseY >= y + 22 && mouseX < x + backgroundWidth - 20 && mouseY < y + 42 && this.handler.getPartPage() != 1 && this.handler.getToolPage() != 5;
-        boolean part3 = mouseX >= x + backgroundWidth - 40 && mouseY >= y + 42 && mouseX < x + backgroundWidth - 20 && mouseY < y + 62 && this.handler.getPartPage() != 2 && this.handler.getToolPage() != 5;
+        boolean part1 = mouseX >= x + backgroundWidth - 40 && mouseY >= y + 2  && mouseX < x + backgroundWidth - 20 && mouseY < y + 22 && this.handler.getPartPage() != 0 && this.handler.getToolPage() != 5 && this.handler.getToolPage() != 6;
+        boolean part2 = mouseX >= x + backgroundWidth - 40 && mouseY >= y + 22 && mouseX < x + backgroundWidth - 20 && mouseY < y + 42 && this.handler.getPartPage() != 1 && this.handler.getToolPage() != 5 && this.handler.getToolPage() != 6;
+        boolean part3 = mouseX >= x + backgroundWidth - 40 && mouseY >= y + 42 && mouseX < x + backgroundWidth - 20 && mouseY < y + 62 && this.handler.getPartPage() != 2 && this.handler.getToolPage() != 5 && this.handler.getToolPage() != 6;
 
         if (this.clickPos == -1) {
             this.clickPos = part1 ? 5 : part2 ? 6 : part3 ? 7 : -1;
@@ -139,19 +144,19 @@ public class ChiselingTableScreen extends HandledScreen<ScreenHandler> {
             this.clickPos = 8;
         }
 
-        if (tool1 || tool2 || tool3 || tool4 || tool5 || tool6) {
+        if (tool1 || tool2 || tool3 || tool4 || tool5 || tool6 || tool7) {
             MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-            int id = tool1 ? 0 : tool2 ? 1 : tool3 ? 2 : tool4 ? 3 : tool5 ? 4 : 5;
+            int id = tool1 ? 0 : tool2 ? 1 : tool3 ? 2 : tool4 ? 3 : tool5 ? 4 : tool6 ? 5 : 6;
             MinecraftClient.getInstance().interactionManager.clickButton(this.handler.syncId, id);
             this.handler.setToolPage(id);
         } else if (part1 || part2 || part3) {
             MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-            int id = 6 + (part1 ? 0 : part2 ? 1 : 2);
+            int id = 7 + (part1 ? 0 : part2 ? 1 : 2);
             MinecraftClient.getInstance().interactionManager.clickButton(this.handler.syncId, id);
             this.handler.setPartPage(id - 6);
         } else if (chisel) {
             MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-            MinecraftClient.getInstance().interactionManager.clickButton(this.handler.syncId, 9);
+            MinecraftClient.getInstance().interactionManager.clickButton(this.handler.syncId, 10);
         }
         return super.mouseClicked(mouseX, mouseY, button);
     }

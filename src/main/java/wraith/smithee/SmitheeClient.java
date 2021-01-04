@@ -2,7 +2,7 @@ package wraith.smithee;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
-import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.nbt.CompoundTag;
 import wraith.smithee.registry.ItemRegistry;
@@ -43,11 +43,11 @@ public class SmitheeClient implements ClientModInitializer {
     }
 
     private void registerPacketHandlers() {
-        ClientSidePacketRegistry.INSTANCE.register(Utils.ID("connect_packet"), (packetContext, attachedData) -> {
+        ClientPlayNetworking.registerGlobalReceiver(Utils.ID("connect_packet"), (client, networkHandler, data, sender) -> {
             if (MinecraftClient.getInstance().isInSingleplayer()) {
                 return;
             }
-            CompoundTag tag = attachedData.readCompoundTag();
+            CompoundTag tag = data.readCompoundTag();
             /*
             ItemRegistry.TOOL_PART_RECIPES.clear();
             Set<String> ids = tag.getCompound("recipes").getKeys();

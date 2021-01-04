@@ -8,42 +8,42 @@
     {
       "material": "oak",
       "durability": 4,
-      "level": 0
+      "level": 1
     },
     {
       "material": "birch",
       "durability": 4,
-      "level": 0
+      "level": 1
     },
     {
       "material": "spruce",
       "durability": 4,
-      "level": 0
+      "level": 1
     },
     {
       "material": "dark_oak",
       "durability": 4,
-      "level": 0
+      "level": 1
     },
     {
       "material": "acacia",
       "durability": 4,
-      "level": 0
+      "level": 1
     },
     {
       "material": "jungle",
       "durability": 4,
-      "level": 0
+      "level": 1
     },
     {
       "material": "cactus",
       "durability": 4,
-      "level": 0
+      "level": 1
     },
     {
       "material": "bone",
       "durability": 8,
-      "level": 1
+      "level": 2
     },
     {
       "material": "stone",
@@ -103,32 +103,32 @@
     {
       "material": "bamboo",
       "durability": 4,
-      "level": 0
+      "level": 1
     },
     {
       "material": "ice",
       "durability": 2,
-      "level": 1
+      "level": 2
     },
     {
       "material": "crimson",
       "durability": 4,
-      "level": 0
+      "level": 1
     },
     {
       "material": "golden",
       "durability": 8,
-      "level": 0
+      "level": 1
     },
     {
       "material": "iron",
       "durability": 24,
-      "level": 2
+      "level": 3
     },
     {
       "material": "diamond",
       "durability": 32,
-      "level": 3
+      "level": 4
     },
     {
       "smithing_input": "diamond",

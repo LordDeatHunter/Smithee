@@ -3,7 +3,7 @@ package wraith.smithee;
 import com.google.gson.JsonObject;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
-import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
@@ -87,10 +87,10 @@ public class Smithee implements ModInitializer {
     }
 
     private void registerPacketHandlers() {
-        ServerSidePacketRegistry.INSTANCE.register(new Identifier(MOD_ID, "rename_tool_assembly"), (packetContext, attachedData) -> {
-            CompoundTag tag = attachedData.readCompoundTag();
-            if (packetContext.getPlayer().currentScreenHandler instanceof AssemblyTableScreenHandler) {
-                ((AssemblyTableScreenHandler)packetContext.getPlayer().currentScreenHandler).setName(tag.getString("ToolName"));
+        ServerPlayNetworking.registerGlobalReceiver(new Identifier(MOD_ID, "rename_tool_assembly"), (server, player, networkHandler, packet, sender) -> {
+            CompoundTag tag = packet.readCompoundTag();
+            if (player.currentScreenHandler instanceof AssemblyTableScreenHandler) {
+                ((AssemblyTableScreenHandler)player.currentScreenHandler).setName(tag.getString("ToolName"));
             }
         });
     }

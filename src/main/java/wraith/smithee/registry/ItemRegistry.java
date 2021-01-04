@@ -170,13 +170,6 @@ public class ItemRegistry {
             Registry.register(Registry.ITEM, Utils.ID(id), ITEMS.get(id));
         }
     }
-    public static void registerNewItems() {
-        for (String id : ITEMS.keySet()) {
-            if (!Registry.ITEM.containsId(Utils.ID(id))) {
-                Registry.register(Registry.ITEM, Utils.ID(id), ITEMS.get(id));
-            }
-        }
-    }
 
     public static void addMaterials() {
         JsonArray array = Config.getJsonObject(Config.readFile(new File("config/smithee/materials.json"))).get("materials").getAsJsonArray();
