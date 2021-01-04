@@ -284,11 +284,12 @@ public class AssemblyTableScreenHandler extends ScreenHandler {
                 }
                 tag.putString("HandlePart", ((ToolPartItem) handle.getItem()).part.materialName);
             }
+
             itemStack.putSubTag("Parts", tag);
             Properties.setProperties(itemStack, Properties.getProperties(itemStack));
             double totalDamage = headDamage + bindingDamage + handleDamage;
 
-            Utils.damage(itemStack, (int) totalDamage);
+            Utils.damage(itemStack, (int) totalDamage * maxDurability);
 
             inventory.setStack(3, itemStack);
             inventory.getStack(0).decrement(1);

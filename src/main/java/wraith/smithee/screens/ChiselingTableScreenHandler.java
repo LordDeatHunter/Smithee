@@ -158,7 +158,7 @@ public class ChiselingTableScreenHandler extends ScreenHandler {
             ItemStack outputStack = inventory.getStack(2);
             if (outputStack.isEmpty()) {
                 if (isShard) {
-                    outputStack = new ItemStack(Registry.ITEM.get(ItemRegistry.SHARDS.get(recipes.get(type).outputMaterial)));
+                    outputStack = new ItemStack(Registry.ITEM.get(ItemRegistry.SHARDS.get(recipes.get(type).outputMaterial)), worth);
                 } else {
                     outputStack = new ItemStack(ItemRegistry.ITEMS.get(recipes.get(type).outputMaterial + "_" + type));
                 }
@@ -166,7 +166,7 @@ public class ChiselingTableScreenHandler extends ScreenHandler {
                     outputStack.getOrCreateTag().putDouble("PartDamage", 0);
                 }
             } else {
-                outputStack.increment(1);
+                outputStack.increment(isShard ? worth : 1);
             }
 
             inventory.setStack(2, outputStack);
