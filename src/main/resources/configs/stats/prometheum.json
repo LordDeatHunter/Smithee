@@ -5,21 +5,45 @@
       "durability": 1201,
       "mining_speed": 8.5,
       "attack_damage": 3.5,
-      "attack_speed": 0.6
+      "attack_speed": 0.6,
+      "traits": [
+        {
+          "trait": "ecological",
+          "min_level": 2,
+          "max_level": 3,
+          "chance": 0.0015
+        }
+      ]
     },
     "binding": {
       "mining_level": 0,
       "durability": 600,
       "mining_speed": 0.0,
       "attack_damage": 0.0,
-      "attack_speed": 0.1
+      "attack_speed": 0.1,
+      "traits": [
+        {
+          "trait": "ecological",
+          "min_level": 2,
+          "max_level": 3,
+          "chance": 0.0015
+        }
+      ]
     },
     "handle": {
       "mining_level": 0,
       "durability": 360,
       "mining_speed": 1.0,
       "attack_damage": 0.0,
-      "attack_speed": 0.3
+      "attack_speed": 0.3,
+      "traits": [
+        {
+          "trait": "ecological",
+          "min_level": 2,
+          "max_level": 3,
+          "chance": 0.0015
+        }
+      ]
     }
   }
 }

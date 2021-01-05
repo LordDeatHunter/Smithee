@@ -129,17 +129,17 @@ public class DisassemblyTableScreenHandler extends ScreenHandler {
 
             double damage;
 
-            damage = (double)currentDamage / (double)maxDurability;
+            damage = ((double)currentDamage / (double)maxDurability) * adjustedHeadDurability;
             head.getTag().putDouble("PartDamage", damage);
-            Utils.setDamage(head, (int) (damage * adjustedHeadDurability));
+            Utils.setDamage(head, (int) (damage));
 
-            damage = (double)currentDamage / (double)maxDurability;
+            damage = ((double)currentDamage / (double)maxDurability) * adjustedBindingDurability;
             binding.getTag().putDouble("PartDamage", damage);
-            Utils.setDamage(binding, (int) (damage * adjustedBindingDurability));
+            Utils.setDamage(binding, (int) (damage));
 
-            damage = (double)currentDamage / (double)maxDurability;
+            damage = ((double)currentDamage / (double)maxDurability) * adjustedHandleDurability;
             handle.getTag().putDouble("PartDamage", damage);
-            Utils.setDamage(handle, (int) (damage * adjustedHandleDurability));
+            Utils.setDamage(handle, (int) (damage));
 
             inventory.setStack(0, ItemStack.EMPTY);
             inventory.setStack(1, head);

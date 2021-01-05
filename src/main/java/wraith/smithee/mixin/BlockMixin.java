@@ -34,7 +34,7 @@ public class BlockMixin {
         } else if (!cancelExhaustion && cancelDrops) {
             player.addExhaustion(0.005F);
             ci.cancel();
-        } else if (cancelExhaustion) {
+        } else {
             Block.dropStacks(state, world, pos, entity, player, stack);
             for (ItemStack drop : drops) {
                 Block.dropStack(world, pos, drop);

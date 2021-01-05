@@ -166,6 +166,10 @@ public class ChiselingTableScreenHandler extends ScreenHandler {
                     outputStack.getOrCreateTag().putDouble("PartDamage", 0);
                 }
             } else {
+                int difference = (outputStack.getCount() + (isShard ? worth : 1)) - outputStack.getMaxCount();
+                if (difference > 0) {
+                    player.inventory.offerOrDrop(player.world, new ItemStack(outputStack.getItem(), difference));
+                }
                 outputStack.increment(isShard ? worth : 1);
             }
 

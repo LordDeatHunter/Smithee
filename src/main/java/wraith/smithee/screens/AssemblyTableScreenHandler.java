@@ -118,7 +118,7 @@ public class AssemblyTableScreenHandler extends ScreenHandler {
 
     @Override
     public boolean onButtonClick(PlayerEntity player, int id) {
-        if (!(player instanceof ServerPlayerEntity)) {
+        if (!(player instanceof ServerPlayerEntity) || player.world.isClient()) {
             return false;
         }
         ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) player;
@@ -218,19 +218,21 @@ public class AssemblyTableScreenHandler extends ScreenHandler {
             int headDurability = 0;
             int bindingDurability = 0;
             int handleDurability = 0;
+            int maxDurability = itemStack.getMaxDamage();
+            int currentDamage = itemStack.getDamage();
+            int summedDurability = 0;
+            double headDamage = 0;
+            double bindingDamage = 0;
+            double handleDamage = 0;
             if (!tag.isEmpty()) {
                 headDurability = ItemRegistry.PROPERTIES.get(tag.getString("HeadPart")).partProperties.get("head").durability;
                 bindingDurability = ItemRegistry.PROPERTIES.get(tag.getString("BindingPart")).partProperties.get("binding").durability;
                 handleDurability = ItemRegistry.PROPERTIES.get(tag.getString("HandlePart")).partProperties.get("handle").durability;
+                summedDurability = headDurability + bindingDurability + handleDurability;
+                headDamage = ((double)(headDurability * maxDurability) / (double)summedDurability) * ((double)currentDamage / (double)maxDurability);
+                bindingDamage = ((double)(bindingDurability * maxDurability) / (double)summedDurability) * ((double)currentDamage / (double)maxDurability);
+                handleDamage = ((double)(handleDurability * maxDurability) / (double)summedDurability) * ((double)currentDamage / (double)maxDurability);
             }
-            int maxDurability = itemStack.getMaxDamage();
-            int currentDamage = itemStack.getDamage();
-            int summedDurability = headDurability + bindingDurability + handleDurability;
-
-            double headDamage = 0;
-            double bindingDamage = 0;
-            double handleDamage = 0;
-
             String toolType = Utils.getToolType(itemStack.getItem());
             if (!headEmpty) {
                 if (head.hasTag() && head.getTag().contains("PartDamage")) {
@@ -241,9 +243,9 @@ public class AssemblyTableScreenHandler extends ScreenHandler {
                     ItemStack oldPart = new ItemStack(ItemRegistry.ITEMS.get(material + "_" + toolType + "_head"));
 
                     double adjustedHeadDurability = (double)(headDurability * maxDurability) / (double)summedDurability;
-                    double damagePercent = ((double)currentDamage / (double)maxDurability);
+                    double damagePercent = ((double)currentDamage / (double)maxDurability) * adjustedHeadDurability;
                     oldPart.getTag().putDouble("PartDamage", damagePercent);
-                    Utils.setDamage(oldPart, (int) (damagePercent * adjustedHeadDurability));
+                    Utils.setDamage(oldPart, (int) (damagePercent));
 
                     player.inventory.offerOrDrop(player.world, oldPart);
                 }
@@ -259,9 +261,9 @@ public class AssemblyTableScreenHandler extends ScreenHandler {
                     ItemStack oldPart = new ItemStack(ItemRegistry.ITEMS.get(material + type));
 
                     double adjustedBindingDurability = (double)(bindingDurability * maxDurability) / (double)summedDurability;
-                    double damagePercent = ((double)currentDamage / (double)maxDurability);
+                    double damagePercent = ((double)currentDamage / (double)maxDurability) * adjustedBindingDurability;
                     oldPart.getTag().putDouble("PartDamage", damagePercent);
-                    Utils.setDamage(oldPart, (int) (damagePercent * adjustedBindingDurability));
+                    Utils.setDamage(oldPart, (int) (damagePercent));
 
                     player.inventory.offerOrDrop(player.world, oldPart);
                 }
@@ -276,9 +278,9 @@ public class AssemblyTableScreenHandler extends ScreenHandler {
                     ItemStack oldPart = new ItemStack(ItemRegistry.ITEMS.get(material + "_handle"));
 
                     double adjustedHandleDurability = (double)(handleDurability * maxDurability) / (double)summedDurability;
-                    double damagePercent = ((double)currentDamage / (double)maxDurability);
+                    double damagePercent = ((double)currentDamage / (double)maxDurability) * adjustedHandleDurability;
                     oldPart.getTag().putDouble("PartDamage", damagePercent);
-                    Utils.setDamage(oldPart, (int) (damagePercent * adjustedHandleDurability));
+                    Utils.setDamage(oldPart, (int) (damagePercent));
 
                     player.inventory.offerOrDrop(player.world, oldPart);
                 }
@@ -289,7 +291,7 @@ public class AssemblyTableScreenHandler extends ScreenHandler {
             Properties.setProperties(itemStack, Properties.getProperties(itemStack));
             double totalDamage = headDamage + bindingDamage + handleDamage;
 
-            Utils.damage(itemStack, (int) totalDamage * maxDurability);
+            Utils.setDamage(itemStack, (int) totalDamage);
 
             inventory.setStack(3, itemStack);
             inventory.getStack(0).decrement(1);

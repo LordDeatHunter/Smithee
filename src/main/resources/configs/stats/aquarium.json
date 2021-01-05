@@ -5,21 +5,45 @@
       "durability": 180,
       "mining_speed": 6.0,
       "attack_damage": 2.0,
-      "attack_speed": 0.6
+      "attack_speed": 0.6,
+      "traits": [
+        {
+          "trait": "aquadynamic",
+          "min_level": 1,
+          "max_level": 1,
+          "chance": 1
+        }
+      ]
     },
     "binding": {
       "mining_level": 0,
       "durability": 90,
       "mining_speed": 0.0,
       "attack_damage": 0.0,
-      "attack_speed": 0.1
+      "attack_speed": 0.1,
+      "traits": [
+        {
+          "trait": "aquadynamic",
+          "min_level": 1,
+          "max_level": 1,
+          "chance": 1
+        }
+      ]
     },
     "handle": {
       "mining_level": 0,
       "durability": 54,
       "mining_speed": 1.0,
       "attack_damage": 0.0,
-      "attack_speed": 0.3
+      "attack_speed": 0.3,
+      "traits": [
+        {
+          "trait": "aquadynamic",
+          "min_level": 1,
+          "max_level": 1,
+          "chance": 1
+        }
+      ]
     }
   }
 }
