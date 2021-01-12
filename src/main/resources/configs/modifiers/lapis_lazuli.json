@@ -6,7 +6,19 @@
     {
       "gives": "minecraft:looting",
       "gives_to": [
-        "sword"
+        "sword",
+        "harvest_scythe",
+        "broadsword",
+        "claymore",
+        "cutlass",
+        "battle_scythe",
+        "katana",
+        "battle_staff",
+        "spear",
+        "glaive",
+        "rapier",
+        "sickle",
+        "dagger"
       ]
     },
     {
@@ -15,7 +27,8 @@
         "pickaxe",
         "axe",
         "shovel",
-        "hoe"
+        "hoe",
+        "harvest_scythe"
       ]
     }
   ],

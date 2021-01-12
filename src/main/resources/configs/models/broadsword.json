@@ -1,0 +1,38 @@
+{
+  "smithee:base_smithee_broadsword": {
+    "parent": "minecraft:item/handheld",
+    "display": {
+      "gui": {
+        "translation": [-0.4, -0.4, 0],
+        "scale": [1.5, 1.5, 3]
+      },
+      "ground": {
+        "scale": [2, 2, 0.5]
+      },
+      "thirdperson_righthand": {
+        "rotation": [0, 90, 55],
+        "translation": [0, 5.25, 2.5],
+        "scale": [2, 2, 0.8]
+      },
+      "thirdperson_lefthand": {
+        "rotation": [0, -90, -55],
+        "translation": [0, 5.25, 2.5],
+        "scale": [2, 2, 0.8]
+      },
+      "firstperson_righthand": {
+        "rotation": [0, -90, 25],
+        "translation": [1.13, 3.2, 1.13],
+        "scale": [1.71875, 1.71875, 0.7]
+      },
+      "firstperson_lefthand": {
+        "rotation": [0, 90, -25],
+        "translation": [1.13, 3.2, 1.13],
+        "scale": [1.71875, 1.71875, 0.7]
+      },
+      "fixed": {
+        "rotation": [0, 180, 0],
+        "scale": [1.71875, 1.71875, 1]
+      }
+    }
+  }
+}

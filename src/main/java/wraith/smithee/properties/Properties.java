@@ -84,8 +84,20 @@ public class Properties {
             case "pickaxe":
                 return 1;
             case "axe":
+            case "broadsword":
+            case "claymore":
                 return 6;
             case "sword":
+            case "harvest_scythe":
+            case "battle_scythe":
+            case "katana":
+            case "cutlass":
+            case "battle_staff":
+            case "sickle":
+            case "dagger":
+            case "spear":
+            case "glaive":
+            case "rapier":
                 return 3;
             case "shovel":
                 return 1.5f;

@@ -226,4 +226,12 @@ public class JsonParser {
             shards.put(material, new Identifier(obj.get("item").getAsString()));
         }
     }
+
+    public static void parseModels(JsonObject obj, HashMap<String, String> models) {
+        for (Map.Entry<String, JsonElement> entry : obj.entrySet()) {
+            String key = entry.getKey();
+            String json = entry.getValue().toString();
+            models.put(key, json);
+        }
+    }
 }

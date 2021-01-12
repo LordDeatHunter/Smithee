@@ -26,6 +26,10 @@ dependencies {
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
+	modCompileOnly 'curse.maven:mythicmetals-412225:3160648'
+	modCompileOnly 'curse.maven:harvestscythes-412225:3159547'
+	modCompileOnly 'curse.maven:mcdw-407311:3154479'
+
 	compile 'com.udojava:EvalEx:2.5'
 	include 'com.udojava:EvalEx:2.5'
 

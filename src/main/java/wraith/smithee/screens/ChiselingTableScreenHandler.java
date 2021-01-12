@@ -4,7 +4,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.s2c.play.ScreenHandlerSlotUpdateS2CPacket;
 import net.minecraft.screen.ArrayPropertyDelegate;
@@ -22,9 +21,7 @@ import wraith.smithee.screens.slots.ToolOutputSlot;
 import wraith.smithee.screens.slots.ToolSlot;
 import wraith.smithee.utils.Utils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class ChiselingTableScreenHandler extends ScreenHandler {
 
@@ -40,27 +37,20 @@ public class ChiselingTableScreenHandler extends ScreenHandler {
         this.delegate = delegate;
         this.addProperties(this.delegate);
         this.inventory = inventory;
-        this.addSlot(new ToolSlot(inventory, 0, 81, 41, Chisel.class)); //Chisel
-        this.addSlot(new ToolSlot(inventory, 1, 115, 41, ItemRegistry.TOOL_PART_RECIPES.keySet())); //Material
-        this.addSlot(new ToolOutputSlot(inventory, 2, 98, 66)); //Output
+        this.addSlot(new ToolSlot(inventory, 0, 18, 31, Chisel.class)); //Chisel
+        this.addSlot(new ToolSlot(inventory, 1, 18, 56, ItemRegistry.TOOL_PART_RECIPES.keySet())); //Material
+        this.addSlot(new ToolOutputSlot(inventory, 2, 143, 52)); //Output
 
         for (int y = 0; y < 3; ++y) {
             for (int x = 0; x < 9; ++x) {
-                this.addSlot(new Slot(playerInventory, x + y * 9 + 9, 28 + x * 18, 90 + y * 18));
+                this.addSlot(new Slot(playerInventory, x + y * 9 + 9, 8 + x * 18, 137 + y * 18));
             }
         }
 
         for (int x = 0; x < 9; ++x) {
-            this.addSlot(new Slot(playerInventory, x, 28 + x * 18, 148));
+            this.addSlot(new Slot(playerInventory, x, 8 + x * 18, 195));
         }
-
     }
-
-    @Override
-    public boolean canUse(PlayerEntity playerEntity) {
-        return this.inventory.canPlayerUse(playerEntity);
-    }
-
     @Override
     public ItemStack transferSlot(PlayerEntity player, int invSlot) {
         ItemStack newStack = ItemStack.EMPTY;
@@ -100,16 +90,14 @@ public class ChiselingTableScreenHandler extends ScreenHandler {
 
     @Override
     public boolean onButtonClick(PlayerEntity player, int id) {
-        if (id < 5) {
-            this.delegate.set(0, id);
+        if (id >= 0) {
+            if (id % 2 == 0) {
+                this.delegate.set(0, id / 2);
+            } else {
+                this.delegate.set(1, (id - 1) / 2);
+            }
             return true;
-        } else if (id == 5 || id == 6) {
-            this.delegate.set(0, id);
-            this.delegate.set(1, 0);
-        } else if (id < 10) {
-            this.delegate.set(1, id - 7);
-            return true;
-        } else if (!inventory.getStack(1).isEmpty()) {
+        } else if (!inventory.getStack(0).isEmpty() && !inventory.getStack(1).isEmpty()) {
             ServerPlayerEntity serverPlayerEntity;
             if (player instanceof ServerPlayerEntity) {
                 serverPlayerEntity = (ServerPlayerEntity) player;
@@ -124,53 +112,43 @@ public class ChiselingTableScreenHandler extends ScreenHandler {
             }
             HashMap<String, ToolPartRecipe> recipes = ItemRegistry.TOOL_PART_RECIPES.get(materialStack.getItem());
 
-            String type = partPageToString();
-            boolean isShard = "shard".equals(type);
-            if (isShard) {
-                type = "pickaxe_head";
-            } else if ("head".equals(type)) {
-                type = toolPageToString() + "_head";
+            String type = getSelectedPartAsString();
+
+            if (!getSelectedPartAsString().equals(getSelectedPartAsString())) {
+                type = getSelectedToolAsString() + "_" + getSelectedPartAsString();
             }
-            boolean isRecipe = recipes.containsKey(type);
+            if (!recipes.containsKey(type)) {
+                return false;
+            }
             if (!(inventory.getStack(0).getItem() instanceof Chisel)) {
                 return false;
             }
-            if (!isRecipe && this.delegate.get(0) != 6) {
-                return false;
-            }
-            if (isRecipe && ((Chisel)inventory.getStack(0).getItem()).getChiselingLevel() < recipes.get(type).chiselingLevel) {
+            if (((Chisel) inventory.getStack(0).getItem()).getChiselingLevel() < recipes.get(type).chiselingLevel) {
                 return false;
             }
             int worth = ItemRegistry.REMAINS.get(recipes.get(type).outputMaterial).get(Registry.ITEM.getId(materialStack.getItem()));
-            int requiredAmount = 1;
-            if (!isShard) {
-                requiredAmount = recipes.get(type).requiredAmount;
-            }
-            if (!isRecipe && materialStack.getCount() * worth < requiredAmount) {
+            int requiredAmount = recipes.get(type).requiredAmount;
+            if (materialStack.getCount() * worth < requiredAmount) {
                 return false;
             }
             if (!inventory.getStack(2).isEmpty() && inventory.getStack(2).getCount() >= inventory.getStack(2).getMaxCount()) {
                 return false;
             }
-            int decAmount = (int) Math.ceil((float)requiredAmount / worth);
+            int decAmount = (int) Math.ceil((float) requiredAmount / worth);
             int remains = decAmount * worth - requiredAmount;
 
             ItemStack outputStack = inventory.getStack(2);
             if (outputStack.isEmpty()) {
-                if (isShard) {
-                    outputStack = new ItemStack(Registry.ITEM.get(ItemRegistry.SHARDS.get(recipes.get(type).outputMaterial)), worth);
-                } else {
-                    outputStack = new ItemStack(ItemRegistry.ITEMS.get(recipes.get(type).outputMaterial + "_" + type));
-                }
-                if (!"embossment".equals(type) && !isShard) {
+                outputStack = new ItemStack(ItemRegistry.ITEMS.get(recipes.get(type).outputMaterial + "_" + type));
+                if (!"embossment".equals(type) && !"shard".equals(type) && !"whetstone".equals(type)) {
                     outputStack.getOrCreateTag().putDouble("PartDamage", 0);
                 }
             } else {
-                int difference = (outputStack.getCount() + (isShard ? worth : 1)) - outputStack.getMaxCount();
+                int difference = (outputStack.getCount() + 1 - outputStack.getMaxCount());
                 if (difference > 0) {
                     player.inventory.offerOrDrop(player.world, new ItemStack(outputStack.getItem(), difference));
                 }
-                outputStack.increment(isShard ? worth : 1);
+                outputStack.increment(1);
             }
 
             inventory.setStack(2, outputStack);
@@ -178,21 +156,19 @@ public class ChiselingTableScreenHandler extends ScreenHandler {
 
             Utils.damage(inventory.getStack(0), 1);
 
-            if (!isShard) {
-                HashMap<Identifier, Integer> remainders = ItemRegistry.REMAINS.get(recipes.get(type).outputMaterial);
-                ArrayList<Map.Entry<Identifier, Integer>> mapValues = new ArrayList<>(remainders.entrySet());
-                mapValues.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue()));
+            HashMap<Identifier, Integer> remainders = ItemRegistry.REMAINS.get(recipes.get(type).outputMaterial);
+            ArrayList<Map.Entry<Identifier, Integer>> mapValues = new ArrayList<>(remainders.entrySet());
+            mapValues.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue()));
 
-                for (Map.Entry<Identifier, Integer> entry : mapValues) {
-                    if (entry.getValue() <= remains) {
-                        int amount = remains / entry.getValue();
-                        amount = Math.min(Registry.ITEM.get(entry.getKey()).getMaxCount(), amount);
-                        remains -= amount * entry.getValue();
-                        serverPlayerEntity.inventory.offerOrDrop(serverPlayerEntity.world, new ItemStack(Registry.ITEM.get(entry.getKey()), amount));
-                    }
-                    if (remains <= 0) {
-                        break;
-                    }
+            for (Map.Entry<Identifier, Integer> entry : mapValues) {
+                if (entry.getValue() <= remains) {
+                    int amount = remains / entry.getValue();
+                    amount = Math.min(Registry.ITEM.get(entry.getKey()).getMaxCount(), amount);
+                    remains -= amount * entry.getValue();
+                    serverPlayerEntity.inventory.offerOrDrop(serverPlayerEntity.world, new ItemStack(Registry.ITEM.get(entry.getKey()), amount));
+                }
+                if (remains <= 0) {
+                    break;
                 }
             }
 
@@ -204,57 +180,39 @@ public class ChiselingTableScreenHandler extends ScreenHandler {
         return false;
     }
 
-    public String partPageToString() {
-        switch (this.delegate.get(1)) {
-            case 1:
-                return this.delegate.get(0) == 3 ? "sword_guard" : "binding";
-            case 2:
-                return "handle";
-            default:
-                if (getToolPage() == 5) {
-                    return "embossment";
-                } else if (getToolPage() == 6) {
-                    return "shard";
-                } else {
-                    return "head";
-                }
-        }
+    @Override
+    public boolean canUse(PlayerEntity playerEntity) {
+        return this.inventory.canPlayerUse(playerEntity);
     }
 
-    public String toolPageToString() {
-        switch(this.delegate.get(0)) {
-            case 1:
-                return "shovel";
-            case 2:
-                return "axe";
-            case 3:
-                return "sword";
-            case 4:
-                return "hoe";
-            case 5:
-                return "embossment";
-            case 6:
-                return "shard";
-            default:
-                return "pickaxe";
-        }
+    public String getSelectedToolAsString() {
+        ArrayList<String> list = new ArrayList<>(ToolPartRecipe.TOOL_ASSEMBLY_RECIPES.keySet());
+        Collections.sort(list);
+        return list.get(getSelectedTool());
     }
 
-
-
-    public void setToolPage(int id) {
-        this.delegate.set(0, id);
+    public String getSelectedPartAsString() {
+        ArrayList<String> list = new ArrayList<>(ToolPartRecipe.TOOL_ASSEMBLY_RECIPES.keySet());
+        Collections.sort(list);
+        String tool = list.get(getSelectedTool());
+        ArrayList<String> parts = new ArrayList<>(ToolPartRecipe.TOOL_ASSEMBLY_RECIPES.get(tool));
+        Collections.sort(parts);
+        return parts.get(getSelectedPart());
     }
 
-    public int getToolPage() {
+    public int getSelectedTool() {
         return this.delegate.get(0);
     }
 
-    public int getPartPage() {
+    public int getSelectedPart() {
         return this.delegate.get(1);
     }
 
-    public void setPartPage(int id) {
-        this.delegate.set(1, id);
+    public void setSelectedTool(int n) {
+        this.delegate.set(0, n);
+    }
+
+    public void setSelectedPart(int n) {
+        this.delegate.set(1, n);
     }
 }

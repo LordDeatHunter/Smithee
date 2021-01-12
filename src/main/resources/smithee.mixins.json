@@ -21,6 +21,7 @@
     "PlayerEntityMixin",
     "PlayerManagerMixin",
     "RecipeManagerMixin",
+    "ScreenHandlerMixin",
     "SmithingScreenHandlerMixin",
     "StatusEffectInvoker",
     "StatusEffectMixin",

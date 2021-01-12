@@ -1,0 +1,28 @@
+{
+  "smithee:base_smithee_battle_staff": {
+    "parent": "minecraft:item/handheld",
+    "display": {
+      "gui": {
+        "scale": [1.3125, 1.3125, 1]
+      },
+      "ground": {
+        "scale": [1.3125, 1.3125, 1]
+      },
+      "thirdperson_righthand": {
+        "scale": [1.3125, 1.3125, 1]
+      },
+      "thirdperson_lefthand": {
+        "scale": [1.3125, 1.3125, 1]
+      },
+      "firstperson_righthand": {
+        "scale": [1.3125, 1.3125, 1]
+      },
+      "firstperson_lefthand": {
+        "scale": [1.3125, 1.3125, 1]
+      },
+      "fixed": {
+        "scale": [1.3125, 1.3125, 1]
+      }
+    }
+  }
+}

@@ -12,12 +12,12 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.registry.Registry;
-import wraith.smithee.Smithee;
 import wraith.smithee.blocks.AassemblyTableBlockEntity;
 import wraith.smithee.items.tool_parts.ToolPartItem;
-import wraith.smithee.items.tools.BaseSmitheeTool;
+import wraith.smithee.items.tools.BaseSmitheeItem;
 import wraith.smithee.properties.Properties;
 import wraith.smithee.properties.ToolPartRecipe;
+import wraith.smithee.recipes.EmbossModifiers;
 import wraith.smithee.recipes.EmbossRecipe;
 import wraith.smithee.registry.ItemRegistry;
 import wraith.smithee.registry.ScreenHandlerRegistry;
@@ -30,7 +30,7 @@ import java.util.HashSet;
 
 public class AssemblyTableScreenHandler extends ScreenHandler {
 
-    private Inventory inventory;
+    private final Inventory inventory;
     private String toolName = "";
 
     public AssemblyTableScreenHandler(int syncId, PlayerInventory playerInventory) {
@@ -43,8 +43,8 @@ public class AssemblyTableScreenHandler extends ScreenHandler {
         if (inventory instanceof AassemblyTableBlockEntity) {
             ((AassemblyTableBlockEntity)inventory).setHandler(this);
         }
-        this.addSlot(new PartSlot(inventory, 0, 35, 57, "handle")); //Handle
-        this.addSlot(new PartSlot(inventory, 1, 47, 37, "binding", "sword_guard")); //Binding
+        this.addSlot(new PartSlot(inventory, 0, 35, 57, ItemRegistry.HANDLE_TYPES)); //Handle
+        this.addSlot(new PartSlot(inventory, 1, 47, 37, ItemRegistry.BINDING_TYPES)); //Binding
         this.addSlot(new PartSlot(inventory, 2, 59, 17, "head")); //Head
         this.addSlot(new AssemblyTableOutputSlot(inventory, 3, 113, 43, true)); //Output
         HashSet<Item> itemSet = new HashSet<>();
@@ -83,12 +83,12 @@ public class AssemblyTableScreenHandler extends ScreenHandler {
                 }
             } else if (originalStack.getItem() instanceof ToolPartItem) {
                 ToolPartItem tool = (ToolPartItem) originalStack.getItem();
-                if (("handle".equals(tool.part.partType) && !this.insertItem(originalStack, 0, 1, false)) ||
-                        (("binding".equals(tool.part.partType) || "sword_guard".equals(tool.part.partType)) && !this.insertItem(originalStack, 1, 2, false)) ||
-                        ("head".equals(tool.part.partType) && !this.insertItem(originalStack, 2, 3, false))) {
+                if ((ItemRegistry.HANDLE_TYPES.contains(tool.part.partType) && !this.insertItem(originalStack, 0, 1, false)) ||
+                    (ItemRegistry.BINDING_TYPES.contains(tool.part.partType) && !this.insertItem(originalStack, 1, 2, false)) ||
+                    ("head".equals(tool.part.partType) && !this.insertItem(originalStack, 2, 3, false))) {
                     return ItemStack.EMPTY;
                 }
-            } else if (originalStack.getItem() instanceof BaseSmitheeTool) {
+            } else if (originalStack.getItem() instanceof BaseSmitheeItem) {
                 if(!this.insertItem(originalStack, 3, 4, false)) {
                     return ItemStack.EMPTY;
                 }
@@ -142,6 +142,16 @@ public class AssemblyTableScreenHandler extends ScreenHandler {
                 return false;
             }
             EmbossRecipe recipe = ItemRegistry.EMBOSS_RECIPES.get(material.toString());
+            boolean canEmboss = false;
+            for (EmbossModifiers modifier : recipe.modifiers) {
+                if (modifier.givesTo.contains(((BaseSmitheeItem)tool.getItem()).getToolType())) {
+                    canEmboss = true;
+                    break;
+                }
+            }
+            if (!canEmboss) {
+                return false;
+            }
             CompoundTag mainTag = tool.getSubTag("SmitheeProperties");
             if (!mainTag.contains("Modifiers")) {
                 return false;
@@ -205,7 +215,7 @@ public class AssemblyTableScreenHandler extends ScreenHandler {
                 recipe.add(((ToolPartItem)head.getItem()).part.recipeString());
             }
 
-            if (!ToolPartRecipe.TOOL_ASSEMBLY_RECIPES.contains(recipe) && slotEmpty) {
+            if (!ToolPartRecipe.TOOL_ASSEMBLY_RECIPES.containsValue(recipe) && slotEmpty) {
                 return false;
             }
 
@@ -233,7 +243,7 @@ public class AssemblyTableScreenHandler extends ScreenHandler {
                 bindingDamage = ((double)(bindingDurability * maxDurability) / (double)summedDurability) * ((double)currentDamage / (double)maxDurability);
                 handleDamage = ((double)(handleDurability * maxDurability) / (double)summedDurability) * ((double)currentDamage / (double)maxDurability);
             }
-            String toolType = Utils.getToolType(itemStack.getItem());
+            String toolType = ((BaseSmitheeItem)itemStack.getItem()).getToolType();
             if (!headEmpty) {
                 if (head.hasTag() && head.getTag().contains("PartDamage")) {
                     headDamage = head.getTag().getDouble("PartDamage");

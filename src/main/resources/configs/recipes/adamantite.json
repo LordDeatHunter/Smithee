@@ -1,17 +1,17 @@
 {
-  "#mythicmetals:adamantite_blocks": {
+  "#c:adamantite_blocks": {
     "output_material": "adamantite",
     "material_value": 81,
     "chiseling_level": 4,
     "overrides": {}
   },
-  "#mythicmetals:adamantite_ingots": {
+  "#c:adamantite_ingots": {
     "output_material": "adamantite",
     "material_value": 9,
     "chiseling_level": 4,
     "overrides": {}
   },
-  "#mythicmetals:adamantite_nuggets": {
+  "#c:adamantite_nuggets": {
     "output_material": "adamantite",
     "material_value": 1,
     "chiseling_level": 4,

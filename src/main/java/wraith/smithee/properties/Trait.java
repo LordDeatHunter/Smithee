@@ -15,7 +15,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-import wraith.smithee.items.tools.BaseSmitheeTool;
+import wraith.smithee.items.tools.BaseSmitheeItem;
 import wraith.smithee.mixin.TextColorInvoker;
 import wraith.smithee.registry.ItemRegistry;
 import wraith.smithee.utils.Utils;
@@ -52,7 +52,7 @@ public class Trait {
 
     public static HashSet<Text> getTooltip(ItemStack stack) {
         HashSet<Text> tooltips = new HashSet<>();
-        if (!(stack.getItem() instanceof BaseSmitheeTool) || !stack.hasTag() || !stack.getTag().contains("Parts")) {
+        if (!(stack.getItem() instanceof BaseSmitheeItem) || !stack.hasTag() || !stack.getTag().contains("Parts")) {
             return tooltips;
         }
         CompoundTag tag = stack.getTag().getCompound("Parts");
@@ -74,7 +74,7 @@ public class Trait {
 
     public static HashMap<String, Object> evaluateTraits(ItemStack stack, World world, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, Entity player, String source) {
         HashMap<String, Object> returns = new HashMap<>();
-        if (!(stack.getItem() instanceof BaseSmitheeTool) || !stack.hasTag() || !stack.getTag().contains("Parts")) {
+        if (!(stack.getItem() instanceof BaseSmitheeItem) || !stack.hasTag() || !stack.getTag().contains("Parts")) {
             return returns;
         }
 
@@ -164,7 +164,7 @@ public class Trait {
                 returns.put("Cancel Item Damage", true);
                 break;
             case "sharp":
-                if (!"MobEntity#tryAttack".equals(source)) {
+                if (!"PlayerEntity#attack".equals(source)) {
                     break;
                 }
                 returns.put("Attack Damage Amount", (float)Utils.getRandomDoubleInRange(trait.minLevel, trait.maxLevel));

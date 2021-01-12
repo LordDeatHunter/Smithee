@@ -6,7 +6,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.util.Identifier;
-import wraith.smithee.items.tools.BaseSmitheeTool;
+import wraith.smithee.items.tools.BaseSmitheeItem;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -53,7 +53,7 @@ public class ToolSlot extends Slot {
 
     @Override
     public boolean canInsert(ItemStack stack) {
-        return (smithy && stack.getItem() instanceof BaseSmitheeTool) || (compatibleTools.contains(stack.getItem()) || useClass == null || useClass.isInstance(stack.getItem()));
+        return (smithy && stack.getItem() instanceof BaseSmitheeItem) || (compatibleTools.contains(stack.getItem()) || useClass == null || useClass.isInstance(stack.getItem()));
     }
 
 }

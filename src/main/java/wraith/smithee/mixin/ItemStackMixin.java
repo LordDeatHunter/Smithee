@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.Material;
@@ -34,14 +35,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import wraith.smithee.Smithee;
 import wraith.smithee.items.Chisel;
 import wraith.smithee.items.tool_parts.ToolPartItem;
+import wraith.smithee.items.tools.BaseSmitheeMeleeWeapon;
 import wraith.smithee.items.tools.BaseSmitheePickaxe;
-import wraith.smithee.items.tools.BaseSmitheeSword;
-import wraith.smithee.items.tools.BaseSmitheeTool;
+import wraith.smithee.items.tools.BaseSmitheeHarvestScythe;
+import wraith.smithee.items.tools.BaseSmitheeItem;
 import wraith.smithee.properties.Modifier;
 import wraith.smithee.properties.Properties;
 import wraith.smithee.properties.ToolPartRecipe;
 import wraith.smithee.properties.Trait;
 import wraith.smithee.registry.ItemRegistry;
+import wraith.smithee.support.HarvestScythes;
 import wraith.smithee.utils.Utils;
 
 import java.util.HashMap;
@@ -66,9 +69,16 @@ public abstract class ItemStackMixin {
 
     @Shadow public abstract int getCount();
 
+    @Inject(method = "getTag", at = @At("HEAD"), cancellable = true)
+    public void getTag(CallbackInfoReturnable<CompoundTag> cir) {
+        if (FabricLoader.getInstance().isModLoaded("harvest_scythes") && getItem() instanceof BaseSmitheeHarvestScythe) {
+            HarvestScythes.addTag(tag);
+        }
+    }
+
     @Inject(method = "getMaxDamage", at = @At("HEAD"), cancellable = true)
     public void getMaxDamage(CallbackInfoReturnable<Integer> cir) {
-        if (getItem() instanceof BaseSmitheeTool && tag != null && tag.contains("SmitheeProperties")) {
+        if (getItem() instanceof BaseSmitheeItem && tag != null && tag.contains("SmitheeProperties")) {
             CompoundTag tag = getSubTag("SmitheeProperties");
             cir.setReturnValue(tag.getInt("Durability"));
             cir.cancel();
@@ -77,7 +87,7 @@ public abstract class ItemStackMixin {
 
     @Inject(method = "isEnchantable", at = @At("HEAD"), cancellable = true)
     public void isEnchantable(CallbackInfoReturnable<Boolean> cir) {
-        if (getItem() instanceof BaseSmitheeTool) {
+        if (getItem() instanceof BaseSmitheeItem) {
             cir.setReturnValue(false);
             cir.cancel();
         }
@@ -85,7 +95,7 @@ public abstract class ItemStackMixin {
 
     @Inject(method = "hasEnchantments", at = @At("HEAD"), cancellable = true)
     public void hasEnchantments(CallbackInfoReturnable<Boolean> cir) {
-        if (getItem() instanceof BaseSmitheeTool) {
+        if (getItem() instanceof BaseSmitheeItem) {
             cir.setReturnValue(false);
             cir.cancel();
         }
@@ -93,7 +103,7 @@ public abstract class ItemStackMixin {
 
     @Inject(method = "addEnchantment", at = @At("HEAD"), cancellable = true)
     public void addEnchantment(Enchantment enchantment, int level, CallbackInfo ci) {
-        if (getItem() instanceof BaseSmitheeTool) {
+        if (getItem() instanceof BaseSmitheeItem) {
             ci.cancel();
         }
     }
@@ -111,15 +121,17 @@ public abstract class ItemStackMixin {
 
     @Inject(method = "getMiningSpeedMultiplier", at = @At("HEAD"), cancellable = true)
     public void getMiningSpeedMultiplier(BlockState state, CallbackInfoReturnable<Float> cir) {
-        if (getItem() instanceof BaseSmitheeTool && !(getItem() instanceof BaseSmitheeSword) && tag != null && tag.contains("SmitheeProperties")) {
+        if (tag != null && tag.contains("SmitheeProperties")) {
             CompoundTag tag = getSubTag("SmitheeProperties");
-            float mineSpeed = ((MiningToolItemAccessor) getItem()).getEffectiveBlocks().contains(state.getBlock()) ? tag.getFloat("MiningSpeed") : 1.0F;
+            float mineSpeed = 0;
             if (getItem() instanceof PickaxeItem) {
+                mineSpeed = ((MiningToolItemAccessor) getItem()).getEffectiveBlocks().contains(state.getBlock()) ? tag.getFloat("MiningSpeed") : 1.0F;
                 Material material = state.getMaterial();
                 mineSpeed = material != Material.METAL && material != Material.REPAIR_STATION && material != Material.STONE ? mineSpeed : tag.getFloat("MiningSpeed");
             } else if (getItem() instanceof AxeItem) {
+                mineSpeed = ((MiningToolItemAccessor) getItem()).getEffectiveBlocks().contains(state.getBlock()) ? tag.getFloat("MiningSpeed") : 1.0F;
                 mineSpeed = ((AxeItemAccessor) getItem()).getEffectiveMaterials().contains(state.getMaterial()) ? tag.getFloat("MiningSpeed") : mineSpeed;
-            } else if (getItem() instanceof SwordItem) {
+            } else if (getItem() instanceof BaseSmitheeMeleeWeapon) {
                 mineSpeed = (getItem().isEffectiveOn(state)) ? tag.getFloat("MiningSpeed") : mineSpeed;
             }
             cir.setReturnValue(mineSpeed);
@@ -129,7 +141,7 @@ public abstract class ItemStackMixin {
 
     @Inject(method = "isEffectiveOn", at = @At("HEAD"), cancellable = true)
     public void isEffectiveOn(BlockState state, CallbackInfoReturnable<Boolean> cir) {
-        if (getItem() instanceof BaseSmitheeTool) {
+        if (getItem() instanceof BaseSmitheeItem) {
             if (getItem() instanceof BaseSmitheePickaxe && tag != null && tag.contains("SmitheeProperties")) {
                 CompoundTag tag = getSubTag("SmitheeProperties");
                 int mineLevel = tag.getInt("MiningLevel");
@@ -157,11 +169,11 @@ public abstract class ItemStackMixin {
 
     @Inject(method = "getAttributeModifiers", at = @At("HEAD"), cancellable = true)
     public void getAttributeModifiers(EquipmentSlot equipmentSlot, CallbackInfoReturnable<Multimap<EntityAttribute, EntityAttributeModifier>> cir) {
-        if (getItem() instanceof BaseSmitheeTool && tag != null && tag.contains("SmitheeProperties") && equipmentSlot == EquipmentSlot.MAINHAND) {
+        if (getItem() instanceof BaseSmitheeItem && tag != null && tag.contains("SmitheeProperties") && equipmentSlot == EquipmentSlot.MAINHAND) {
             CompoundTag tag = getSubTag("SmitheeProperties");
             ImmutableMultimap.Builder<EntityAttribute, EntityAttributeModifier> builder = ImmutableMultimap.builder();
-            builder.put(EntityAttributes.GENERIC_ATTACK_DAMAGE, new EntityAttributeModifier(((ItemAccessor) getItem()).getAttackDamageModifierId(), getItem() instanceof BaseSmitheeSword ? "Tool modifier" : "Weapon modifier", tag.getFloat("AttackDamage") + Properties.getExtraDamage(Utils.getToolType(getItem())), EntityAttributeModifier.Operation.ADDITION));
-            builder.put(EntityAttributes.GENERIC_ATTACK_SPEED, new EntityAttributeModifier(((ItemAccessor) getItem()).getAttackSpeedModifierId(), getItem() instanceof BaseSmitheeSword ? "Tool modifier" : "Weapon modifier", -4 + tag.getFloat("AttackSpeed") + Properties.getExtraAttackSpeed(Utils.getToolType(getItem())), EntityAttributeModifier.Operation.ADDITION));
+            builder.put(EntityAttributes.GENERIC_ATTACK_DAMAGE, new EntityAttributeModifier(((ItemAccessor) getItem()).getAttackDamageModifierId(), getItem() instanceof BaseSmitheeMeleeWeapon ? "Weapon modifier" : "Tool modifier", tag.getFloat("AttackDamage") + Properties.getExtraDamage(((BaseSmitheeItem)getItem()).getToolType()), EntityAttributeModifier.Operation.ADDITION));
+            builder.put(EntityAttributes.GENERIC_ATTACK_SPEED, new EntityAttributeModifier(((ItemAccessor) getItem()).getAttackSpeedModifierId(), getItem() instanceof BaseSmitheeMeleeWeapon ? "Weapon modifier" : "Tool modifier", -4 + tag.getFloat("AttackSpeed") + Properties.getExtraAttackSpeed(((BaseSmitheeItem)getItem()).getToolType()), EntityAttributeModifier.Operation.ADDITION));
             cir.setReturnValue(builder.build());
             cir.cancel();
         }
@@ -169,7 +181,7 @@ public abstract class ItemStackMixin {
 
     @Inject(method = "hasCustomName", at = @At("HEAD"), cancellable = true)
     public void hasCustomName(CallbackInfoReturnable<Boolean> cir) {
-        if (getItem() instanceof BaseSmitheeTool || getItem() instanceof Chisel || Registry.ITEM.getId(getItem()).getPath().endsWith("_embossment")) {
+        if (getItem() instanceof BaseSmitheeItem || getItem() instanceof Chisel || Registry.ITEM.getId(getItem()).getPath().endsWith("_embossment")) {
             cir.setReturnValue(false);
             cir.cancel();
         }
@@ -178,13 +190,13 @@ public abstract class ItemStackMixin {
     @Inject(method = "getName", at = @At("HEAD"), cancellable = true)
     public void getName(CallbackInfoReturnable<Text> cir) {
         boolean isSmithee = Registry.ITEM.getId(getItem()).getNamespace().equals(Smithee.MOD_ID);
-        if (getItem() instanceof BaseSmitheeTool) {
+        if (getItem() instanceof BaseSmitheeItem) {
             if (tag != null && tag.contains("SmitheeProperties") && tag.getCompound("SmitheeProperties").contains("CustomName")) {
                 cir.setReturnValue(new LiteralText(tag.getCompound("SmitheeProperties").getString("CustomName")));
             } else if (tag != null && tag.contains("Parts")) {
-                cir.setReturnValue(new LiteralText(Utils.capitalize(tag.getCompound("Parts").getString("HeadPart").split("_")) + " " + Utils.capitalize(Utils.getToolType(getItem()))));
+                cir.setReturnValue(new LiteralText(Utils.capitalize(tag.getCompound("Parts").getString("HeadPart").split("_")) + " " + Utils.capitalize(((BaseSmitheeItem)getItem()).getToolType().split("_"))));
             } else {
-                cir.setReturnValue(new LiteralText("Base Smithee " + Utils.capitalize(Utils.getToolType(getItem()))));
+                cir.setReturnValue(new LiteralText("Base Smithee " + Utils.capitalize(((BaseSmitheeItem)getItem()).getToolType().split("_"))));
             }
         } else if (getItem() instanceof ToolPartItem) {
             ToolPartItem part = (ToolPartItem)getItem();
@@ -208,11 +220,11 @@ public abstract class ItemStackMixin {
                 list.add(new LiteralText("§3[§bSHIFT§3] for info."));
             }
         }
-        if (getItem() instanceof BaseSmitheeTool) {
+        if (getItem() instanceof BaseSmitheeItem) {
             CompoundTag tag = getSubTag("SmitheeProperties");
             if (tag != null && tag.contains("Experience")) {
                 list.add(new LiteralText("§2Level §a" + tag.getLong("Level") + "."));
-                list.add(new LiteralText("§5Progress " + BaseSmitheeTool.getProgressString(tag.getLong("Experience"), tag.getLong("Level"))));
+                list.add(new LiteralText("§5Progress " + BaseSmitheeItem.getProgressString(tag.getLong("Experience"), tag.getLong("Level"))));
             }
             HashSet<Text> traits = Trait.getTooltip(((ItemStack)(Object)this));
             if (!traits.isEmpty()) {

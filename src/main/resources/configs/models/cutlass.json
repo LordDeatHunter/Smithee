@@ -1,0 +1,37 @@
+{
+  "smithee:base_smithee_cutlass": {
+    "parent": "minecraft:item/handheld",
+    "display": {
+      "gui": {
+        "scale": [1.375, 1.375, 1]
+      },
+      "ground": {
+        "scale": [1.375, 1.375, 1]
+      },
+      "thirdperson_righthand": {
+        "translation": [ 0, 4.0, 0.5 ],
+        "rotation": [0, 90, 55],
+        "scale": [1.375, 1.375, 1]
+      },
+      "thirdperson_lefthand": {
+        "translation": [ 0, 4.0, 0.5 ],
+        "rotation": [0, -90, -55],
+        "scale": [1.375, 1.375, 1]
+      },
+      "firstperson_righthand": {
+        "translation": [ 1.13, 3.2, 1.13 ],
+        "rotation": [0, -90, 25],
+        "scale": [1.375, 1.375, 1]
+      },
+      "firstperson_lefthand": {
+        "translation": [ 1.13, 3.2, 1.13 ],
+        "rotation": [0, 90, -25],
+        "scale": [1.375, 1.375, 1]
+      },
+      "fixed": {
+        "rotation": [0, 180, 0],
+        "scale": [1.375, 1.375, 1]
+      }
+    }
+  }
+}

@@ -13,6 +13,7 @@ import wraith.smithee.Config;
 import wraith.smithee.ItemGroups;
 import wraith.smithee.Smithee;
 import wraith.smithee.items.Chisel;
+import wraith.smithee.items.Whetstone;
 import wraith.smithee.items.tool_parts.Part;
 import wraith.smithee.items.tool_parts.ToolPartItem;
 import wraith.smithee.items.tools.*;
@@ -28,6 +29,9 @@ import java.util.*;
 
 public class ItemRegistry {
 
+    //TODO: Move this out of here
+    public static final HashMap<String, String> MODELS = new HashMap<>();
+
     public static final HashSet<Item> DISABLED_ITEMS = new HashSet<>();
     public static HashMap<String, Item> ITEMS = new HashMap<>();
     public static HashSet<String> MATERIALS = new HashSet<>();
@@ -42,6 +46,13 @@ public class ItemRegistry {
         add("sword");
         add("hoe");
     }};
+    public static HashSet<String> BINDING_TYPES = new HashSet<String>() {{
+        add("binding");
+        add("sword_guard");
+    }};
+    public static HashSet<String> HANDLE_TYPES = new HashSet<String>() {{
+        add("handle");
+    }};
 
     //Material -> Properties
     public static final HashMap<String, Properties> PROPERTIES = new HashMap<>();
@@ -54,13 +65,16 @@ public class ItemRegistry {
     //InputMaterial -> OutputItem -> Cost
     public static final HashMap<String, HashMap<Identifier, Integer>> REMAINS = new HashMap<>();
 
-    public static final HashMap<String, Integer> BASE_RECIPE_VALUES = new HashMap<String, Integer>(){{
+    public static HashMap<String, Integer> BASE_RECIPE_VALUES = new HashMap<String, Integer>(){{
         put("pickaxe_head", 27);
         put("hoe_head", 18);
         put("axe_head", 27);
         put("shovel_head", 9);
         put("sword_head", 18);
+
         put("embossment", 405);
+        put("shard", 1);
+        put("whetstone", 27);
 
         put("binding", 9);
         put("handle", 18);
@@ -71,15 +85,20 @@ public class ItemRegistry {
         for (String material : MATERIALS) {
             try {
                 int durability;
+                int dura = PROPERTIES.get(material).partProperties.get("head").durability * 3;
+                ITEMS.put(material + "_whetstone", new Whetstone(new Item.Settings().maxCount(1).maxDamage(dura).group(ItemGroups.SMITHEE_ITEMS), material));
                 for (String tool : TOOL_TYPES) {
                     durability = PROPERTIES.get(material).partProperties.get("head").durability;
                     ITEMS.put(material + "_" + tool + "_head", new ToolPartItem(new Part(material, "head", tool), new Item.Settings().maxDamage(durability).group(ItemGroups.SMITHEE_PARTS)));
                 }
-                durability = PROPERTIES.get(material).partProperties.get("binding").durability;
-                ITEMS.put(material + "_binding", new ToolPartItem(new Part(material, "binding", "any"), new Item.Settings().maxDamage(durability).group(ItemGroups.SMITHEE_PARTS)));
-                ITEMS.put(material + "_sword_guard", new ToolPartItem(new Part(material, "sword_guard", "any"), new Item.Settings().maxDamage(durability).group(ItemGroups.SMITHEE_PARTS)));
-                durability = PROPERTIES.get(material).partProperties.get("handle").durability;
-                ITEMS.put(material + "_handle", new ToolPartItem(new Part(material, "handle", "any"), new Item.Settings().maxDamage(durability).group(ItemGroups.SMITHEE_PARTS)));
+                for (String binding : BINDING_TYPES) {
+                    durability = PROPERTIES.get(material).partProperties.get("binding").durability;
+                    ITEMS.put(material + "_" + binding, new ToolPartItem(new Part(material, binding, "any"), new Item.Settings().maxDamage(durability).group(ItemGroups.SMITHEE_PARTS)));
+                }
+                for (String handle : HANDLE_TYPES) {
+                    durability = PROPERTIES.get(material).partProperties.get("handle").durability;
+                    ITEMS.put(material + "_" + handle, new ToolPartItem(new Part(material, handle, "any"), new Item.Settings().maxDamage(durability).group(ItemGroups.SMITHEE_PARTS)));
+                }
             } catch (Exception e) {
                 Smithee.LOGGER.error("Error with material " + material);
             }
@@ -115,11 +134,14 @@ public class ItemRegistry {
         ITEMS.put("granite_disassembly_table", new BlockItem(BlockRegistry.BLOCKS.get("granite_disassembly_table"), new Item.Settings().group(ItemGroups.SMITHEE_BLOCKS)));
         ITEMS.put("netherrack_disassembly_table", new BlockItem(BlockRegistry.BLOCKS.get("netherrack_disassembly_table"), new Item.Settings().group(ItemGroups.SMITHEE_BLOCKS)));
 
-        ITEMS.put("base_smithee_pickaxe", new BaseSmitheePickaxe(new Item.Settings().group(ItemGroups.SMITHEE_PARTS)));
-        ITEMS.put("base_smithee_axe", new BaseSmitheeAxe(new Item.Settings().group(ItemGroups.SMITHEE_PARTS)));
-        ITEMS.put("base_smithee_shovel", new BaseSmitheeShovel(new Item.Settings().group(ItemGroups.SMITHEE_PARTS)));
-        ITEMS.put("base_smithee_hoe", new BaseSmitheeHoe(new Item.Settings().group(ItemGroups.SMITHEE_PARTS)));
-        ITEMS.put("base_smithee_sword", new BaseSmitheeSword(new Item.Settings().group(ItemGroups.SMITHEE_PARTS)));
+        ITEMS.put("base_smithee_pickaxe", new BaseSmitheePickaxe(new Item.Settings()));
+        ITEMS.put("base_smithee_axe", new BaseSmitheeAxe(new Item.Settings()));
+        ITEMS.put("base_smithee_shovel", new BaseSmitheeShovel(new Item.Settings()));
+        ITEMS.put("base_smithee_hoe", new BaseSmitheeHoe(new Item.Settings()));
+        ITEMS.put("base_smithee_sword", new BaseSmitheeSword(new Item.Settings()));
+        for (String id : BASE_RECIPE_VALUES.keySet()) {
+            ITEMS.put("base_smithee_" + id, new Item(new Item.Settings()));
+        }
 
         ITEMS.put("items_creative_icon", new Item(new Item.Settings()));
         ITEMS.put("parts_creative_icon", new Item(new Item.Settings()));
@@ -166,7 +188,9 @@ public class ItemRegistry {
     }
 
     public static void registerItems() {
-        for (String id : ITEMS.keySet()) {
+        ArrayList<String> IDs = new ArrayList<>(ITEMS.keySet());
+        Collections.sort(IDs);
+        for (String id : IDs) {
             Registry.register(Registry.ITEM, Utils.ID(id), ITEMS.get(id));
         }
     }
@@ -315,7 +339,7 @@ public class ItemRegistry {
         if (contents == null || contents.length == 0) {
             return;
         }
-        SHARDS.clear();
+        EMBOSS_RECIPES.clear();
         for (String content : contents) {
             JsonParser.parseModifiers(Config.getJsonObject(content), EMBOSS_RECIPES);
         }
@@ -348,4 +372,17 @@ public class ItemRegistry {
             JsonParser.parseShards(obj, SHARDS);
         }
     }
+
+    public static void generateModels() {
+        File[] files = Config.getFiles("config/smithee/models/");
+        if (files == null) {
+            return;
+        }
+        MODELS.clear();
+        for (File file : files) {
+            JsonObject obj = Config.getJsonObject(Config.readFile(file));
+            JsonParser.parseModels(obj, MODELS);
+        }
+    }
+
 }

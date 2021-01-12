@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
@@ -11,6 +12,8 @@ import org.apache.logging.log4j.Logger;
 import wraith.smithee.recipes.RecipesGenerator;
 import wraith.smithee.registry.*;
 import wraith.smithee.screens.AssemblyTableScreenHandler;
+import wraith.smithee.support.HarvestScythes;
+import wraith.smithee.support.MCDungeons;
 import wraith.smithee.utils.JsonParser;
 import wraith.smithee.utils.Utils;
 
@@ -23,6 +26,13 @@ public class Smithee implements ModInitializer {
     @Override
     public void onInitialize() {
         LOGGER.info("[Smithee] is loading.");
+
+        if (FabricLoader.getInstance().isModLoaded("harvest_scythes")) {
+            HarvestScythes.addItemRegistryValues();
+        }
+        if (FabricLoader.getInstance().isModLoaded("mcdw")) {
+            MCDungeons.addItemRegistryValues();
+        }
 
         JsonObject json = Config.loadConfig();
 
@@ -40,22 +50,39 @@ public class Smithee implements ModInitializer {
         if (!json.has("regenerate_deleted_texture_files") || json.get("regenerate_deleted_texture_files").getAsBoolean()) {
             Utils.saveFilesFromJar("configs/textures", "textures", json.has("replace_old_texture_files_when_regenerating") && json.get("replace_old_texture_files_when_regenerating").getAsBoolean());
         }
-
         if (!json.has("regenerate_deleted_shard_files") || json.get("regenerate_deleted_shard_files").getAsBoolean()) {
             Utils.saveFilesFromJar("configs/shards", "shards", json.has("replace_old_shard_files_when_regenerating") && json.get("replace_old_shard_files_when_regenerating").getAsBoolean());
         }
-        ItemRegistry.generateShards();
-
-        ItemRegistry.addMaterials();
-
+        if (!json.has("regenerate_deleted_model_files") || json.get("regenerate_deleted_model_files").getAsBoolean()) {
+            Utils.saveFilesFromJar("configs/models", "models", json.has("replace_old_model_files_when_regenerating") && json.get("replace_old_model_files_when_regenerating").getAsBoolean());
+        }
         if (!json.has("regenerate_deleted_stat_files") || json.get("regenerate_deleted_stat_files").getAsBoolean()) {
             Utils.saveFilesFromJar("configs/stats", "stats", json.has("replace_old_stat_files_when_regenerating") && json.get("replace_old_stat_files_when_regenerating").getAsBoolean());
         }
         if (!json.has("regenerate_deleted_chisel_files") || json.get("regenerate_deleted_chisel_files").getAsBoolean()) {
             Utils.saveFilesFromJar("configs/chisels", "chisels", json.has("replace_old_chisel_files_when_regenerating") && json.get("replace_old_chisel_files_when_regenerating").getAsBoolean());
         }
+        if (!json.has("regenerate_deleted_modifier_files") || json.get("regenerate_deleted_modifier_files").getAsBoolean()) {
+            Utils.saveFilesFromJar("configs/modifiers", "modifiers", json.has("replace_old_modifier_files_when_regenerating") && json.get("replace_old_modifier_files_when_regenerating").getAsBoolean());
+        }
+        if (!json.has("regenerate_deleted_recipe_files") || json.get("regenerate_deleted_recipe_files").getAsBoolean()) {
+            Utils.saveFilesFromJar("configs/recipes", "recipes", json.has("replace_old_recipe_files_when_regenerating") && json.get("replace_old_recipe_files_when_regenerating").getAsBoolean());
+        }
+        if (!json.has("regenerate_deleted_smithing_files") || json.get("regenerate_deleted_smithing_files").getAsBoolean()) {
+            Utils.saveFilesFromJar("configs/smithing", "smithing", json.has("replace_old_smithing_files_when_regenerating") && json.get("replace_old_smithing_files_when_regenerating").getAsBoolean());
+        }
+        if (!json.has("regenerate_deleted_combination_files") || json.get("regenerate_deleted_combination_files").getAsBoolean()) {
+            Utils.saveFilesFromJar("configs/combinations", "combinations", json.has("replace_old_combination_files_when_regenerating") && json.get("replace_old_combination_files_when_regenerating").getAsBoolean());
+        }
+
+        ItemRegistry.generateModels();
+        ItemRegistry.generateShards();
+
+        ItemRegistry.addMaterials();
+
         ItemRegistry.generateChiselingStats();
         ItemRegistry.generateProperties();
+
         ItemRegistry.generateModifiers();
 
         ItemRegistry.addItems();
@@ -66,24 +93,12 @@ public class Smithee implements ModInitializer {
         ScreenHandlerRegistry.registerScreenHandlers();
         StatusEffectRegistry.registerStatusEffects();
 
-        if (!json.has("regenerate_deleted_recipe_files") || json.get("regenerate_deleted_recipe_files").getAsBoolean()) {
-            Utils.saveFilesFromJar("configs/recipes", "recipes", json.has("replace_old_recipe_files_when_regenerating") && json.get("replace_old_recipe_files_when_regenerating").getAsBoolean());
-        }
-        if (!json.has("regenerate_deleted_modifier_files") || json.get("regenerate_deleted_modifier_files").getAsBoolean()) {
-            Utils.saveFilesFromJar("configs/modifiers", "modifiers", json.has("replace_old_modifier_files_when_regenerating") && json.get("replace_old_modifier_files_when_regenerating").getAsBoolean());
-        }
-        if (!json.has("regenerate_deleted_smithing_files") || json.get("regenerate_deleted_smithing_files").getAsBoolean()) {
-            Utils.saveFilesFromJar("configs/smithing", "smithing", json.has("replace_old_smithing_files_when_regenerating") && json.get("replace_old_smithing_files_when_regenerating").getAsBoolean());
-        }
-        if (!json.has("regenerate_deleted_combination_files") || json.get("regenerate_deleted_combination_files").getAsBoolean()) {
-            Utils.saveFilesFromJar("configs/combinations", "combinations", json.has("replace_old_combination_files_when_regenerating") && json.get("replace_old_combination_files_when_regenerating").getAsBoolean());
-        }
         JsonParser.parseCombinations();
 
         RecipesGenerator.generateRecipes();
         registerPacketHandlers();
         registerEvents();
-        LOGGER.info("[Smithee] has successfully been loaded.");
+        LOGGER.info("[Smithee] has successfully loaded.");
     }
 
     private void registerPacketHandlers() {

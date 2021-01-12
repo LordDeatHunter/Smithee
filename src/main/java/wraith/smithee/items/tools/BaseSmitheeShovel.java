@@ -24,5 +24,14 @@ public class BaseSmitheeShovel extends ShovelItem implements BaseSmitheeMiningTo
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         return boostXp(world, user, hand);
     }
+    @Override
+    public boolean canRepair(ItemStack stack, ItemStack ingredient) {
+        return false;
+    }
+
+    @Override
+    public String getToolType() {
+        return "shovel";
+    }
 
 }

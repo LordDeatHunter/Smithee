@@ -10,10 +10,11 @@ import net.minecraft.network.packet.s2c.play.ScreenHandlerSlotUpdateS2CPacket;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
+import wraith.smithee.items.tools.BaseSmitheeBroadsword;
 import wraith.smithee.items.tools.BaseSmitheeSword;
 import wraith.smithee.utils.Utils;
 import wraith.smithee.blocks.DisassemblyTableBlockEntity;
-import wraith.smithee.items.tools.BaseSmitheeTool;
+import wraith.smithee.items.tools.BaseSmitheeItem;
 import wraith.smithee.registry.ItemRegistry;
 import wraith.smithee.registry.ScreenHandlerRegistry;
 import wraith.smithee.screens.slots.ToolOutputSlot;
@@ -66,7 +67,7 @@ public class DisassemblyTableScreenHandler extends ScreenHandler {
                 if (!this.insertItem(originalStack, this.inventory.size(), this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (originalStack.getItem() instanceof BaseSmitheeTool) {
+            } else if (originalStack.getItem() instanceof BaseSmitheeItem) {
                 if (!this.insertItem(originalStack, 0, 1, false)) {
                     return ItemStack.EMPTY;
                 }
@@ -92,7 +93,7 @@ public class DisassemblyTableScreenHandler extends ScreenHandler {
 
     @Override
     public boolean onButtonClick(PlayerEntity player, int id) {
-        if (inventory.getStack(0).getItem() instanceof BaseSmitheeTool) {
+        if (inventory.getStack(0).getItem() instanceof BaseSmitheeItem) {
             ServerPlayerEntity serverPlayerEntity;
             if (player instanceof ServerPlayerEntity) {
                 serverPlayerEntity = (ServerPlayerEntity) player;
@@ -110,8 +111,8 @@ public class DisassemblyTableScreenHandler extends ScreenHandler {
                 return false;
             }
             tag = tag.getCompound("Parts");
-            String tool = Utils.getToolType(stack.getItem());
-            String bindingType = stack.getItem() instanceof BaseSmitheeSword ? "_sword_guard" : "_binding";
+            String tool = ((BaseSmitheeItem)stack.getItem()).getToolType();
+            String bindingType = "_" + ((BaseSmitheeItem)stack.getItem()).getBindingType();
             ItemStack head = new ItemStack(ItemRegistry.ITEMS.get(tag.getString("HeadPart") + "_" + tool + "_head"));
             ItemStack binding = new ItemStack(ItemRegistry.ITEMS.get(tag.getString("BindingPart") + bindingType));
             ItemStack handle = new ItemStack(ItemRegistry.ITEMS.get(tag.getString("HandlePart") + "_handle"));

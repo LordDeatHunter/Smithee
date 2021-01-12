@@ -13,7 +13,7 @@ public class ItemModelProvider implements ModelVariantProvider {
     public @Nullable UnbakedModel loadModelVariant(ModelIdentifier modelIdentifier, ModelProviderContext modelProviderContext) {
         if(modelIdentifier.getNamespace().equals(Smithee.MOD_ID)) {
             if (Utils.isSmitheeTool(modelIdentifier.getPath())) {
-                return new ItemBakedModel();
+                return new ItemBakedModel(modelIdentifier);
             }
         }
         return null;

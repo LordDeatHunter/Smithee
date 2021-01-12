@@ -33,20 +33,20 @@ public class NamespaceResourceManagerMixin {
         if (maxI >= segments.length) {
             return;
         }
-        String material = "";
+        StringBuilder material = new StringBuilder();
         int i = 0;
         for (; i < maxI; ++i) {
             if (i > 0) {
-                material += "_";
+                material.append("_");
             }
-            material += segments[i];
+            material.append(segments[i]);
         }
-        String part = "";
+        StringBuilder part = new StringBuilder();
         for(; i < segments.length; ++i) {
-            part += "_" + segments[i];
+            part.append("_").append(segments[i]);
         }
-        part = part.substring(1);
-        if ((!ItemRegistry.MATERIALS.contains(material) && !ItemRegistry.EMBOSS_MATERIALS.contains(material)) || (!ItemRegistry.BASE_RECIPE_VALUES.containsKey(part) && !SmitheeClient.RENDERING_TOOL_PARTS.contains(pathWithoutExtension) && !"embossment".equals(part) && !"chisel".equals(part) && !"shard".equals(part))) {
+        part = new StringBuilder(part.substring(1));
+        if ((!ItemRegistry.MATERIALS.contains(material.toString()) && !ItemRegistry.EMBOSS_MATERIALS.contains(material.toString())) || (!ItemRegistry.BASE_RECIPE_VALUES.containsKey(part.toString()) && !SmitheeClient.RENDERING_TOOL_PARTS.contains(pathWithoutExtension) && !"whetstone".equals(part.toString()) && !"embossment".equals(part.toString()) && !"chisel".equals(part.toString()) && !"shard".equals(part.toString()))) {
             return;
         }
         File texture = new File("config/smithee/textures/" + path);

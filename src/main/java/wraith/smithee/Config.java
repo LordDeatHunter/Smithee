@@ -176,6 +176,8 @@ public class Config {
                         "  \"replace_old_chisel_files_when_regenerating\": false,\n" +
                         "  \"regenerate_deleted_shard_files\": true,\n" +
                         "  \"replace_old_shard_files_when_regenerating\": false,\n" +
+                        "  \"regenerate_deleted_model_files\": true,\n" +
+                        "  \"replace_old_model_files_when_regenerating\": false,\n" +
                         "  \"regenerate_material_list\": true,\n" +
                         "  \"replace_material_list_when_regenerating\": false\n" +
                         "}";

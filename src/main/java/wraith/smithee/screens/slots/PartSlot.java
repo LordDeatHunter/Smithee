@@ -11,11 +11,16 @@ import java.util.HashSet;
 
 public class PartSlot extends Slot {
 
-    private final HashSet<String> types = new HashSet<>();
+    private HashSet<String> types = new HashSet<>();
 
     public PartSlot(Inventory inventory, int index, int x, int y, String... types) {
         super(inventory, index, x, y);
         Collections.addAll(this.types, types);
+    }
+
+    public PartSlot(Inventory inventory, int index, int x, int y, HashSet<String> types) {
+        super(inventory, index, x, y);
+        this.types = types;
     }
 
     @Override

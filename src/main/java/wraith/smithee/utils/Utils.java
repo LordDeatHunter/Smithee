@@ -9,6 +9,7 @@ import org.apache.commons.io.FileUtils;
 import wraith.smithee.Config;
 import wraith.smithee.Smithee;
 import wraith.smithee.SmitheeClient;
+import wraith.smithee.items.tools.*;
 import wraith.smithee.registry.ItemRegistry;
 
 import javax.imageio.ImageIO;
@@ -57,11 +58,11 @@ public class Utils {
         return new ModelIdentifier(new Identifier(Smithee.MOD_ID, id), "inventory");
     }
 
-    public static String createModelJson(String path, String type) {
+    public static String createModelJson(String path, String parent) {
         String[] segments = path.split("/");
         path = segments[segments.length - 1];
         return "{\n" +
-                "  \"parent\": \"item/" + type + "\",\n" +
+                "  \"parent\": \"" + parent + "\",\n" +
                 "  \"textures\": {\n" +
                 "    \"layer0\": \"" + Smithee.MOD_ID + ":item/" + path + "\"\n" +
                 "  }\n" +
@@ -107,27 +108,6 @@ public class Utils {
         return "";
     }
      */
-
-    public static String getToolType(Item item) {
-        if (item instanceof PickaxeItem) {
-            return "pickaxe";
-        }
-        else if (item instanceof AxeItem) {
-            return "axe";
-        }
-        else if (item instanceof ShovelItem) {
-            return "shovel";
-        }
-        else if (item instanceof HoeItem) {
-            return "hoe";
-        }
-        else if (item instanceof SwordItem) {
-            return "sword";
-        }
-        else {
-            return "";
-        }
-    }
 
     public static void saveFilesFromJar(String dir, String outputDir, boolean overwrite) {
         JarFile jar = null;
@@ -244,12 +224,12 @@ public class Utils {
 
     public static String stripToolType(String part) {
         String[] parts = part.split("_");
-        String stripped = "";
+        StringBuilder stripped = new StringBuilder();
         for (int i = 0; i < parts.length - 1; ++i) {
-            stripped += parts[i];
+            stripped.append(parts[i]);
         }
-        stripped += parts[parts.length - 1];
-        return stripped;
+        stripped.append(parts[parts.length - 1]);
+        return stripped.toString();
     }
 
     public static int getRandomIntInRange(int min, int max) {
@@ -261,15 +241,15 @@ public class Utils {
     }
 
     public static String capitalize(String[] split) {
-        String result = "";
+        StringBuilder result = new StringBuilder();
         Iterator<String> it = Arrays.asList(split).iterator();
         while (it.hasNext()) {
-            result += capitalize(it.next());
+            result.append(capitalize(it.next()));
             if (it.hasNext()) {
-                result += " ";
+                result.append(" ");
             }
         }
-        return result;
+        return result.toString();
     }
 
     public static boolean isToolPart(String path) {
@@ -288,20 +268,16 @@ public class Utils {
         if (maxI >= segments.length) {
             return false;
         }
-        String part = "";
+        StringBuilder part = new StringBuilder();
         for (int i = maxI; i < segments.length; i++) {
-            part += "_" + segments[i];
+            part.append("_").append(segments[i]);
         }
-        part = part.substring(1);
-        return ItemRegistry.BASE_RECIPE_VALUES.containsKey(part) || SmitheeClient.RENDERING_TOOL_PARTS.contains(path);
+        part = new StringBuilder(part.substring(1));
+        return ItemRegistry.BASE_RECIPE_VALUES.containsKey(part.toString()) || SmitheeClient.RENDERING_TOOL_PARTS.contains(path);
     }
 
     public static boolean isSmitheeTool(String path) {
-        HashSet<String> baseTools = new HashSet<>();
-        for(String tool : ItemRegistry.TOOL_TYPES) {
-            baseTools.add("base_smithee_" + tool);
-        }
-        return baseTools.contains(path);
+        return path.length() > "base_smithee_".length() && ItemRegistry.TOOL_TYPES.contains(path.substring("base_smithee_".length()));
     }
 
     public static InputStream recolor(File template, File templatePalette, File palette, String textureName) {

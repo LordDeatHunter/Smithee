@@ -1,5 +1,6 @@
 package wraith.smithee.properties;
 
+import java.util.HashMap;
 import java.util.HashSet;
 
 public class ToolPartRecipe {
@@ -14,31 +15,40 @@ public class ToolPartRecipe {
         this.chiselingLevel = chiselingLevel;
     }
 
-    public static final HashSet<HashSet<String>> TOOL_ASSEMBLY_RECIPES = new HashSet<HashSet<String>>(){{
-        add(new HashSet<String>(){{
+    public static HashMap<String, HashSet<String>> TOOL_ASSEMBLY_RECIPES = new HashMap<String, HashSet<String>>(){{
+        put("pickaxe", new HashSet<String>(){{
             add("pickaxe_head");
             add("binding");
             add("handle");
         }});
-        add(new HashSet<String>(){{
+        put("axe", new HashSet<String>(){{
             add("axe_head");
             add("binding");
             add("handle");
         }});
-        add(new HashSet<String>(){{
+        put("shovel", new HashSet<String>(){{
             add("shovel_head");
             add("binding");
             add("handle");
         }});
-        add(new HashSet<String>(){{
+        put("hoe", new HashSet<String>(){{
             add("hoe_head");
             add("binding");
             add("handle");
         }});
-        add(new HashSet<String>(){{
+        put("sword", new HashSet<String>(){{
             add("sword_head");
             add("sword_guard");
             add("handle");
+        }});
+        put("whetstone", new HashSet<String>(){{
+            add("whetstone");
+        }});
+        put("shard", new HashSet<String>(){{
+            add("shard");
+        }});
+        put("embossment", new HashSet<String>(){{
+            add("embossment");
         }});
     }};
 

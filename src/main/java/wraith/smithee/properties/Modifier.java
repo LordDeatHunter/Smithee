@@ -4,7 +4,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
-import wraith.smithee.items.tools.BaseSmitheeTool;
+import wraith.smithee.items.tools.BaseSmitheeItem;
 import wraith.smithee.mixin.TextColorInvoker;
 import wraith.smithee.recipes.EmbossModifiers;
 import wraith.smithee.recipes.EmbossRecipe;
@@ -45,7 +45,7 @@ public class Modifier {
 
     public static HashSet<Text> getTooltip(ItemStack stack) {
         HashSet<Text> tooltips = new HashSet<>();
-        if (!(stack.getItem() instanceof BaseSmitheeTool) || !stack.hasTag() || !stack.getTag().contains("SmitheeProperties") || !stack.getSubTag("SmitheeProperties").contains("Modifiers")) {
+        if (!(stack.getItem() instanceof BaseSmitheeItem) || !stack.hasTag() || !stack.getTag().contains("SmitheeProperties") || !stack.getSubTag("SmitheeProperties").contains("Modifiers")) {
             return tooltips;
         }
 
@@ -61,7 +61,7 @@ public class Modifier {
 
     public static HashMap<String, Modifier> evaluateModifiers(ItemStack stack) {
         HashMap<String, Modifier> result = new HashMap<>();
-        if (!(stack.getItem() instanceof BaseSmitheeTool) || !stack.hasTag() || !stack.getTag().contains("SmitheeProperties") || !stack.getSubTag("SmitheeProperties").contains("Modifiers")) {
+        if (!(stack.getItem() instanceof BaseSmitheeItem) || !stack.hasTag() || !stack.getTag().contains("SmitheeProperties") || !stack.getSubTag("SmitheeProperties").contains("Modifiers")) {
             return result;
         }
         Set<String> modifiers = stack.getSubTag("SmitheeProperties").getCompound("Modifiers").getCompound("Slots").getKeys();
@@ -71,7 +71,7 @@ public class Modifier {
                 continue;
             }
             EmbossRecipe recipe = ItemRegistry.EMBOSS_RECIPES.get(modifier);
-            String toolType = Utils.getToolType(stack.getItem());
+            String toolType = ((BaseSmitheeItem)stack.getItem()).getToolType();
             HashSet<String> gives  = new HashSet<>();
             for (EmbossModifiers embossModifiers : recipe.modifiers) {
                 if (embossModifiers.givesTo.contains(toolType)) {

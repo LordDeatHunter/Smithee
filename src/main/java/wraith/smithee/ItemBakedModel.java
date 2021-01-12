@@ -4,6 +4,7 @@ import com.google.common.base.Charsets;
 import com.mojang.datafixers.util.Pair;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.model.*;
@@ -11,6 +12,7 @@ import net.minecraft.client.render.model.json.JsonUnbakedModel;
 import net.minecraft.client.render.model.json.ModelOverrideList;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.texture.Sprite;
+import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
@@ -21,6 +23,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockRenderView;
 import org.jetbrains.annotations.Nullable;
+import wraith.smithee.items.tools.BaseSmitheeItem;
+import wraith.smithee.registry.ItemRegistry;
 import wraith.smithee.utils.Utils;
 
 import java.io.BufferedReader;
@@ -34,10 +38,15 @@ import java.util.function.Supplier;
 public class ItemBakedModel implements FabricBakedModel, BakedModel, UnbakedModel {
 
     private static final HashMap<String, FabricBakedModel> PART_MODELS = new HashMap<>();
+    private final ModelIdentifier modelIdentifier;
+
+    public ItemBakedModel(ModelIdentifier modelIdentifier) {
+        this.modelIdentifier = modelIdentifier;
+    }
 
     @Override
     public void emitItemQuads(ItemStack itemStack, Supplier<Random> supplier, RenderContext context) {
-        String tool = Utils.getToolType(itemStack.getItem());
+        String tool = ((BaseSmitheeItem)itemStack.getItem()).getToolType();
 
         String head = "iron_" + tool + "_head";
         String binding = "iron_" + tool + "_binding";
@@ -63,6 +72,9 @@ public class ItemBakedModel implements FabricBakedModel, BakedModel, UnbakedMode
             exception.printStackTrace();
             return null;
         }
+    }
+    public static ModelTransformation loadTransformFromJsonString(String json) {
+        return JsonUnbakedModel.deserialize(json).getTransformations();
     }
 
     public static Reader getReaderForResource(Identifier location) throws IOException {
@@ -126,6 +138,11 @@ public class ItemBakedModel implements FabricBakedModel, BakedModel, UnbakedMode
 
     @Override
     public ModelTransformation getTransformation() {
+        String model = modelIdentifier.getNamespace() + ":" + modelIdentifier.getPath();
+        if (ItemRegistry.MODELS.containsKey(model)) {
+            String json = ItemRegistry.MODELS.get(model);
+            return loadTransformFromJsonString(json);
+        }
         return loadTransformFromJson(new Identifier("minecraft:models/item/handheld"));
     }
 

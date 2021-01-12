@@ -1,0 +1,37 @@
+{
+  "smithee:base_smithee_spear": {
+    "parent": "minecraft:item/handheld",
+    "display": {
+      "gui": {
+        "scale": [1.6875, 1.6875, 1]
+      },
+      "ground": {
+        "scale": [1.6875, 1.6875, 0.5]
+      },
+      "thirdperson_righthand": {
+        "rotation": [0, 90, 45],
+        "translation": [0, 4, 1.13],
+        "scale": [1.6875, 1.6875, 1]
+      },
+      "thirdperson_lefthand": {
+        "rotation": [0, -90, -45],
+        "translation": [0, 4, 1.13],
+        "scale": [1.6875, 1.6875, 1]
+      },
+      "firstperson_righthand": {
+        "rotation": [0, -90, 25],
+        "translation": [1.13, 4.2, 1.13],
+        "scale": [1.6875, 1.6875, 1]
+      },
+      "firstperson_lefthand": {
+        "rotation": [0, 90, -25],
+        "translation": [1.13, 4.2, 1.13],
+        "scale": [1.6875, 1.6875, 1]
+      },
+      "fixed": {
+        "rotation": [0, 180, 0],
+        "scale": [1.6875, 1.6875, 1]
+      }
+    }
+  }
+}

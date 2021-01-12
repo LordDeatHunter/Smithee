@@ -1,0 +1,5 @@
+{
+  "smithee:_chisel": {
+    "parent": "minecraft:item/handheld"
+  }
+}

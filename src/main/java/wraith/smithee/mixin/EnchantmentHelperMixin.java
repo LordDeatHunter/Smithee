@@ -2,12 +2,16 @@ package wraith.smithee.mixin;
 
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.EntityGroup;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import wraith.smithee.properties.Modifier;
@@ -65,7 +69,6 @@ public class EnchantmentHelperMixin {
         }
     }
 
-/*
     @ModifyVariable(method = "forEachEnchantment(Lnet/minecraft/enchantment/EnchantmentHelper$Consumer;Lnet/minecraft/item/ItemStack;)V", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/item/ItemStack;getEnchantments()Lnet/minecraft/nbt/ListTag;"))
     private static ListTag forEachEnchantment(ListTag listTag, EnchantmentHelper.Consumer consumer, ItemStack stack) {
         HashMap<String, Modifier> result = Modifier.evaluateModifiers(stack);
@@ -74,7 +77,7 @@ public class EnchantmentHelperMixin {
         }
         ListTag newListTag = listTag.copy();
         for (Modifier modifiers : result.values()) {
-            if (!modifiers.type.equals("enchant")) {
+            if (!"enchant".equals(modifiers.type)) {
                 continue;
             }
             for (String modifier : modifiers.modifiers) {
@@ -86,6 +89,5 @@ public class EnchantmentHelperMixin {
         }
         return newListTag;
     }
- */
 
 }
