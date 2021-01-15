@@ -20,6 +20,7 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.tag.BlockTags;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.registry.Registry;
@@ -34,11 +35,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import wraith.smithee.Smithee;
 import wraith.smithee.items.Chisel;
+import wraith.smithee.items.Whetstone;
+import wraith.smithee.items.tool_parts.Part;
 import wraith.smithee.items.tool_parts.ToolPartItem;
-import wraith.smithee.items.tools.BaseSmitheeMeleeWeapon;
-import wraith.smithee.items.tools.BaseSmitheePickaxe;
 import wraith.smithee.items.tools.BaseSmitheeHarvestScythe;
 import wraith.smithee.items.tools.BaseSmitheeItem;
+import wraith.smithee.items.tools.BaseSmitheeMeleeWeapon;
+import wraith.smithee.items.tools.BaseSmitheePickaxe;
 import wraith.smithee.properties.Modifier;
 import wraith.smithee.properties.Properties;
 import wraith.smithee.properties.ToolPartRecipe;
@@ -69,10 +72,37 @@ public abstract class ItemStackMixin {
 
     @Shadow public abstract int getCount();
 
+    @Shadow public abstract int getMaxDamage();
+
+    @Shadow public abstract int getDamage();
+
+    @Inject(method = "setDamage", at = @At("HEAD"), cancellable = true)
+    public void setDamage(int damage, CallbackInfo ci) {
+        if (getItem() instanceof BaseSmitheeItem && damage >= getMaxDamage()) {
+            CompoundTag tag = getSubTag("SmitheeProperties");
+            if (!tag.contains("isBroken") || !tag.getBoolean("isBroken")) {
+                tag.putBoolean("isBroken", true);
+            }
+            ci.cancel();
+        }
+    }
+
     @Inject(method = "getTag", at = @At("HEAD"), cancellable = true)
     public void getTag(CallbackInfoReturnable<CompoundTag> cir) {
-        if (FabricLoader.getInstance().isModLoaded("harvest_scythes") && getItem() instanceof BaseSmitheeHarvestScythe) {
-            HarvestScythes.addTag(tag);
+        if (FabricLoader.getInstance().isModLoaded("harvest_scythes") && getItem() instanceof BaseSmitheeHarvestScythe && tag.contains("SmitheeProperties") && (!tag.getCompound("SmitheeProperties").contains("isBroken") || !tag.getCompound("SmitheeProperties").getBoolean("isBroken"))) {
+            cir.setReturnValue(HarvestScythes.addTag(tag));
+            cir.cancel();
+        }
+    }
+
+    @Inject(method = "getDamage", at = @At("HEAD"), cancellable = true)
+    public void getDamage(CallbackInfoReturnable<Integer> cir) {
+        if (getItem() instanceof BaseSmitheeItem && tag != null && tag.contains("SmitheeProperties")) {
+            CompoundTag tag = getSubTag("SmitheeProperties");
+            if (tag.contains("isBroken") && tag.getBoolean("isBroken")) {
+                cir.setReturnValue(0);
+                cir.cancel();
+            }
         }
     }
 
@@ -123,15 +153,22 @@ public abstract class ItemStackMixin {
     public void getMiningSpeedMultiplier(BlockState state, CallbackInfoReturnable<Float> cir) {
         if (tag != null && tag.contains("SmitheeProperties")) {
             CompoundTag tag = getSubTag("SmitheeProperties");
-            float mineSpeed = 0;
-            if (getItem() instanceof PickaxeItem) {
+            if (tag.contains("isBroken") && tag.getBoolean("isBroken")) {
+                cir.setReturnValue(0f);
+                cir.cancel();
+                return;
+            }
+            float mineSpeed = 1;
+            Material material = state.getMaterial();
+            if (getItem() instanceof MiningToolItem) {
                 mineSpeed = ((MiningToolItemAccessor) getItem()).getEffectiveBlocks().contains(state.getBlock()) ? tag.getFloat("MiningSpeed") : 1.0F;
-                Material material = state.getMaterial();
+            }
+            if (getItem() instanceof PickaxeItem) {
                 mineSpeed = material != Material.METAL && material != Material.REPAIR_STATION && material != Material.STONE ? mineSpeed : tag.getFloat("MiningSpeed");
             } else if (getItem() instanceof AxeItem) {
-                mineSpeed = ((MiningToolItemAccessor) getItem()).getEffectiveBlocks().contains(state.getBlock()) ? tag.getFloat("MiningSpeed") : 1.0F;
                 mineSpeed = ((AxeItemAccessor) getItem()).getEffectiveMaterials().contains(state.getMaterial()) ? tag.getFloat("MiningSpeed") : mineSpeed;
             } else if (getItem() instanceof BaseSmitheeMeleeWeapon) {
+                mineSpeed = material != Material.PLANT && material != Material.REPLACEABLE_PLANT && material != Material.UNUSED_PLANT && !state.isIn(BlockTags.LEAVES) && material != Material.GOURD ? 1.0F : 1.5F;
                 mineSpeed = (getItem().isEffectiveOn(state)) ? tag.getFloat("MiningSpeed") : mineSpeed;
             }
             cir.setReturnValue(mineSpeed);
@@ -141,9 +178,14 @@ public abstract class ItemStackMixin {
 
     @Inject(method = "isEffectiveOn", at = @At("HEAD"), cancellable = true)
     public void isEffectiveOn(BlockState state, CallbackInfoReturnable<Boolean> cir) {
-        if (getItem() instanceof BaseSmitheeItem) {
-            if (getItem() instanceof BaseSmitheePickaxe && tag != null && tag.contains("SmitheeProperties")) {
-                CompoundTag tag = getSubTag("SmitheeProperties");
+        CompoundTag tag = getSubTag("SmitheeProperties");
+        if (getItem() instanceof BaseSmitheeItem && tag != null) {
+            if (tag.contains("isBroken") && tag.getBoolean("isBroken")) {
+                cir.setReturnValue(false);
+                cir.cancel();
+                return;
+            }
+            if (getItem() instanceof BaseSmitheePickaxe) {
                 int mineLevel = tag.getInt("MiningLevel");
                 if (!state.isOf(Blocks.OBSIDIAN) && !state.isOf(Blocks.CRYING_OBSIDIAN) && !state.isOf(Blocks.NETHERITE_BLOCK) && !state.isOf(Blocks.RESPAWN_ANCHOR) && !state.isOf(Blocks.ANCIENT_DEBRIS)) {
                     if (!state.isOf(Blocks.DIAMOND_BLOCK) && !state.isOf(Blocks.DIAMOND_ORE) && !state.isOf(Blocks.EMERALD_ORE) && !state.isOf(Blocks.EMERALD_BLOCK) && !state.isOf(Blocks.GOLD_BLOCK) && !state.isOf(Blocks.GOLD_ORE) && !state.isOf(Blocks.REDSTONE_ORE)) {
@@ -172,8 +214,13 @@ public abstract class ItemStackMixin {
         if (getItem() instanceof BaseSmitheeItem && tag != null && tag.contains("SmitheeProperties") && equipmentSlot == EquipmentSlot.MAINHAND) {
             CompoundTag tag = getSubTag("SmitheeProperties");
             ImmutableMultimap.Builder<EntityAttribute, EntityAttributeModifier> builder = ImmutableMultimap.builder();
-            builder.put(EntityAttributes.GENERIC_ATTACK_DAMAGE, new EntityAttributeModifier(((ItemAccessor) getItem()).getAttackDamageModifierId(), getItem() instanceof BaseSmitheeMeleeWeapon ? "Weapon modifier" : "Tool modifier", tag.getFloat("AttackDamage") + Properties.getExtraDamage(((BaseSmitheeItem)getItem()).getToolType()), EntityAttributeModifier.Operation.ADDITION));
-            builder.put(EntityAttributes.GENERIC_ATTACK_SPEED, new EntityAttributeModifier(((ItemAccessor) getItem()).getAttackSpeedModifierId(), getItem() instanceof BaseSmitheeMeleeWeapon ? "Weapon modifier" : "Tool modifier", -4 + tag.getFloat("AttackSpeed") + Properties.getExtraAttackSpeed(((BaseSmitheeItem)getItem()).getToolType()), EntityAttributeModifier.Operation.ADDITION));
+            float attackDamage = tag.getFloat("AttackDamage") + Properties.getExtraDamage(((BaseSmitheeItem)getItem()).getToolType());
+            if (tag.contains("isBroken") && tag.getBoolean("isBroken")) {
+                attackDamage = 0.1f;
+            }
+            float attackSpeed = -4 + tag.getFloat("AttackSpeed") + Properties.getExtraAttackSpeed(((BaseSmitheeItem)getItem()).getToolType());
+            builder.put(EntityAttributes.GENERIC_ATTACK_DAMAGE, new EntityAttributeModifier(((ItemAccessor) getItem()).getAttackDamageModifierId(), getItem() instanceof BaseSmitheeMeleeWeapon ? "Weapon modifier" : "Tool modifier", attackDamage, EntityAttributeModifier.Operation.ADDITION));
+            builder.put(EntityAttributes.GENERIC_ATTACK_SPEED, new EntityAttributeModifier(((ItemAccessor) getItem()).getAttackSpeedModifierId(), getItem() instanceof BaseSmitheeMeleeWeapon ? "Weapon modifier" : "Tool modifier", attackSpeed, EntityAttributeModifier.Operation.ADDITION));
             cir.setReturnValue(builder.build());
             cir.cancel();
         }
@@ -194,14 +241,18 @@ public abstract class ItemStackMixin {
             if (tag != null && tag.contains("SmitheeProperties") && tag.getCompound("SmitheeProperties").contains("CustomName")) {
                 cir.setReturnValue(new LiteralText(tag.getCompound("SmitheeProperties").getString("CustomName")));
             } else if (tag != null && tag.contains("Parts")) {
-                cir.setReturnValue(new LiteralText(Utils.capitalize(tag.getCompound("Parts").getString("HeadPart").split("_")) + " " + Utils.capitalize(((BaseSmitheeItem)getItem()).getToolType().split("_"))));
+                String name = Utils.capitalize(tag.getCompound("Parts").getString("HeadPart").split("_")) + " " + Utils.capitalize(((BaseSmitheeItem)getItem()).getToolType().split("_"));
+                if (tag.getCompound("SmitheeProperties").contains("isBroken") && tag.getCompound("SmitheeProperties").getBoolean("isBroken")) {
+                    name = "Broken " + name;
+                }
+                cir.setReturnValue(new LiteralText(name));
             } else {
                 cir.setReturnValue(new LiteralText("Base Smithee " + Utils.capitalize(((BaseSmitheeItem)getItem()).getToolType().split("_"))));
             }
         } else if (getItem() instanceof ToolPartItem) {
             ToolPartItem part = (ToolPartItem)getItem();
             cir.setReturnValue(new LiteralText(part.toString()));
-        } else if (getItem() instanceof Chisel || (isSmithee && (Registry.ITEM.getId(getItem()).getPath().endsWith("_embossment") || Registry.ITEM.getId(getItem()).getPath().endsWith("_shard")))) {
+        } else if (getItem() instanceof Chisel || getItem() instanceof Whetstone || (isSmithee && (Registry.ITEM.getId(getItem()).getPath().endsWith("_embossment") || Registry.ITEM.getId(getItem()).getPath().endsWith("_shard")))) {
             cir.setReturnValue(new LiteralText(Utils.capitalize(Registry.ITEM.getId(getItem()).getPath().split("/")[0].split("_"))));
         }
     }
@@ -220,11 +271,19 @@ public abstract class ItemStackMixin {
                 list.add(new LiteralText("§3[§bSHIFT§3] for info."));
             }
         }
+        if (getItem() instanceof ToolPartItem) {
+
+            Part part = ((ToolPartItem) getItem()).part;
+            for (Trait trait : ItemRegistry.PROPERTIES.get(part.materialName).traits.get(part.globalPartType)) {
+                list.add(Trait.TRAIT_TEXT.get(trait.traitName));
+            }
+
+        }
         if (getItem() instanceof BaseSmitheeItem) {
             CompoundTag tag = getSubTag("SmitheeProperties");
             if (tag != null && tag.contains("Experience")) {
-                list.add(new LiteralText("§2Level §a" + tag.getLong("Level") + "."));
-                list.add(new LiteralText("§5Progress " + BaseSmitheeItem.getProgressString(tag.getLong("Experience"), tag.getLong("Level"))));
+                list.add(new LiteralText("§2Level §a" + tag.getInt("Level") + "."));
+                list.add(new LiteralText("§5Progress " + BaseSmitheeItem.getProgressString(tag.getInt("Experience"), tag.getInt("Level"))));
             }
             HashSet<Text> traits = Trait.getTooltip(((ItemStack)(Object)this));
             if (!traits.isEmpty()) {
@@ -253,6 +312,13 @@ public abstract class ItemStackMixin {
     public <T extends LivingEntity> void damage(int amount, T entity, Consumer<T> breakCallback, CallbackInfo ci) {
         HashMap<String, Object> result = Trait.evaluateTraits(((ItemStack)(Object)this), null, null, null, null, null, "ItemStack#damage");
         if (result.containsKey("Cancel Item Damage") && (boolean)result.get("Cancel Item Damage")) {
+            ci.cancel();
+        }
+        if (getItem() instanceof BaseSmitheeItem && getDamage() + amount >= getMaxDamage()) {
+            CompoundTag tag = getSubTag("SmitheeProperties");
+            if (!tag.contains("isBroken") || !tag.getBoolean("isBroken")) {
+                tag.putBoolean("isBroken", true);
+            }
             ci.cancel();
         }
     }

@@ -19,14 +19,16 @@ public class SmitheeClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         ScreenRegistry.registerScreens();
-        ModelLoadingRegistry.INSTANCE.registerAppender((manager, out) -> {
+        ModelLoadingRegistry.INSTANCE.registerModelProvider((manager, out) -> {
             for (String material : ItemRegistry.MATERIALS) {
                 for (String tool : ItemRegistry.TOOL_TYPES) {
                     String id;
 
                     id = material + "_" + tool + "_head";
                     RENDERING_TOOL_PARTS.add(id);
+                    RENDERING_TOOL_PARTS.add(material + "_broken_" + tool + "_head");
                     out.accept(Utils.inventoryModelID(id));
+                    out.accept(Utils.inventoryModelID(material + "_broken_" + tool + "_head"));
 
                     id = material + "_" + tool + "_binding";
                     RENDERING_TOOL_PARTS.add(id);

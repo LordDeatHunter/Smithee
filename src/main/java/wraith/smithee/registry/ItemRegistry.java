@@ -89,15 +89,15 @@ public class ItemRegistry {
                 ITEMS.put(material + "_whetstone", new Whetstone(new Item.Settings().maxCount(1).maxDamage(dura).group(ItemGroups.SMITHEE_ITEMS), material));
                 for (String tool : TOOL_TYPES) {
                     durability = PROPERTIES.get(material).partProperties.get("head").durability;
-                    ITEMS.put(material + "_" + tool + "_head", new ToolPartItem(new Part(material, "head", tool), new Item.Settings().maxDamage(durability).group(ItemGroups.SMITHEE_PARTS)));
+                    ITEMS.put(material + "_" + tool + "_head", new ToolPartItem(new Part(material, "head", "head", tool), new Item.Settings().maxDamage(durability).group(ItemGroups.SMITHEE_PARTS)));
                 }
                 for (String binding : BINDING_TYPES) {
                     durability = PROPERTIES.get(material).partProperties.get("binding").durability;
-                    ITEMS.put(material + "_" + binding, new ToolPartItem(new Part(material, binding, "any"), new Item.Settings().maxDamage(durability).group(ItemGroups.SMITHEE_PARTS)));
+                    ITEMS.put(material + "_" + binding, new ToolPartItem(new Part(material, binding, "binding", "any"), new Item.Settings().maxDamage(durability).group(ItemGroups.SMITHEE_PARTS)));
                 }
                 for (String handle : HANDLE_TYPES) {
                     durability = PROPERTIES.get(material).partProperties.get("handle").durability;
-                    ITEMS.put(material + "_" + handle, new ToolPartItem(new Part(material, handle, "any"), new Item.Settings().maxDamage(durability).group(ItemGroups.SMITHEE_PARTS)));
+                    ITEMS.put(material + "_" + handle, new ToolPartItem(new Part(material, handle, "handle", "any"), new Item.Settings().maxDamage(durability).group(ItemGroups.SMITHEE_PARTS)));
                 }
             } catch (Exception e) {
                 Smithee.LOGGER.error("Error with material " + material);

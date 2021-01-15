@@ -4,12 +4,14 @@ public class Part {
 
     public String materialName;
     public String partType;
+    public String globalPartType;
     public String toolType;
 
-    public Part(String materialName, String partType, String toolType) {
+    public Part(String materialName, String partType, String globalPartType, String toolType) {
         this.materialName = materialName;
         this.partType = partType;
         this.toolType = toolType;
+        this.globalPartType = globalPartType;
     }
 
     @Override

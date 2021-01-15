@@ -14,7 +14,7 @@ public class ToolPartItem extends Item{
 
     @Override
     public String toString() {
-        return Utils.capitalize(this.part.materialName.split("_")) + " " + ("any".equals(this.part.toolType)?"":(Utils.capitalize(this.part.toolType.split("_")) + " "))  + Utils.capitalize(this.part.partType.split("_"));
+        return Utils.capitalize(this.part.materialName.split("_")) + " " + (!"head".equals(this.part.toolType)?"":(Utils.capitalize(this.part.toolType.split("_")) + " "))  + Utils.capitalize(this.part.partType.split("_"));
     }
 
 }

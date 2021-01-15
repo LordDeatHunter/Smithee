@@ -31,7 +31,6 @@ import java.util.HashSet;
 public class AssemblyTableScreenHandler extends ScreenHandler {
 
     private final Inventory inventory;
-    private String toolName = "";
 
     public AssemblyTableScreenHandler(int syncId, PlayerInventory playerInventory) {
         this(syncId, playerInventory, new SimpleInventory(5));
@@ -261,11 +260,12 @@ public class AssemblyTableScreenHandler extends ScreenHandler {
                 }
                 tag.putString("HeadPart", ((ToolPartItem) head.getItem()).part.materialName);
             }
+            boolean shouldChangeBinding = true;
             if (!bindingEmpty) {
                 if (binding.hasTag() && binding.getTag().contains("PartDamage")) {
                     bindingDamage = binding.getTag().getDouble("PartDamage");
                 }
-                if (!slotEmpty) {
+                if (!slotEmpty && ((ToolPartItem)inventory.getStack(1).getItem()).part.partType.equals(((BaseSmitheeItem)inventory.getStack(3).getItem()).getBindingType())) {
                     String material = tag.getString("BindingPart");
                     String type = "sword".equals(toolType) ? "_sword_guard" : "_binding";
                     ItemStack oldPart = new ItemStack(ItemRegistry.ITEMS.get(material + type));
@@ -276,8 +276,12 @@ public class AssemblyTableScreenHandler extends ScreenHandler {
                     Utils.setDamage(oldPart, (int) (damagePercent));
 
                     player.inventory.offerOrDrop(player.world, oldPart);
+                } else if (!slotEmpty) {
+                    shouldChangeBinding = false;
                 }
-                tag.putString("BindingPart", ((ToolPartItem) binding.getItem()).part.materialName);
+                if (shouldChangeBinding) {
+                    tag.putString("BindingPart", ((ToolPartItem) binding.getItem()).part.materialName);
+                }
             }
             if (!handleEmpty) {
                 if (handle.hasTag() && handle.getTag().contains("PartDamage")) {
@@ -305,7 +309,9 @@ public class AssemblyTableScreenHandler extends ScreenHandler {
 
             inventory.setStack(3, itemStack);
             inventory.getStack(0).decrement(1);
-            inventory.getStack(1).decrement(1);
+            if (shouldChangeBinding) {
+                inventory.getStack(1).decrement(1);
+            }
             inventory.getStack(2).decrement(1);
             serverPlayerEntity.networkHandler.sendPacket(new ScreenHandlerSlotUpdateS2CPacket(syncId, 0, inventory.getStack(0)));
             serverPlayerEntity.networkHandler.sendPacket(new ScreenHandlerSlotUpdateS2CPacket(syncId, 1, inventory.getStack(1)));
@@ -316,11 +322,4 @@ public class AssemblyTableScreenHandler extends ScreenHandler {
         return false;
     }
 
-    public void setName(String toolName) {
-        this.toolName = toolName;
-    }
-
-    public String getName() {
-        return this.toolName;
-    }
 }

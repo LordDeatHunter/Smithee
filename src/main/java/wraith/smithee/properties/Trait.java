@@ -20,6 +20,7 @@ import wraith.smithee.mixin.TextColorInvoker;
 import wraith.smithee.registry.ItemRegistry;
 import wraith.smithee.utils.Utils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -117,7 +118,7 @@ public class Trait {
                 returns.put("Cancel Exhaustion", false);
                 returns.put("Cancel Drops", false);
                 if (!world.isClient()) {
-                    List<ItemStack> changedDrops = Block.getDroppedStacks(state, (ServerWorld) world, pos, blockEntity, player, stack);
+                    List<ItemStack> changedDrops = new ArrayList<>();//Block.getDroppedStacks(state, (ServerWorld) world, pos, blockEntity, player, stack);
                     changedDrops.add(new ItemStack(Items.GOLD_NUGGET, Utils.getRandomIntInRange(trait.minLevel, trait.maxLevel)));
                     returns.put("Drops", changedDrops);
                 }

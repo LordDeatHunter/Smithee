@@ -45,15 +45,15 @@ public class DisassemblyTableScreen extends HandledScreen<ScreenHandler> {
 
         //Handle
         if (this.handler.slots.get(3).getStack().isEmpty()) {
-            this.drawTexture(matrices, x + 108, y + 62, 176, 0, 16, 16);
+            this.drawTexture(matrices, x + 109, y + 63, 176, 0, 16, 16);
         }
         //Binding
         if (this.handler.slots.get(2).getStack().isEmpty()) {
-            this.drawTexture(matrices, x + 50, y + 62, 176 + 16, 0, 16, 16);
+            this.drawTexture(matrices, x + 51, y + 63, 176 + 16, 0, 16, 16);
         }
         //Head
         if (this.handler.slots.get(1).getStack().isEmpty()) {
-            this.drawTexture(matrices, x + 79, y + 18, 176 + 32, 0, 16, 16);
+            this.drawTexture(matrices, x + 80, y + 19, 176 + 32, 0, 16, 16);
         }
 
         int s = 196;

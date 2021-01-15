@@ -1,5 +1,5 @@
 {
-  "smithee:claymore": {
+  "smithee:base_smithee_claymore": {
     "parent": "minecraft:item/handheld",
     "display": {
       "gui": {
@@ -11,22 +11,22 @@
       },
       "thirdperson_righthand": {
         "rotation": [0, 90, 55],
-        "translation": [1.13, 4, 1.13],
-        "scale": [1.71875, 1.71875, 0.7]
+        "translation": [1.13, 10, 1.13],
+        "scale": [1.71875, 1.71875, 0.8]
       },
       "thirdperson_lefthand": {
         "rotation": [0, -90, -55],
-        "translation": [1.13, 4, 1.13],
-        "scale": [1.71875, 1.71875, 0.7]
+        "translation": [1.13, 10, 1.13],
+        "scale": [1.71875, 1.71875, 0.8]
       },
       "firstperson_righthand": {
         "rotation": [0, -90, 25],
-        "translation": [1.13, 3, 1.13],
+        "translation": [1.13, 6.5, 1.13],
         "scale": [1.71875, 1.71875, 0.7]
       },
       "firstperson_lefthand": {
         "rotation": [0, 90, -25],
-        "translation": [1.13, 3, 1.13],
+        "translation": [1.13, 6.5, 1.13],
         "scale": [1.71875, 1.71875, 0.7]
       },
       "fixed": {

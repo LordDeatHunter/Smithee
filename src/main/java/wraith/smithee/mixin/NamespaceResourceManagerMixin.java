@@ -24,6 +24,7 @@ public class NamespaceResourceManagerMixin {
     public void getResource(Identifier id, CallbackInfoReturnable<Resource> cir) {
         String[] segments = id.getPath().split("/");
         String path = segments[segments.length - 1];
+
         if (!id.getNamespace().equals(Smithee.MOD_ID) || !path.endsWith(".png")) {
             return;
         }

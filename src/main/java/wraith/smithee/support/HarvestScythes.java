@@ -11,7 +11,7 @@ import java.util.HashSet;
 
 public class HarvestScythes {
 
-    public static void addTag(CompoundTag tag) {
+    public static CompoundTag addTag(CompoundTag tag) {
         CompoundTag subtag = tag.getCompound("SmitheeProperties");
         int mineLevel = subtag.getInt("MiningLevel");
         boolean circleHarvest = mineLevel % 2 == 0;
@@ -20,7 +20,9 @@ public class HarvestScythes {
         CompoundTag scytheTag = new CompoundTag();
         scytheTag.putInt("HarvestRadius", harvestRange);
         scytheTag.putBoolean("CircleHarvest", circleHarvest);
-        tag.put("HarvestScytheProperties", scytheTag);
+        CompoundTag newTag = tag.copy();
+        newTag.put("HarvestScytheProperties", scytheTag);
+        return newTag;
     }
 
     public static void addItemRegistryValues() {

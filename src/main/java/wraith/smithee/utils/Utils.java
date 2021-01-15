@@ -4,6 +4,7 @@ import com.udojava.evalex.Expression;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.item.*;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
 import org.apache.commons.io.FileUtils;
 import wraith.smithee.Config;
@@ -209,7 +210,7 @@ public class Utils {
 
     public static void setDamage(ItemStack stack, int damage) {
         stack.setDamage(damage);
-        if (stack.getDamage() >= stack.getMaxDamage()) {
+        if (stack.getDamage() >= stack.getMaxDamage() && !(stack.getItem() instanceof BaseSmitheeItem)) {
             stack.setCount(0);
         }
     }

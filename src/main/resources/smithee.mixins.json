@@ -12,6 +12,7 @@
     "ForgingScreenHandlerAccessor",
     "ItemAccessor",
     "ItemEntityMixin",
+    "ItemMixin",
     "ItemRenderContextMixin",
     "ItemStackMixin",
     "LivingEntityMixin",

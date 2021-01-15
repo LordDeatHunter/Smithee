@@ -5,6 +5,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
@@ -102,10 +103,11 @@ public class Smithee implements ModInitializer {
     }
 
     private void registerPacketHandlers() {
-        ServerPlayNetworking.registerGlobalReceiver(new Identifier(MOD_ID, "rename_tool_assembly"), (server, player, networkHandler, packet, sender) -> {
-            CompoundTag tag = packet.readCompoundTag();
+        ServerPlayNetworking.registerGlobalReceiver(Utils.ID("assembly_table.rename_tool"), (server, player, networkHandler, packet, sender) -> {
+            String name = packet.readCompoundTag().getString("CustomName");
             if (player.currentScreenHandler instanceof AssemblyTableScreenHandler) {
-                ((AssemblyTableScreenHandler)player.currentScreenHandler).setName(tag.getString("ToolName"));
+                ItemStack stack = player.currentScreenHandler.slots.get(3).getStack();
+                stack.getOrCreateSubTag("SmitheeProperties").putString("CustomName", name);
             }
         });
     }

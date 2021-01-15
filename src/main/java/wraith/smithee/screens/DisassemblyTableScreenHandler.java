@@ -106,20 +106,26 @@ public class DisassemblyTableScreenHandler extends ScreenHandler {
             }
 
             ItemStack stack = inventory.getStack(0);
-            CompoundTag tag = stack.getTag();
-            if (!tag.contains("Parts")) {
+            CompoundTag partsTag = stack.getSubTag("Parts");
+            CompoundTag propertyTag = stack.getSubTag("SmitheeProperties");
+            if (partsTag == null || propertyTag == null || (propertyTag.contains("isBroken") && propertyTag.getBoolean("isBroken"))) {
                 return false;
             }
-            tag = tag.getCompound("Parts");
+            CompoundTag modifierSlots = propertyTag.getCompound("Modifiers").getCompound("Slots");
+            for (String modifier : modifierSlots.getKeys()) {
+                player.inventory.offerOrDrop(player.world, new ItemStack(ItemRegistry.ITEMS.get(modifier + "_embossment"), modifierSlots.getInt(modifier)));
+            }
+            player.addExperience(propertyTag.getInt("Experience"));
+
             String tool = ((BaseSmitheeItem)stack.getItem()).getToolType();
             String bindingType = "_" + ((BaseSmitheeItem)stack.getItem()).getBindingType();
-            ItemStack head = new ItemStack(ItemRegistry.ITEMS.get(tag.getString("HeadPart") + "_" + tool + "_head"));
-            ItemStack binding = new ItemStack(ItemRegistry.ITEMS.get(tag.getString("BindingPart") + bindingType));
-            ItemStack handle = new ItemStack(ItemRegistry.ITEMS.get(tag.getString("HandlePart") + "_handle"));
+            ItemStack head = new ItemStack(ItemRegistry.ITEMS.get(partsTag.getString("HeadPart") + "_" + tool + "_head"));
+            ItemStack binding = new ItemStack(ItemRegistry.ITEMS.get(partsTag.getString("BindingPart") + bindingType));
+            ItemStack handle = new ItemStack(ItemRegistry.ITEMS.get(partsTag.getString("HandlePart") + "_handle"));
 
-            int headDurability = ItemRegistry.PROPERTIES.get(tag.getString("HeadPart")).partProperties.get("head").durability;
-            int bindingDurability = ItemRegistry.PROPERTIES.get(tag.getString("BindingPart")).partProperties.get("binding").durability;
-            int handleDurability = ItemRegistry.PROPERTIES.get(tag.getString("HandlePart")).partProperties.get("handle").durability;
+            int headDurability = ItemRegistry.PROPERTIES.get(partsTag.getString("HeadPart")).partProperties.get("head").durability;
+            int bindingDurability = ItemRegistry.PROPERTIES.get(partsTag.getString("BindingPart")).partProperties.get("binding").durability;
+            int handleDurability = ItemRegistry.PROPERTIES.get(partsTag.getString("HandlePart")).partProperties.get("handle").durability;
             int maxDurability = stack.getMaxDamage();
             int summedDurability = headDurability + bindingDurability + handleDurability;
             int currentDamage = stack.getDamage();

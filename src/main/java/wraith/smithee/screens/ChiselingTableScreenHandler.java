@@ -12,6 +12,7 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.Registry;
 import wraith.smithee.items.Chisel;
 import wraith.smithee.properties.ToolPartRecipe;
@@ -197,7 +198,8 @@ public class ChiselingTableScreenHandler extends ScreenHandler {
         String tool = list.get(getSelectedTool());
         ArrayList<String> parts = new ArrayList<>(ToolPartRecipe.TOOL_ASSEMBLY_RECIPES.get(tool));
         Collections.sort(parts);
-        return parts.get(getSelectedPart());
+        //TODO: Fix the original problem that's causing this issue in the first place
+        return parts.get(MathHelper.clamp(getSelectedPart(), 0, parts.size() - 1));
     }
 
     public int getSelectedTool() {

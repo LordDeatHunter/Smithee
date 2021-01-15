@@ -2,14 +2,17 @@ package wraith.smithee.screens;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import io.netty.buffer.Unpooled;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
@@ -30,8 +33,6 @@ public class AssemblyTableScreen extends HandledScreen<ScreenHandler> {
     public final AssemblyTableScreenHandler handler;
     private boolean ignoreTypedCharacter;
     private TextFieldWidget nameInputField;
-    private boolean canType = false;
-    private boolean hadTool = false;
     private boolean mouseClicked = false;
     private int clickPos = -1;
 
@@ -46,9 +47,8 @@ public class AssemblyTableScreen extends HandledScreen<ScreenHandler> {
 
     @Override
     public void tick() {
-        super.tick();
-        if (this.nameInputField.getText().equals(this.handler.getName())) {
-            this.nameInputField.setText(this.handler.getName());
+        if (this.nameInputField != null) {
+            this.nameInputField.tick();
         }
     }
 
@@ -63,8 +63,6 @@ public class AssemblyTableScreen extends HandledScreen<ScreenHandler> {
     protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.client.getTextureManager().bindTexture(TEXTURE);
-        int x = this.x;
-        int y = this.y;
         this.drawTexture(matrices, x, y, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
         //Hande
@@ -110,10 +108,8 @@ public class AssemblyTableScreen extends HandledScreen<ScreenHandler> {
     @Override
     protected void onMouseClick(Slot slot, int invSlot, int clickData, SlotActionType actionType) {
         super.onMouseClick(slot, invSlot, clickData, actionType);
-        if (canType) {
-            this.nameInputField.setCursorToEnd();
-            this.nameInputField.setSelectionEnd(0);
-        }
+        this.nameInputField.setCursorToEnd();
+        this.nameInputField.setSelectionEnd(0);
     }
 
     @Override
@@ -138,7 +134,7 @@ public class AssemblyTableScreen extends HandledScreen<ScreenHandler> {
 
     @Override
     public boolean charTyped(char chr, int keyCode) {
-        if (this.ignoreTypedCharacter || !canType) {
+        if (this.ignoreTypedCharacter) {
             return false;
         } else {
             String string = this.nameInputField.getText();
@@ -163,14 +159,16 @@ public class AssemblyTableScreen extends HandledScreen<ScreenHandler> {
     }
 
     private void rename() {
-        if (canType) {
-            PacketByteBuf data = new PacketByteBuf(Unpooled.buffer());
-            CompoundTag tag = new CompoundTag();
-            tag.putString("ToolName", this.nameInputField.getText());
-            data.writeCompoundTag(tag);
-            handler.setName(this.nameInputField.getText());
-            ClientSidePacketRegistry.INSTANCE.sendToServer(new Identifier(Smithee.MOD_ID, "rename_tool_assembly"), data);
+        PacketByteBuf data = new PacketByteBuf(Unpooled.buffer());
+        CompoundTag tag = new CompoundTag();
+
+        ItemStack stack = handler.slots.get(3).getStack();
+        if (!stack.isEmpty() && stack.getSubTag("SmitheeProperties") != null) {
+            stack.getSubTag("SmitheeProperties").putString("CustomName", this.nameInputField.getText());
         }
+        tag.putString("CustomName", this.nameInputField.getText());
+        data.writeCompoundTag(tag);
+        ClientPlayNetworking.send(Utils.ID("assembly_table.rename_tool"), data);
     }
 
     @Override
@@ -181,7 +179,6 @@ public class AssemblyTableScreen extends HandledScreen<ScreenHandler> {
         this.nameInputField.setHasBorder(false);
         this.nameInputField.setEditableColor(0xffffff);
         this.nameInputField.setVisible(true);
-        this.nameInputField.setSelected(false);
         this.nameInputField.setFocusUnlocked(true);
         this.nameInputField.setText("");
         this.children.add(this.nameInputField);

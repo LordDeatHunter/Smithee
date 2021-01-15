@@ -11,9 +11,9 @@ public interface BaseSmitheeItem  {
 
     String getToolType();
 
-    static long getLevel(long experience) {
-        long xp = 100;
-        long level = 0;
+    static int getLevel(int experience) {
+        int xp = 100;
+        int level = 0;
         while (xp < experience) {
             xp += calculateXp(xp, level);
             ++level;
@@ -21,13 +21,13 @@ public interface BaseSmitheeItem  {
         return level;
     }
 
-    static double calculateXp(long xp, long level) {
-        return level < 15 ? Math.pow(Math.pow(xp, 0.3D) * 3, 2) + 100 : xp * 15;
+    static double calculateXp(int xp, int level) {
+        return level < 15 ? Math.pow(Math.pow(xp, 0.3D) * 3, 2) + 100 : xp * 1.5;
     }
 
-    static long getNeededExperience(long level) {
-        long xp = 100;
-        long lvl = 0;
+    static int getNeededExperience(int level) {
+        int xp = 100;
+        int lvl = 0;
         while (lvl < level) {
             xp += calculateXp(xp, lvl);
             ++lvl;
@@ -35,8 +35,8 @@ public interface BaseSmitheeItem  {
         return xp;
     }
 
-    static String getProgressString(long experience, long level) {
-        long xp = getNeededExperience(level);
+    static String getProgressString(int experience, int level) {
+        int xp = getNeededExperience(level);
         double collected = (double)experience/(double)xp;
         StringBuilder filled = new StringBuilder();
         for (int i = 0; i < collected * 10; ++i) {
@@ -64,29 +64,29 @@ public interface BaseSmitheeItem  {
         if (!tag.contains("Level")) {
             tag.putInt("Level", 0);
         }
-        long curLevel = tag.getLong("Level");
-        if (curLevel >= 25) {
+        int curLevel = tag.getInt("Level");
+        if (curLevel > 20) {
             return TypedActionResult.fail(stack);
         }
-        long vanillaxp = user.totalExperience;
-        long lvl = 0;
+        int vanillaxp = user.totalExperience;
+        int lvl = 0;
         while (lvl < user.experienceLevel) {
             vanillaxp += getVanillaExperienceRequirement(lvl);
             ++lvl;
         }
 
-        long xp = tag.getLong("Experience");
-        long fraction = vanillaxp;
+        int xp = tag.getInt("Experience");
+        int fraction = vanillaxp;
         if (vanillaxp >= 100) {
             fraction = vanillaxp / 5;
         }
         xp += fraction;
-        user.addExperience((int) -fraction);
-        tag.putLong("Experience", xp);
-        tag.putLong("Level", getLevel(xp));
-        if (tag.getLong("Level") != curLevel) {
+        user.addExperience(-fraction);
+        tag.putInt("Experience", xp);
+        tag.putInt("Level", getLevel(xp));
+        if (tag.getInt("Level") != curLevel) {
             CompoundTag modifiers = tag.getCompound("Modifiers");
-            int diff = (int) (tag.getLong("Level") - curLevel);
+            int diff = tag.getInt("Level") - curLevel;
             modifiers.putInt("EnchantmentSlots", modifiers.getInt("EnchantmentSlots") + diff);
             tag.put("Modifiers", modifiers);
         }
@@ -94,14 +94,13 @@ public interface BaseSmitheeItem  {
         return TypedActionResult.success(stack, world.isClient());
     }
 
-    static long getVanillaExperienceRequirement(long level) {
+    static int getVanillaExperienceRequirement(int level) {
         if (level >= 30) {
             return 112 + (level - 30) * 9;
         } else {
             return level >= 15 ? 37 + (level - 15) * 5 : 7 + level * 2;
         }
     }
-
 
     default String getBindingType() {
         return "binding";

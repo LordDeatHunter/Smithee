@@ -2,6 +2,7 @@ package wraith.smithee.mixin;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
@@ -30,14 +31,30 @@ public abstract class ScreenHandlerMixin {
             return;
         }
         ItemStack playerStack = player.inventory.getCursorStack();
-        if (playerStack.isEmpty() || !(playerStack.getItem() instanceof BaseSmitheeItem) || !playerStack.hasTag() || playerStack.getDamage() == 0) {
+        CompoundTag tag = playerStack.getTag();
+        if (tag == null) {
             return;
         }
-        String material = playerStack.getSubTag("Parts").getString("HeadPart");
+        CompoundTag smitheeTag = tag.getCompound("SmitheeProperties");
+        if (playerStack.isEmpty() || !(playerStack.getItem() instanceof BaseSmitheeItem) || smitheeTag == null || ((!smitheeTag.contains("isBroken") || !smitheeTag.getBoolean("isBroken")) && playerStack.getDamage() == 0)) {
+            return;
+        }
+        String material = tag.getCompound("Parts").getString("HeadPart");
         if (actionType == SlotActionType.PICKUP && !slots.get(screenStackIndex).getStack().isEmpty() && slots.get(screenStackIndex).getStack().getItem() instanceof Whetstone && ((Whetstone)slots.get(screenStackIndex).getStack().getItem()).getMaterial().equals(material)) {
-            int durability = player.inventory.getCursorStack().getDamage();
-            player.inventory.getCursorStack().setDamage(0);
-            Utils.damage(slots.get(screenStackIndex).getStack(), durability);
+            ItemStack whetstoneStack = slots.get(screenStackIndex).getStack();
+            int toolDamage = player.inventory.getCursorStack().getDamage();
+            if (smitheeTag.contains("isBroken") && smitheeTag.getBoolean("isBroken")) {
+                toolDamage = whetstoneStack.getMaxDamage();
+            }
+            int repairAmount = toolDamage;
+            if (whetstoneStack.getDamage() + toolDamage > whetstoneStack.getMaxDamage()) {
+                repairAmount = whetstoneStack.getMaxDamage() - whetstoneStack.getDamage();
+            }
+            Utils.damage(slots.get(screenStackIndex).getStack(), repairAmount);
+            if (smitheeTag.contains("isBroken") && smitheeTag.getBoolean("isBroken")) {
+                smitheeTag.putBoolean("isBroken", false);
+            }
+            player.inventory.getCursorStack().setDamage(toolDamage - repairAmount);
             sendContentUpdates();
             cir.setReturnValue(player.inventory.getCursorStack());
             cir.cancel();

@@ -63,18 +63,28 @@ public class Properties {
     public static void setProperties(ItemStack itemStack, Property properties) {
         CompoundTag tag = itemStack.getOrCreateSubTag("SmitheeProperties");
 
+        if (!tag.contains("isBroken")) {
+            tag.putBoolean("isBroken", false);
+        }
+
         tag.putInt("MiningLevel", properties.miningLevel);
         tag.putFloat("MiningSpeed", properties.miningSpeed);
         tag.putFloat("AttackSpeed", properties.attackSpeed);
         tag.putFloat("AttackDamage", properties.attackDamage);
         tag.putInt("Durability", properties.durability);
-        tag.putInt("Experience", 0);
-        tag.putInt("Level", 0);
-        CompoundTag modifiers = new CompoundTag();
-        modifiers.put("Slots", new CompoundTag());
-        modifiers.putInt("TraitSlots", 1);
-        modifiers.putInt("EnchantmentSlots", 0);
-        tag.put("Modifiers", modifiers);
+
+        if (!tag.contains("Experience") || !tag.contains("Level")) {
+            tag.putInt("Experience", 0);
+            tag.putInt("Level", 0);
+        }
+
+        if (!tag.contains("Modifiers")) {
+            CompoundTag modifiers = new CompoundTag();
+            modifiers.put("Slots", new CompoundTag());
+            modifiers.putInt("TraitSlots", 1);
+            modifiers.putInt("EnchantmentSlots", 0);
+            tag.put("Modifiers", modifiers);
+        }
 
         itemStack.putSubTag("SmitheeProperties", tag);
     }

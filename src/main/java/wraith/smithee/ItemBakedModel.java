@@ -51,12 +51,20 @@ public class ItemBakedModel implements FabricBakedModel, BakedModel, UnbakedMode
         String head = "iron_" + tool + "_head";
         String binding = "iron_" + tool + "_binding";
         String handle = "iron_" + tool + "_handle";
+        boolean isBroken = false;
 
-        CompoundTag tag = itemStack.getSubTag("Parts");
-        if (tag != null) {
-            head = tag.getString("HeadPart") + "_" + tool + "_head";
-            binding = tag.getString("BindingPart") + "_" + tool + "_binding";
-            handle = tag.getString("HandlePart") + "_" + tool + "_handle";
+        CompoundTag partTag = itemStack.getSubTag("Parts");
+        CompoundTag propertyTag = itemStack.getSubTag("SmitheeProperties");
+        if (partTag != null) {
+            if (propertyTag != null && propertyTag.contains("isBroken")) {
+                isBroken = propertyTag.getBoolean("isBroken");
+            }
+            head = partTag.getString("HeadPart") + "_" + tool + "_head";
+            binding = partTag.getString("BindingPart") + "_" + tool + "_binding";
+            handle = partTag.getString("HandlePart") + "_" + tool + "_handle";
+        }
+        if (isBroken) {
+            head = partTag.getString("HeadPart") + "_broken_" + tool + "_head";
         }
 
         PART_MODELS.get(head).emitItemQuads(null, null, context);
