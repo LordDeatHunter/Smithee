@@ -1,0 +1,9 @@
+{
+	"parent": "smithee:block/base_assembly_table",
+	"textures": {
+		"0": "byg:block/witch_hazel_planks",
+		"1": "byg:block/witch_hazel_log",
+		"2": "smithee:block/witch_hazel_assembly_table_top",
+		"particle": "byg:block/witch_hazel_planks"
+	}
+}

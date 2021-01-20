@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "| |",
+    "| |"
+  ],
+  "key": {
+    "|": {
+      "item": "byg:jacaranda_log"
+    },
+    "#": {
+      "item": "minecraft:jacaranda_planks"
+    }
+  },
+  "result": {
+    "item": "smithee:jacaranda_assembly_table"
+  }
+}

@@ -1,0 +1,9 @@
+{
+	"parent": "smithee:block/base_assembly_table",
+	"textures": {
+		"0": "byg:block/cherry_planks",
+		"1": "byg:block/cherry_log",
+		"2": "smithee:block/cherry_assembly_table_top",
+		"particle": "byg:block/cherry_planks"
+	}
+}

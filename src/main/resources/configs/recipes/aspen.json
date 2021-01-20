@@ -1,0 +1,14 @@
+{
+  "#byg:aspen_logs": {
+    "output_material": "aspen",
+    "material_value": 81,
+    "chiseling_level": 0,
+    "overrides": {}
+  },
+  "byg:aspen_planks": {
+    "output_material": "aspen",
+    "material_value": 9,
+    "chiseling_level": 0,
+    "overrides": {}
+  }
+}

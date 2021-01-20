@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "| |",
+    "| |"
+  ],
+  "key": {
+    "|": {
+      "item": "byg:witch_hazel_log"
+    },
+    "#": {
+      "item": "minecraft:witch_hazel_planks"
+    }
+  },
+  "result": {
+    "item": "smithee:witch_hazel_assembly_table"
+  }
+}

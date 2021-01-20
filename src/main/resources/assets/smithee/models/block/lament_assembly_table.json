@@ -1,0 +1,9 @@
+{
+	"parent": "smithee:block/base_assembly_table",
+	"textures": {
+		"0": "byg:block/lament_planks",
+		"1": "byg:block/lament_log",
+		"2": "smithee:block/lament_assembly_table_top",
+		"particle": "byg:block/lament_planks"
+	}
+}

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "| |",
+    "| |"
+  ],
+  "key": {
+    "|": {
+      "item": "byg:willow_log"
+    },
+    "#": {
+      "item": "minecraft:willow_planks"
+    }
+  },
+  "result": {
+    "item": "smithee:willow_assembly_table"
+  }
+}

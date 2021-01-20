@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "| |",
+    "| |"
+  ],
+  "key": {
+    "|": {
+      "item": "byg:sythian_stem"
+    },
+    "#": {
+      "item": "minecraft:sythian_planks"
+    }
+  },
+  "result": {
+    "item": "smithee:sythian_assembly_table"
+  }
+}

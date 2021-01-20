@@ -1,0 +1,9 @@
+{
+	"parent": "smithee:block/base_assembly_table",
+	"textures": {
+		"0": "byg:block/baobab_planks",
+		"1": "byg:block/baobab_log",
+		"2": "smithee:block/baobab_assembly_table_top",
+		"particle": "byg:block/baobab_planks"
+	}
+}

@@ -1,0 +1,9 @@
+{
+	"parent": "smithee:block/base_assembly_table",
+	"textures": {
+		"0": "byg:block/pine_planks",
+		"1": "byg:block/pine_log",
+		"2": "smithee:block/pine_assembly_table_top",
+		"particle": "byg:block/pine_planks"
+	}
+}

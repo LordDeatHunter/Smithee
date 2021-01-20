@@ -1,0 +1,14 @@
+{
+  "#byg:cika_logs": {
+    "output_material": "cika",
+    "material_value": 81,
+    "chiseling_level": 0,
+    "overrides": {}
+  },
+  "byg:cika_planks": {
+    "output_material": "cika",
+    "material_value": 9,
+    "chiseling_level": 0,
+    "overrides": {}
+  }
+}

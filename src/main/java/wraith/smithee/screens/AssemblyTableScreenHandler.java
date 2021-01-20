@@ -73,11 +73,11 @@ public class AssemblyTableScreenHandler extends ScreenHandler {
         ItemStack newStack = ItemStack.EMPTY;
         Slot slot = this.slots.get(invSlot);
         if (slot != null && slot.hasStack()) {
+            int invSize = this.inventory.size();
             ItemStack originalStack = slot.getStack();
             newStack = originalStack.copy();
-            if (invSlot < 5) { //If the click is inside the tool station, transfer it to the player
-                onContentChanged(inventory);
-                if (!this.insertItem(originalStack, this.inventory.size(), this.slots.size(), true)) {
+            if (invSlot < invSize) { //If the click is inside the tool station, transfer it to the player
+                if (!this.insertItem(originalStack, invSize, this.slots.size(), false)) {
                     return ItemStack.EMPTY;
                 }
             } else if (originalStack.getItem() instanceof ToolPartItem) {
@@ -100,7 +100,7 @@ public class AssemblyTableScreenHandler extends ScreenHandler {
                 if (!this.insertItem(originalStack, this.slots.size() - 9, this.slots.size(), false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.insertItem(originalStack, this.inventory.size(), this.slots.size() - 4 - 9, false)) {
+            } else if (!this.insertItem(originalStack, invSize, this.slots.size() - 9, false)) {
                 //Hotbar to inventory
                 return ItemStack.EMPTY;
             }
@@ -110,6 +110,12 @@ public class AssemblyTableScreenHandler extends ScreenHandler {
             } else {
                 slot.markDirty();
             }
+
+            if (originalStack.getCount() == newStack.getCount()) {
+                return ItemStack.EMPTY;
+            }
+
+            slot.onTakeItem(player, originalStack);
         }
 
         return newStack;

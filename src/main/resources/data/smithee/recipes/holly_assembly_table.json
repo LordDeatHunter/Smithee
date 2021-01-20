@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "| |",
+    "| |"
+  ],
+  "key": {
+    "|": {
+      "item": "byg:holly_log"
+    },
+    "#": {
+      "item": "minecraft:holly_planks"
+    }
+  },
+  "result": {
+    "item": "smithee:holly_assembly_table"
+  }
+}

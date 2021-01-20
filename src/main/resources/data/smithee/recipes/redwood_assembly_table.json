@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "| |",
+    "| |"
+  ],
+  "key": {
+    "|": {
+      "item": "byg:redwood_log"
+    },
+    "#": {
+      "item": "minecraft:redwood_planks"
+    }
+  },
+  "result": {
+    "item": "smithee:redwood_assembly_table"
+  }
+}

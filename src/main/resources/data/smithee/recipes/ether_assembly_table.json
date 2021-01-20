@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "| |",
+    "| |"
+  ],
+  "key": {
+    "|": {
+      "item": "byg:ether_log"
+    },
+    "#": {
+      "item": "minecraft:ether_planks"
+    }
+  },
+  "result": {
+    "item": "smithee:ether_assembly_table"
+  }
+}

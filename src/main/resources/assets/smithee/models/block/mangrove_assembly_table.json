@@ -1,0 +1,9 @@
+{
+	"parent": "smithee:block/base_assembly_table",
+	"textures": {
+		"0": "byg:block/mangrove_planks",
+		"1": "byg:block/mangrove_log",
+		"2": "smithee:block/mangrove_assembly_table_top",
+		"particle": "byg:block/mangrove_planks"
+	}
+}

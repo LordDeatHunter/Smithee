@@ -115,6 +115,36 @@ public class Config {
         }
         if (FabricLoader.getInstance().isModLoaded("byg")) {
             materials.add("pendorite");
+
+            materials.add("aspen");
+            materials.add("baobab");
+            materials.add("blue_enchanted");
+            materials.add("bulbis");
+            materials.add("cherry");
+            materials.add("cika");
+            materials.add("cypress");
+            materials.add("ebony");
+            materials.add("embur");
+            materials.add("ether");
+            materials.add("fir");
+            materials.add("glacial_oak");
+            materials.add("green_enchanted");
+            materials.add("holly");
+            materials.add("jacaranda");
+            materials.add("lament");
+            materials.add("mahogany");
+            materials.add("mangrove");
+            materials.add("maple");
+            materials.add("nightshade");
+            materials.add("palm");
+            materials.add("pine");
+            materials.add("rainbow_eucalyptus");
+            materials.add("redwood");
+            materials.add("skyris");
+            materials.add("sythian");
+            materials.add("willow");
+            materials.add("witch_hazel");
+            materials.add("zelkova");
         }
         if (FabricLoader.getInstance().isModLoaded("betterend")) {
             materials.add("terminite");

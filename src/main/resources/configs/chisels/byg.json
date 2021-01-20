@@ -7,6 +7,151 @@
       "material": "pendorite",
       "durability": 56,
       "level": 5
+    },
+    {
+      "material": "aspen",
+      "durability": 4,
+      "level": 1
+    },
+    {
+      "material": "baobab",
+      "durability": 4,
+      "level": 1
+    },
+    {
+      "material": "blue_enchanted",
+      "durability": 4,
+      "level": 1
+    },
+    {
+      "material": "bulbis",
+      "durability": 4,
+      "level": 1
+    },
+    {
+      "material": "cherry",
+      "durability": 4,
+      "level": 1
+    },
+    {
+      "material": "cika",
+      "durability": 4,
+      "level": 1
+    },
+    {
+      "material": "cypress",
+      "durability": 4,
+      "level": 1
+    },
+    {
+      "material": "ebony",
+      "durability": 4,
+      "level": 1
+    },
+    {
+      "material": "embur",
+      "durability": 4,
+      "level": 1
+    },
+    {
+      "material": "ether",
+      "durability": 4,
+      "level": 1
+    },
+    {
+      "material": "fir",
+      "durability": 4,
+      "level": 1
+    },
+    {
+      "material": "glacial_oak",
+      "durability": 4,
+      "level": 1
+    },
+    {
+      "material": "green_enchanted",
+      "durability": 4,
+      "level": 1
+    },
+    {
+      "material": "holly",
+      "durability": 4,
+      "level": 1
+    },
+    {
+      "material": "jacaranda",
+      "durability": 4,
+      "level": 1
+    },
+    {
+      "material": "lament",
+      "durability": 4,
+      "level": 1
+    },
+    {
+      "material": "mahogany",
+      "durability": 4,
+      "level": 1
+    },
+    {
+      "material": "mangrove",
+      "durability": 4,
+      "level": 1
+    },
+    {
+      "material": "maple",
+      "durability": 4,
+      "level": 1
+    },
+    {
+      "material": "nightshade",
+      "durability": 4,
+      "level": 1
+    },
+    {
+      "material": "palm",
+      "durability": 4,
+      "level": 1
+    },
+    {
+      "material": "pine",
+      "durability": 4,
+      "level": 1
+    },
+    {
+      "material": "rainbow_eucalyptus",
+      "durability": 4,
+      "level": 1
+    },
+    {
+      "material": "redwood",
+      "durability": 4,
+      "level": 1
+    },
+    {
+      "material": "skyris",
+      "durability": 4,
+      "level": 1
+    },
+    {
+      "material": "sythian",
+      "durability": 4,
+      "level": 1
+    },
+    {
+      "material": "willow",
+      "durability": 4,
+      "level": 1
+    },
+    {
+      "material": "witch_hazel",
+      "durability": 4,
+      "level": 1
+    },
+    {
+      "material": "zelkova",
+      "durability": 4,
+      "level": 1
     }
   ]
 }

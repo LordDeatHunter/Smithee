@@ -1,0 +1,49 @@
+{
+	"individual_parts": {
+		"head": {
+			"mining_level": 0,
+			"durability": 30,
+			"mining_speed": 1.5,
+			"attack_damage": -0.3,
+			"attack_speed": 0.6,
+			"traits": [
+				{
+					"trait": "ecological",
+					"min_level": 1,
+					"max_level": 2,
+					"chance": 0.00125
+				}
+			]
+		},
+		"binding": {
+			"mining_level": 0,
+			"durability": 15,
+			"mining_speed": 0.2,
+			"attack_damage": 0.0,
+			"attack_speed": 0.1,
+			"traits": [
+				{
+					"trait": "ecological",
+					"min_level": 1,
+					"max_level": 2,
+					"chance": 0.00125
+				}
+			]
+		},
+		"handle": {
+			"mining_level": 0,
+			"durability": 15,
+			"mining_speed": 0.3,
+			"attack_damage": 0.0,
+			"attack_speed": 0.2,
+			"traits": [
+				{
+					"trait": "ecological",
+					"min_level": 1,
+					"max_level": 2,
+					"chance": 0.00125
+				}
+			]
+		}
+	}
+}

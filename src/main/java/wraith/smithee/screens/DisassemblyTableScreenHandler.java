@@ -63,7 +63,6 @@ public class DisassemblyTableScreenHandler extends ScreenHandler {
             ItemStack originalStack = slot.getStack();
             newStack = originalStack.copy();
             if (invSlot < 4) { //If the click is inside the tool station, transfer it to the player
-                onContentChanged(inventory);
                 if (!this.insertItem(originalStack, this.inventory.size(), this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
@@ -76,7 +75,7 @@ public class DisassemblyTableScreenHandler extends ScreenHandler {
                 if (!this.insertItem(originalStack, this.slots.size() - 9, this.slots.size(), false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.insertItem(originalStack, this.inventory.size(), this.slots.size() - 4 - 9, false)) {
+            } else if (!this.insertItem(originalStack, this.inventory.size(), this.slots.size() - 9, false)) {
                 //Hotbar to inventory
                 return ItemStack.EMPTY;
             }
@@ -86,6 +85,12 @@ public class DisassemblyTableScreenHandler extends ScreenHandler {
             } else {
                 slot.markDirty();
             }
+            if (originalStack.getCount() == newStack.getCount()) {
+                return ItemStack.EMPTY;
+            }
+
+            slot.onTakeItem(player, originalStack);
+
         }
 
         return newStack;

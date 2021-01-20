@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "| |",
+    "| |"
+  ],
+  "key": {
+    "|": {
+      "item": "byg:zelkova_log"
+    },
+    "#": {
+      "item": "minecraft:zelkova_planks"
+    }
+  },
+  "result": {
+    "item": "smithee:zelkova_assembly_table"
+  }
+}

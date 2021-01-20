@@ -53,7 +53,7 @@ public class ToolSlot extends Slot {
 
     @Override
     public boolean canInsert(ItemStack stack) {
-        return (smithy && stack.getItem() instanceof BaseSmitheeItem) || (compatibleTools.contains(stack.getItem()) || useClass == null || useClass.isInstance(stack.getItem()));
+        return (smithy && stack.getItem() instanceof BaseSmitheeItem) || compatibleTools.contains(stack.getItem()) || (useClass != null && useClass.isInstance(stack.getItem()));
     }
 
 }

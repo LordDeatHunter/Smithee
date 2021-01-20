@@ -1,0 +1,9 @@
+{
+	"parent": "smithee:block/base_assembly_table",
+	"textures": {
+		"0": "byg:block/jacaranda_planks",
+		"1": "byg:block/jacaranda_log",
+		"2": "smithee:block/jacaranda_assembly_table_top",
+		"particle": "byg:block/jacaranda_planks"
+	}
+}

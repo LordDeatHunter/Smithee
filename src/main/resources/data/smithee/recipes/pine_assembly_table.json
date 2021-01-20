@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "| |",
+    "| |"
+  ],
+  "key": {
+    "|": {
+      "item": "byg:pine_log"
+    },
+    "#": {
+      "item": "minecraft:pine_planks"
+    }
+  },
+  "result": {
+    "item": "smithee:pine_assembly_table"
+  }
+}

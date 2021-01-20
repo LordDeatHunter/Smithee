@@ -28,7 +28,7 @@ public class AassemblyTableBlockEntity extends LockableContainerBlockEntity impl
 
     @Override
     public int size() {
-        return 4;
+        return inventory.size();
     }
 
     @Override

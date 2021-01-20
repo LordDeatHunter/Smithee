@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "| |",
+    "| |"
+  ],
+  "key": {
+    "|": {
+      "item": "byg:cika_log"
+    },
+    "#": {
+      "item": "minecraft:cika_planks"
+    }
+  },
+  "result": {
+    "item": "smithee:cika_assembly_table"
+  }
+}

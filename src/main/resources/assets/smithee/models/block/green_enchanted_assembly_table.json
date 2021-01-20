@@ -1,0 +1,9 @@
+{
+	"parent": "smithee:block/base_assembly_table",
+	"textures": {
+		"0": "byg:block/green_enchanted_planks",
+		"1": "byg:block/green_enchanted_log",
+		"2": "smithee:block/green_enchanted_assembly_table_top",
+		"particle": "byg:block/green_enchanted_planks"
+	}
+}

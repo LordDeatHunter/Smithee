@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "| |",
+    "| |"
+  ],
+  "key": {
+    "|": {
+      "item": "byg:cypress_log"
+    },
+    "#": {
+      "item": "minecraft:cypress_planks"
+    }
+  },
+  "result": {
+    "item": "smithee:cypress_assembly_table"
+  }
+}

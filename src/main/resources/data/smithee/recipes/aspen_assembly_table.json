@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "| |",
+    "| |"
+  ],
+  "key": {
+    "|": {
+      "item": "byg:aspen_log"
+    },
+    "#": {
+      "item": "minecraft:aspen_planks"
+    }
+  },
+  "result": {
+    "item": "smithee:aspen_assembly_table"
+  }
+}

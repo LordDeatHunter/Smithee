@@ -1,0 +1,9 @@
+{
+	"parent": "smithee:block/base_assembly_table",
+	"textures": {
+		"0": "byg:block/skyris_planks",
+		"1": "byg:block/skyris_log",
+		"2": "smithee:block/skyris_assembly_table_top",
+		"particle": "byg:block/skyris_planks"
+	}
+}

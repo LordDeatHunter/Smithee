@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "| |",
+    "| |"
+  ],
+  "key": {
+    "|": {
+      "item": "byg:mahogany_log"
+    },
+    "#": {
+      "item": "minecraft:mahogany_planks"
+    }
+  },
+  "result": {
+    "item": "smithee:mahogany_assembly_table"
+  }
+}

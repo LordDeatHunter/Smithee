@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "| |",
+    "| |"
+  ],
+  "key": {
+    "|": {
+      "item": "byg:embur_pedu"
+    },
+    "#": {
+      "item": "minecraft:embur_planks"
+    }
+  },
+  "result": {
+    "item": "smithee:embur_assembly_table"
+  }
+}

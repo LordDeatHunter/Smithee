@@ -1,0 +1,14 @@
+{
+  "#byg:holly_logs": {
+    "output_material": "holly",
+    "material_value": 81,
+    "chiseling_level": 0,
+    "overrides": {}
+  },
+  "byg:holly_planks": {
+    "output_material": "holly",
+    "material_value": 9,
+    "chiseling_level": 0,
+    "overrides": {}
+  }
+}

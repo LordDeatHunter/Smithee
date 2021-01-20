@@ -38,6 +38,38 @@ public class BlockRegistry {
         put("acacia_chiseling_table", new ChiselingTable(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));
     }};
 
+    public static void registerBYG() {
+        BLOCKS.put("aspen_assembly_table", new AssemblyTable(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));
+        BLOCKS.put("baobab_assembly_table", new AssemblyTable(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));
+        BLOCKS.put("blue_enchanted_assembly_table", new AssemblyTable(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));
+        BLOCKS.put("bulbis_assembly_table", new AssemblyTable(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));
+        BLOCKS.put("cherry_assembly_table", new AssemblyTable(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));
+        BLOCKS.put("cika_assembly_table", new AssemblyTable(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));
+        BLOCKS.put("cypress_assembly_table", new AssemblyTable(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));
+        BLOCKS.put("ebony_assembly_table", new AssemblyTable(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));
+        BLOCKS.put("embur_assembly_table", new AssemblyTable(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));
+        BLOCKS.put("ether_assembly_table", new AssemblyTable(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));
+        BLOCKS.put("fir_assembly_table", new AssemblyTable(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));
+        BLOCKS.put("glacial_oak_assembly_table", new AssemblyTable(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));
+        BLOCKS.put("green_enchanted_assembly_table", new AssemblyTable(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));
+        BLOCKS.put("holly_assembly_table", new AssemblyTable(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));
+        BLOCKS.put("jacaranda_assembly_table", new AssemblyTable(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));
+        BLOCKS.put("lament_assembly_table", new AssemblyTable(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));
+        BLOCKS.put("mahogany_assembly_table", new AssemblyTable(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));
+        BLOCKS.put("mangrove_assembly_table", new AssemblyTable(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));
+        BLOCKS.put("maple_assembly_table", new AssemblyTable(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));
+        BLOCKS.put("nightshade_assembly_table", new AssemblyTable(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));
+        BLOCKS.put("palm_assembly_table", new AssemblyTable(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));
+        BLOCKS.put("pine_assembly_table", new AssemblyTable(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));
+        BLOCKS.put("rainbow_eucalyptus_assembly_table", new AssemblyTable(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));
+        BLOCKS.put("redwood_assembly_table", new AssemblyTable(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));
+        BLOCKS.put("skyris_assembly_table", new AssemblyTable(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));
+        BLOCKS.put("sythian_assembly_table", new AssemblyTable(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));
+        BLOCKS.put("willow_assembly_table", new AssemblyTable(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));
+        BLOCKS.put("witch_hazel_assembly_table", new AssemblyTable(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));
+        BLOCKS.put("zelkova_assembly_table", new AssemblyTable(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).strength(2f, 2f)));
+    }
+
     public static void registerBlocks() {
         for(String id : BLOCKS.keySet()) {
             Registry.register(Registry.BLOCK, Utils.ID(id), BLOCKS.get(id));

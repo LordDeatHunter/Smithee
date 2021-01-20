@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "| |",
+    "| |"
+  ],
+  "key": {
+    "|": {
+      "item": "byg:rainbow_eucalyptus_log"
+    },
+    "#": {
+      "item": "minecraft:rainbow_eucalyptus_planks"
+    }
+  },
+  "result": {
+    "item": "smithee:rainbow_eucalyptus_assembly_table"
+  }
+}

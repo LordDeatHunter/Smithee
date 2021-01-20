@@ -1,0 +1,14 @@
+{
+  "#byg:palm_logs": {
+    "output_material": "palm",
+    "material_value": 81,
+    "chiseling_level": 0,
+    "overrides": {}
+  },
+  "byg:palm_planks": {
+    "output_material": "palm",
+    "material_value": 9,
+    "chiseling_level": 0,
+    "overrides": {}
+  }
+}

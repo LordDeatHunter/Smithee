@@ -1,0 +1,14 @@
+{
+  "#byg:baobab_logs": {
+    "output_material": "baobab",
+    "material_value": 81,
+    "chiseling_level": 0,
+    "overrides": {}
+  },
+  "byg:baobab_planks": {
+    "output_material": "baobab",
+    "material_value": 9,
+    "chiseling_level": 0,
+    "overrides": {}
+  }
+}

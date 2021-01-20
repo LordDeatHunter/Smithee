@@ -1,0 +1,14 @@
+{
+  "#byg:fir_logs": {
+    "output_material": "fir",
+    "material_value": 81,
+    "chiseling_level": 0,
+    "overrides": {}
+  },
+  "byg:fir_planks": {
+    "output_material": "fir",
+    "material_value": 9,
+    "chiseling_level": 0,
+    "overrides": {}
+  }
+}

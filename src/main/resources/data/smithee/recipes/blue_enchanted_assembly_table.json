@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "| |",
+    "| |"
+  ],
+  "key": {
+    "|": {
+      "item": "byg:blue_enchanted_log"
+    },
+    "#": {
+      "item": "minecraft:blue_enchanted_planks"
+    }
+  },
+  "result": {
+    "item": "smithee:blue_enchanted_assembly_table"
+  }
+}

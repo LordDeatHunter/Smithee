@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
@@ -122,8 +123,10 @@ public class ItemRegistry {
             add("jungle");
         }};
         for (String wood : woods) {
-            ITEMS.put(wood + "_assembly_table", new BlockItem(BlockRegistry.BLOCKS.get(wood + "_assembly_table"), new Item.Settings().group(ItemGroups.SMITHEE_BLOCKS)));
             ITEMS.put(wood + "_chiseling_table", new BlockItem(BlockRegistry.BLOCKS.get(wood + "_chiseling_table"), new Item.Settings().group(ItemGroups.SMITHEE_BLOCKS)));
+        }
+        for (String assemblyTable : BlockEntityRegistry.assemblyTableMap.keySet()) {
+            ITEMS.put(assemblyTable, new BlockItem(BlockRegistry.BLOCKS.get(assemblyTable), new Item.Settings().group(ItemGroups.SMITHEE_BLOCKS)));
         }
 
         ITEMS.put("stone_disassembly_table", new BlockItem(BlockRegistry.BLOCKS.get("stone_disassembly_table"), new Item.Settings().group(ItemGroups.SMITHEE_BLOCKS)));

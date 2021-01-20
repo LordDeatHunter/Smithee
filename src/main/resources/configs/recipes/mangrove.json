@@ -1,0 +1,14 @@
+{
+  "#byg:mangrove_logs": {
+    "output_material": "mangrove",
+    "material_value": 81,
+    "chiseling_level": 0,
+    "overrides": {}
+  },
+  "byg:mangrove_planks": {
+    "output_material": "mangrove",
+    "material_value": 9,
+    "chiseling_level": 0,
+    "overrides": {}
+  }
+}

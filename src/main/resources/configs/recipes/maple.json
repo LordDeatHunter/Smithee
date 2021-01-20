@@ -1,0 +1,14 @@
+{
+  "#byg:maple_logs": {
+    "output_material": "maple",
+    "material_value": 81,
+    "chiseling_level": 0,
+    "overrides": {}
+  },
+  "byg:maple_planks": {
+    "output_material": "maple",
+    "material_value": 9,
+    "chiseling_level": 0,
+    "overrides": {}
+  }
+}

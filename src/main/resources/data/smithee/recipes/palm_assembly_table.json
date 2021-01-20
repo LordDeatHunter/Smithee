@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "| |",
+    "| |"
+  ],
+  "key": {
+    "|": {
+      "item": "byg:palm_log"
+    },
+    "#": {
+      "item": "minecraft:palm_planks"
+    }
+  },
+  "result": {
+    "item": "smithee:palm_assembly_table"
+  }
+}

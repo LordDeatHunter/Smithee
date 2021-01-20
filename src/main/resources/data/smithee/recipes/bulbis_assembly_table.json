@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "| |",
+    "| |"
+  ],
+  "key": {
+    "|": {
+      "item": "byg:bulbis_stem"
+    },
+    "#": {
+      "item": "minecraft:bulbis_planks"
+    }
+  },
+  "result": {
+    "item": "smithee:bulbis_assembly_table"
+  }
+}

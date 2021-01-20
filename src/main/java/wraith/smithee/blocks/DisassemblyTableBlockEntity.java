@@ -28,7 +28,7 @@ public class DisassemblyTableBlockEntity extends LockableContainerBlockEntity im
 
     @Override
     public int size() {
-        return 4;
+        return inventory.size();
     }
 
     @Override

@@ -1,0 +1,9 @@
+{
+	"parent": "smithee:block/base_assembly_table",
+	"textures": {
+		"0": "byg:block/glacial_oak_planks",
+		"1": "byg:block/glacial_oak_log",
+		"2": "smithee:block/glacial_oak_assembly_table_top",
+		"particle": "byg:block/glacial_oak_planks"
+	}
+}

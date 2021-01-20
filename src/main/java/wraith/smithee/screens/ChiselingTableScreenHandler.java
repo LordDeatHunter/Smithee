@@ -74,7 +74,7 @@ public class ChiselingTableScreenHandler extends ScreenHandler {
                 if (!this.insertItem(originalStack, this.slots.size() - 9, this.slots.size(), false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.insertItem(originalStack, this.inventory.size(), this.slots.size() - 4 - 9, false)) {
+            } else if (!this.insertItem(originalStack, this.inventory.size(), this.slots.size() - 9, false)) {
                 //Hotbar to inventory
                 return ItemStack.EMPTY;
             }
@@ -84,6 +84,12 @@ public class ChiselingTableScreenHandler extends ScreenHandler {
             } else {
                 slot.markDirty();
             }
+            if (originalStack.getCount() == newStack.getCount()) {
+                return ItemStack.EMPTY;
+            }
+
+            slot.onTakeItem(player, originalStack);
+
         }
 
         return newStack;

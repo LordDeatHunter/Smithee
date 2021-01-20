@@ -1,0 +1,9 @@
+{
+	"parent": "smithee:block/base_assembly_table",
+	"textures": {
+		"0": "byg:block/mahogany_planks",
+		"1": "byg:block/mahogany_log",
+		"2": "smithee:block/mahogany_assembly_table_top",
+		"particle": "byg:block/mahogany_planks"
+	}
+}

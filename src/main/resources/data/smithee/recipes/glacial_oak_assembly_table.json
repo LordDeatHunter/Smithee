@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "| |",
+    "| |"
+  ],
+  "key": {
+    "|": {
+      "item": "byg:glacial_oak_log"
+    },
+    "#": {
+      "item": "minecraft:glacial_oak_planks"
+    }
+  },
+  "result": {
+    "item": "smithee:glacial_oak_assembly_table"
+  }
+}

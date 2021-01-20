@@ -1,0 +1,9 @@
+{
+	"parent": "smithee:block/base_assembly_table",
+	"textures": {
+		"0": "byg:block/zelkova_planks",
+		"1": "byg:block/zelkova_log",
+		"2": "smithee:block/zelkova_assembly_table_top",
+		"particle": "byg:block/zelkova_planks"
+	}
+}

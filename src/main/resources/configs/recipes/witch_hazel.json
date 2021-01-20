@@ -1,0 +1,14 @@
+{
+  "#byg:witch_hazel_logs": {
+    "output_material": "witch_hazel",
+    "material_value": 81,
+    "chiseling_level": 0,
+    "overrides": {}
+  },
+  "byg:witch_hazel_planks": {
+    "output_material": "witch_hazel",
+    "material_value": 9,
+    "chiseling_level": 0,
+    "overrides": {}
+  }
+}
