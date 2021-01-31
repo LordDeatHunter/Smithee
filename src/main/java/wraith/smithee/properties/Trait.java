@@ -95,19 +95,7 @@ public class Trait {
     }
 
     public static boolean hasTrait(ItemStack stack, String traitType) {
-        if (!(stack.getItem() instanceof BaseSmitheeItem) || !stack.hasTag() || !stack.getTag().contains("Parts")) {
-            return false;
-        }
-        CompoundTag tag = stack.getTag().getCompound("Parts");
-
-        for (String part : tag.getKeys()) {
-            System.out.println(part);
-            System.out.println(ItemRegistry.PROPERTIES.get(tag.getString(part)).traits);
-            if (ItemRegistry.PROPERTIES.get(tag.getString(part)).traits.get(convertNBTToConfig(part)).stream().anyMatch(t -> t.traitType.name().toLowerCase().equals(traitType))) { // FIXME this is *ugly*
-                return true;
-            }
-        }
-        return false;
+        return hasTrait(stack, getTraitTypeFromString(traitType));
     }
 
     public static boolean hasTrait(ItemStack stack, TraitType trait) {
