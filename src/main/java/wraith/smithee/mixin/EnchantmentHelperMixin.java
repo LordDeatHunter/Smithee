@@ -24,9 +24,8 @@ public class EnchantmentHelperMixin {
 
     @Inject(method = "hasAquaAffinity", at = @At("HEAD"), cancellable = true)
     private static void hasAquaAffinity(LivingEntity entity, CallbackInfoReturnable<Boolean> cir) {
-        HashMap<String, Object> result = Trait.evaluateTraits(entity.getMainHandStack(), null, null, null, null, null, "EnchantmentHelper#hasAquaAffinity");
-        if (result.containsKey("Has Aqua Affinity")) {
-            cir.setReturnValue((Boolean) result.get("Has Aqua Affinity"));
+        if (Trait.hasTrait(entity.getMainHandStack(), Trait.Traits.AQUADYNAMIC)) {
+            cir.setReturnValue(true);
             cir.cancel();
         }
     }

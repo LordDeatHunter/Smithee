@@ -18,9 +18,8 @@ public abstract class ItemEntityMixin {
 
     @Inject(method = "isFireImmune", at = @At("HEAD"), cancellable = true)
     private void isFireImmune(CallbackInfoReturnable<Boolean> cir) {
-        HashMap<String, Object> result = Trait.evaluateTraits(getStack(), null, null, null, null, null, "ItemEntity#isFireImmune");
-        if (result.containsKey("Fire Immunity")) {
-            cir.setReturnValue((Boolean) result.get("Fire Immunity"));
+        if (Trait.hasTrait(getStack(), Trait.Traits.SUPERHEATED)) {
+            cir.setReturnValue(true);
             cir.cancel();
         }
     }

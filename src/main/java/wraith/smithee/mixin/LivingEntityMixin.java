@@ -23,12 +23,13 @@ public abstract class LivingEntityMixin {
     private void applyDamage(Args args, DamageSource source, float amount) {
         if (source.getAttacker() instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) source.getAttacker();
-            HashMap<String, Object> results = Trait.evaluateTraits(player.getMainHandStack(), null, null, null, null, player, "LivingEntity#damage");
-            if (results.containsKey("Damage Entity Amount")) {
-                args.set(1, results.get("Damage Entity Amount"));
+            boolean reduceDamage = false; //TODO add a trait for this
+            if (reduceDamage) {
+                args.set(1, 0); // REMEMBER TO DO THIS
             }
-            if (results.containsKey("Damage Entity Effect Type") && results.containsKey("Damage Entity Effect Duration")) {
-                addStatusEffect(new StatusEffectInstance(StatusEffectRegistry.STATUS_EFFECTS.get(results.get("Damage Entity Effect Type")), (Integer) results.get("Damage Entity Effect Duration")));
+            if (Trait.hasTrait(player.getMainHandStack(), Trait.Traits.CHILLING)) {
+                addStatusEffect(new StatusEffectInstance(StatusEffectRegistry.STATUS_EFFECTS.get("frostbite"), Trait.getFrostbiteEffectDuration(player.getMainHandStack())));
+                //TODO just a review, this get seem not great (hardcoded string)... any ideas?
             }
         }
     }

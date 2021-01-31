@@ -20,17 +20,28 @@ import wraith.smithee.mixin.TextColorInvoker;
 import wraith.smithee.registry.ItemRegistry;
 import wraith.smithee.utils.Utils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 public class Trait {
+
+    public enum Traits {
+        ECOLOGICAL,
+        MIDAS_TOUCH,
+        BRITTLE,
+        MAGNETIC,
+        SUPERHEATED,
+        SHARP,
+        CHILLING,
+        ADAMANT,
+        AQUADYNAMIC,
+    }
 
     public String traitName;
     public int minLevel;
     public int maxLevel;
     public double chance;
+
+    // TODO: ItemRegistry.PROPERTIES get is used often. Make it a private function called getTraitsOf
 
     public static final HashMap<String, Text> TRAIT_TEXT = new HashMap<String, Text>(){{
         put("ecological",  new LiteralText("Ecological") .setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0x866526))));
@@ -49,6 +60,19 @@ public class Trait {
         this.minLevel = minLevel;
         this.maxLevel = maxLevel;
         this.chance = chance;
+    }
+
+    private static String convertNBTToConfig(String string) {
+        switch (string) {
+            case "HeadPart":
+                return "head";
+            case "BindingPart":
+                return "binding";
+            case "HandlePart":
+                return "handle";
+            default:
+                return "";
+        }
     }
 
     public static HashSet<Text> getTooltip(ItemStack stack) {
@@ -73,112 +97,109 @@ public class Trait {
         return tooltips;
     }
 
-    public static HashMap<String, Object> evaluateTraits(ItemStack stack, World world, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, Entity player, String source) {
-        HashMap<String, Object> returns = new HashMap<>();
+    public static boolean hasTrait(ItemStack stack, Trait trait) {
         if (!(stack.getItem() instanceof BaseSmitheeItem) || !stack.hasTag() || !stack.getTag().contains("Parts")) {
-            return returns;
+            return false;
         }
-
         CompoundTag tag = stack.getTag().getCompound("Parts");
 
-        HashMap<String, String> parts = new HashMap<>();
-        parts.put("head", tag.getString("HeadPart"));
-        parts.put("binding", tag.getString("BindingPart"));
-        parts.put("handle", tag.getString("HandlePart"));
-
-        HashSet<Trait> evaluateOnce = new HashSet<>();
-        HashSet<String> evaluateOnceString = new HashSet<>();
-        evaluateOnceString.add("magnetic");
-        for (String part : parts.keySet()) {
-            HashSet<Trait> traits = ItemRegistry.PROPERTIES.get(parts.get(part)).traits.get(part);
-            for (Trait trait : traits) {
-                if (evaluateOnceString.contains(trait.traitName)){
-                    evaluateOnce.add(trait);
-                } else {
-                    returns.putAll(Trait.evaluateTrait(trait, source, stack, state, world, pos, blockEntity, player, returns));
-                }
+        for (String part : tag.getKeys()) {
+            if (ItemRegistry.PROPERTIES.get(tag.getString(part)).traits.get(convertNBTToConfig(part)).contains(trait)) { // FIXME this is *ugly*
+                return true;
             }
         }
-        for (Trait trait : evaluateOnce) {
-            returns.putAll(evaluateTrait(trait, source, stack, state, world, pos, blockEntity, player, returns));
-        }
-        return returns;
+        return false;
     }
 
-    public static HashMap<String, Object> evaluateTrait(Trait trait, String source, ItemStack stack, BlockState state, World world, BlockPos pos, @Nullable BlockEntity blockEntity, Entity player, HashMap<String, Object> variables) {
-        HashMap<String, Object> returns = new HashMap<>();
-        if (stack == ItemStack.EMPTY || trait.chance == 0 || Utils.getRandomDoubleInRange(0, 100) > trait.chance * 100) {
-            return returns;
+    public static boolean hasTrait(ItemStack stack, String traitName) {
+        if (!(stack.getItem() instanceof BaseSmitheeItem) || !stack.hasTag() || !stack.getTag().contains("Parts")) {
+            return false;
         }
-        switch(trait.traitName) {
-            case "midas_touch":
-                if (!"Block#afterBreak".equals(source)) {
-                    break;
-                }
-                returns.put("Cancel Exhaustion", false);
-                returns.put("Cancel Drops", false);
-                if (!world.isClient()) {
-                    List<ItemStack> changedDrops = new ArrayList<>();//Block.getDroppedStacks(state, (ServerWorld) world, pos, blockEntity, player, stack);
-                    changedDrops.add(new ItemStack(Items.GOLD_NUGGET, Utils.getRandomIntInRange(trait.minLevel, trait.maxLevel)));
-                    returns.put("Drops", changedDrops);
-                }
-                break;
-            case "ecological":
-                if (!"ItemStack#inventoryTick".equals(source)) {
-                    break;
-                }
-                Utils.repair(stack, 1);
-                break;
-            case "superheated":
-                if (!"ItemEntity#isFireImmune".equals(source)) {
-                    break;
-                }
-                returns.put("Fire Immunity", true);
-                break;
-            case "brittle":
-                if (!"Block#afterBreak".equals(source)) {
-                    break;
-                }
-                Utils.damage(stack, Utils.getRandomIntInRange(trait.minLevel, trait.maxLevel));
-                break;
-            case "magnetic":
-                if (!"Block#afterBreak".equals(source)) {
-                    break;
-                }
-                returns.put("Cancel Exhaustion", false);
-                returns.put("Cancel Drops", true);
-                for (ItemStack drop : (List<ItemStack>)variables.getOrDefault("Drops", Block.getDroppedStacks(state, (ServerWorld) world, pos, blockEntity, player, stack))) {
-                    ((PlayerEntity)player).inventory.offerOrDrop(world, drop);
-                }
-                break;
-            case "chilling":
-                if (!"LivingEntity#damage".equals(source)) {
-                    break;
-                }
-                returns.put("Damage Entity Effect Type", "frostbite");
-                returns.put("Damage Entity Effect Duration", Utils.getRandomIntInRange(trait.minLevel, trait.maxLevel));
-                break;
-            case "adamant":
-                if (!"ItemStack#damage".equals(source)) {
-                    break;
-                }
-                returns.put("Cancel Item Damage", true);
-                break;
-            case "sharp":
-                if (!"PlayerEntity#attack".equals(source)) {
-                    break;
-                }
-                returns.put("Attack Damage Amount", (float)Utils.getRandomDoubleInRange(trait.minLevel, trait.maxLevel));
-                break;
-            case "aquadynamic":
-                if (!"EnchantmentHelper#hasAquaAffinity".equals(source)) {
-                    break;
-                }
-                returns.put("Has Aqua Affinity", true);
-                break;
+        CompoundTag tag = stack.getTag().getCompound("Parts");
 
+        for (String part : tag.getKeys()) {
+            System.out.println(part);
+            System.out.println(ItemRegistry.PROPERTIES.get(tag.getString(part)).traits);
+            if (ItemRegistry.PROPERTIES.get(tag.getString(part)).traits.get(convertNBTToConfig(part)).stream().anyMatch(t -> t.traitName.equals(traitName))) { // FIXME this is *ugly*
+                return true;
+            }
         }
-        return returns;
+        return false;
+    }
+
+    public static boolean hasTrait(ItemStack stack, Traits trait) {
+        return hasTrait(stack, trait.name().toLowerCase());
+    }
+
+    public static int getTraitLevel(ItemStack stack, Trait trait) {
+        if (!hasTrait(stack, trait)) {
+            return 0;
+        }
+        CompoundTag tag = stack.getTag().getCompound("Parts");
+        int traitLevel = 0;
+
+        for (String part : tag.getKeys()) {
+            if (ItemRegistry.PROPERTIES.get(tag.getString(part)).traits.get(convertNBTToConfig(part)).contains(trait)) {
+                traitLevel++;
+            }
+        }
+        return traitLevel;
+    }
+
+    public static ItemStack getMidas(ItemStack stack) {
+        if (!Trait.hasTrait(stack, Traits.MIDAS_TOUCH)) {
+            return ItemStack.EMPTY;
+        }
+        CompoundTag tag = stack.getTag().getCompound("Parts");
+
+        ItemStack nuggets = new ItemStack(Items.GOLD_NUGGET, 0);
+
+        for (String part : tag.getKeys()) {
+            HashSet<Trait> traits = ItemRegistry.PROPERTIES.get(tag.getString(part)).traits.get(convertNBTToConfig(part));
+            traits.forEach(t -> {
+                if (t.traitName.equals("midas_touch")) {
+                    nuggets.setCount(nuggets.getCount() + Utils.getRandomIntInRange(t.minLevel, t.maxLevel));
+                }
+            });
+        }
+        return nuggets;
+    }
+
+    public static float getSharpnessAddition(ItemStack stack) {
+        if (!Trait.hasTrait(stack, Traits.SHARP)) {
+            return 0;
+        }
+        CompoundTag tag = stack.getTag().getCompound("Parts");
+
+        float[] f = {0};
+        for (String part : tag.getKeys()) {
+            HashSet<Trait> traits = ItemRegistry.PROPERTIES.get(tag.getString(part)).traits.get(convertNBTToConfig(part));
+            traits.forEach(t -> {
+                if (t.traitName.equals("sharp")) {
+                    f[0] += (float) Utils.getRandomDoubleInRange(t.minLevel, t.maxLevel);
+                }
+            });
+        }
+        return f[0];
+        //FIXME IF POSSIBLE janky array shit?
+    }
+    //FIXME this one too
+    public static int getFrostbiteEffectDuration(ItemStack stack) {
+        if (!Trait.hasTrait(stack, Traits.CHILLING)) {
+            return 0;
+        }
+        CompoundTag tag = stack.getTag().getCompound("Parts");
+
+        int[] dur = {0};
+        for (String part : tag.getKeys()) {
+            HashSet<Trait> traits = ItemRegistry.PROPERTIES.get(tag.getString(part)).traits.get(convertNBTToConfig(part));
+            traits.forEach(t -> {
+                if (t.traitName.equals("chilling")) {
+                    dur[0] += (float) Utils.getRandomIntInRange(t.minLevel, t.maxLevel);
+                }
+            });
+        }
+        return dur[0];
     }
 
     @Override

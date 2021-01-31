@@ -305,13 +305,14 @@ public abstract class ItemStackMixin {
 
     @Inject(method = "inventoryTick", at = @At("HEAD"))
     public void inventoryTick(World world, Entity entity, int slot, boolean selected, CallbackInfo ci) {
-        Trait.evaluateTraits(((ItemStack)(Object)this), world, null, null, null, entity, "ItemStack#inventoryTick");
+        if (Trait.hasTrait((ItemStack)(Object)this, Trait.Traits.ECOLOGICAL)) {
+            Utils.repair((ItemStack)(Object)this, 1);
+        }
     }
 
     @Inject(method = "damage(ILnet/minecraft/entity/LivingEntity;Ljava/util/function/Consumer;)V", at = @At("HEAD"), cancellable = true)
     public <T extends LivingEntity> void damage(int amount, T entity, Consumer<T> breakCallback, CallbackInfo ci) {
-        HashMap<String, Object> result = Trait.evaluateTraits(((ItemStack)(Object)this), null, null, null, null, null, "ItemStack#damage");
-        if (result.containsKey("Cancel Item Damage") && (boolean)result.get("Cancel Item Damage")) {
+        if (Trait.hasTrait((ItemStack)(Object)this, Trait.Traits.ADAMANT)) {
             ci.cancel();
         }
         if (getItem() instanceof BaseSmitheeItem && getDamage() + amount >= getMaxDamage()) {
