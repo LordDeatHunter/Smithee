@@ -38,7 +38,7 @@ public class JsonParser {
             int minLevel = traitObject.get("min_level").getAsInt();
             int maxLevel = traitObject.get("max_level").getAsInt();
             double chance = traitObject.get("chance").getAsDouble();
-            properties.traits.get(type).add(new Trait(traitName, minLevel, maxLevel, chance));
+            properties.traits.get(type).add(new Trait(Trait.getTraitTypeFromString(traitName), minLevel, maxLevel, chance));
         }
 
     }

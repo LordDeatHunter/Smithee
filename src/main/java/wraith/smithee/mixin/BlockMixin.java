@@ -14,9 +14,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import wraith.smithee.properties.Trait;
+import wraith.smithee.properties.TraitType;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
 @Mixin(Block.class)
@@ -27,10 +27,10 @@ public class BlockMixin {
 
         ItemStack handStack = player.getMainHandStack();
         boolean cancelExhaustion = false; // TODO: add a exhaustion canceller
-        boolean cancelDrops = Trait.hasTrait(handStack, Trait.Traits.MAGNETIC);
+        boolean cancelDrops = Trait.hasTrait(handStack, TraitType.MAGNETIC);
 
         List<ItemStack> drops = Block.getDroppedStacks(state, (ServerWorld) world, pos, entity, player, stack);
-        drops = Trait.hasTrait(stack, Trait.Traits.MIDAS_TOUCH) ? Collections.singletonList(Trait.getMidas(handStack)) : drops;
+        drops = Trait.hasTrait(stack, TraitType.MIDAS_TOUCH) ? Collections.singletonList(Trait.getMidas(handStack)) : drops;
 
         if (cancelDrops) {
             Block.dropStacks(state, world, pos, entity, player, stack);

@@ -10,9 +10,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 import wraith.smithee.properties.Trait;
+import wraith.smithee.properties.TraitType;
 import wraith.smithee.registry.StatusEffectRegistry;
-
-import java.util.HashMap;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin {
@@ -27,7 +26,7 @@ public abstract class LivingEntityMixin {
             if (reduceDamage) {
                 args.set(1, 0); // REMEMBER TO DO THIS
             }
-            if (Trait.hasTrait(player.getMainHandStack(), Trait.Traits.CHILLING)) {
+            if (Trait.hasTrait(player.getMainHandStack(), TraitType.CHILLING)) {
                 addStatusEffect(new StatusEffectInstance(StatusEffectRegistry.STATUS_EFFECTS.get("frostbite"), Trait.getFrostbiteEffectDuration(player.getMainHandStack())));
                 //TODO just a review, this get seem not great (hardcoded string)... any ideas?
             }

@@ -42,10 +42,7 @@ import wraith.smithee.items.tools.BaseSmitheeHarvestScythe;
 import wraith.smithee.items.tools.BaseSmitheeItem;
 import wraith.smithee.items.tools.BaseSmitheeMeleeWeapon;
 import wraith.smithee.items.tools.BaseSmitheePickaxe;
-import wraith.smithee.properties.Modifier;
-import wraith.smithee.properties.Properties;
-import wraith.smithee.properties.ToolPartRecipe;
-import wraith.smithee.properties.Trait;
+import wraith.smithee.properties.*;
 import wraith.smithee.registry.ItemRegistry;
 import wraith.smithee.support.HarvestScythes;
 import wraith.smithee.utils.Utils;
@@ -275,7 +272,7 @@ public abstract class ItemStackMixin {
 
             Part part = ((ToolPartItem) getItem()).part;
             for (Trait trait : ItemRegistry.PROPERTIES.get(part.materialName).traits.get(part.globalPartType)) {
-                list.add(Trait.TRAIT_TEXT.get(trait.traitName));
+                list.add(Trait.TRAIT_TEXT.get(trait.traitType));
             }
 
         }
@@ -305,14 +302,14 @@ public abstract class ItemStackMixin {
 
     @Inject(method = "inventoryTick", at = @At("HEAD"))
     public void inventoryTick(World world, Entity entity, int slot, boolean selected, CallbackInfo ci) {
-        if (Trait.hasTrait((ItemStack)(Object)this, Trait.Traits.ECOLOGICAL)) {
+        if (Trait.hasTrait((ItemStack)(Object)this, TraitType.ECOLOGICAL)) {
             Utils.repair((ItemStack)(Object)this, 1);
         }
     }
 
     @Inject(method = "damage(ILnet/minecraft/entity/LivingEntity;Ljava/util/function/Consumer;)V", at = @At("HEAD"), cancellable = true)
     public <T extends LivingEntity> void damage(int amount, T entity, Consumer<T> breakCallback, CallbackInfo ci) {
-        if (Trait.hasTrait((ItemStack)(Object)this, Trait.Traits.ADAMANT)) {
+        if (Trait.hasTrait((ItemStack)(Object)this, TraitType.ADAMANT)) {
             ci.cancel();
         }
         if (getItem() instanceof BaseSmitheeItem && getDamage() + amount >= getMaxDamage()) {

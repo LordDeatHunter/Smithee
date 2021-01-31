@@ -2,7 +2,6 @@ package wraith.smithee.mixin;
 
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.EntityGroup;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
@@ -16,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import wraith.smithee.properties.Modifier;
 import wraith.smithee.properties.Trait;
+import wraith.smithee.properties.TraitType;
 
 import java.util.HashMap;
 
@@ -24,7 +24,7 @@ public class EnchantmentHelperMixin {
 
     @Inject(method = "hasAquaAffinity", at = @At("HEAD"), cancellable = true)
     private static void hasAquaAffinity(LivingEntity entity, CallbackInfoReturnable<Boolean> cir) {
-        if (Trait.hasTrait(entity.getMainHandStack(), Trait.Traits.AQUADYNAMIC)) {
+        if (Trait.hasTrait(entity.getMainHandStack(), TraitType.AQUADYNAMIC)) {
             cir.setReturnValue(true);
             cir.cancel();
         }
