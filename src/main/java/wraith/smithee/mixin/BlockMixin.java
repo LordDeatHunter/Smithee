@@ -27,21 +27,21 @@ public class BlockMixin {
 
         ItemStack handStack = player.getMainHandStack();
         boolean cancelExhaustion = false; // TODO: add a exhaustion canceller
-        boolean magnetic = Trait.hasTrait(handStack, Trait.Traits.MAGNETIC);
+        boolean cancelDrops = Trait.hasTrait(handStack, Trait.Traits.MAGNETIC);
 
         List<ItemStack> drops = Block.getDroppedStacks(state, (ServerWorld) world, pos, entity, player, stack);
         drops = Trait.hasTrait(stack, Trait.Traits.MIDAS_TOUCH) ? Collections.singletonList(Trait.getMidas(handStack)) : drops;
 
-        if (magnetic) {
+        if (cancelDrops) {
             Block.dropStacks(state, world, pos, entity, player, stack);
             for (ItemStack drop : drops) {
                 player.inventory.offerOrDrop(world, drop);
             }
         }
 
-        if (cancelExhaustion && magnetic) {
+        if (cancelExhaustion && cancelDrops) {
             ci.cancel();
-        } else if (!cancelExhaustion && magnetic) {
+        } else if (!cancelExhaustion && cancelDrops) {
             player.addExhaustion(0.005F);
             ci.cancel();
         } else {
