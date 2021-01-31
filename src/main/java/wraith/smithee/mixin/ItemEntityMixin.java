@@ -8,8 +8,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import wraith.smithee.properties.Trait;
-
-import java.util.HashMap;
+import wraith.smithee.properties.TraitType;
 
 @Mixin(ItemEntity.class)
 public abstract class ItemEntityMixin {
@@ -18,9 +17,8 @@ public abstract class ItemEntityMixin {
 
     @Inject(method = "isFireImmune", at = @At("HEAD"), cancellable = true)
     private void isFireImmune(CallbackInfoReturnable<Boolean> cir) {
-        HashMap<String, Object> result = Trait.evaluateTraits(getStack(), null, null, null, null, null, "ItemEntity#isFireImmune");
-        if (result.containsKey("Fire Immunity")) {
-            cir.setReturnValue((Boolean) result.get("Fire Immunity"));
+        if (Trait.hasTrait(getStack(), TraitType.SUPERHEATED)) {
+            cir.setReturnValue(true);
             cir.cancel();
         }
     }

@@ -1,54 +1,61 @@
 package wraith.smithee.properties;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 import wraith.smithee.items.tools.BaseSmitheeItem;
 import wraith.smithee.mixin.TextColorInvoker;
 import wraith.smithee.registry.ItemRegistry;
 import wraith.smithee.utils.Utils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 public class Trait {
 
-    public String traitName;
+    public TraitType traitType;
     public int minLevel;
     public int maxLevel;
     public double chance;
 
-    public static final HashMap<String, Text> TRAIT_TEXT = new HashMap<String, Text>(){{
-        put("ecological",  new LiteralText("Ecological") .setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0x866526))));
-        put("midas_touch", new LiteralText("Midas Touch").setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0xe9b115))));
-        put("brittle",     new LiteralText("Brittle")    .setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0x6c6c6c))));
-        put("magnetic",    new LiteralText("Magnetic")   .setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0x33ebcb))));
-        put("superheated", new LiteralText("SuperHeated").setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0x6A040F))));//0x652828))));
-        put("sharp",       new LiteralText("Sharp")      .setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0x87EFCC))));
-        put("chilling",    new LiteralText("Chilling")   .setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0x08CDFD))));
-        put("adamant",     new LiteralText("Adamant")    .setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0xBF0026))));
-        put("aquadynamic", new LiteralText("Aquadynamic").setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0xA2D2FF))));
+    // TODO: ItemRegistry.PROPERTIES get is used often. Make it a private function called getTraitsOf
+
+    public static final HashMap<TraitType, Text> TRAIT_TEXT = new HashMap<TraitType, Text>(){{
+        put(TraitType.ECOLOGICAL,  new LiteralText("Ecological") .setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0x866526))));
+        put(TraitType.MIDAS_TOUCH, new LiteralText("Midas Touch").setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0xe9b115))));
+        put(TraitType.BRITTLE,     new LiteralText("Brittle")    .setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0x6c6c6c))));
+        put(TraitType.MAGNETIC,    new LiteralText("Magnetic")   .setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0x33ebcb))));
+        put(TraitType.SUPERHEATED, new LiteralText("SuperHeated").setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0x6A040F))));//0x652828))));
+        put(TraitType.SHARP,       new LiteralText("Sharp")      .setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0x87EFCC))));
+        put(TraitType.CHILLING,    new LiteralText("Chilling")   .setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0x08CDFD))));
+        put(TraitType.ADAMANT,     new LiteralText("Adamant")    .setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0xBF0026))));
+        put(TraitType.AQUADYNAMIC, new LiteralText("Aquadynamic").setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0xA2D2FF))));
     }};
 
-    public Trait(String traitName, int minLevel, int maxLevel, double chance) {
-        this.traitName = traitName;
+    public Trait(TraitType traitType, int minLevel, int maxLevel, double chance) {
+        this.traitType = traitType;
         this.minLevel = minLevel;
         this.maxLevel = maxLevel;
         this.chance = chance;
+    }
+
+    private static String convertNBTToConfig(String string) {
+        switch (string) {
+            case "HeadPart":
+                return "head";
+            case "BindingPart":
+                return "binding";
+            case "HandlePart":
+                return "handle";
+            default:
+                return "";
+        }
+    }
+
+    public static TraitType getTraitTypeFromString(String string) {
+        return TraitType.valueOf(string.toUpperCase());
     }
 
     public static HashSet<Text> getTooltip(ItemStack stack) {
@@ -62,123 +69,118 @@ public class Trait {
         String handle = tag.getString("HandlePart");
 
         for (Trait trait : ItemRegistry.PROPERTIES.get(head).traits.get("head")) {
-            tooltips.add(TRAIT_TEXT.get(trait.traitName));
+            tooltips.add(TRAIT_TEXT.get(trait.traitType));
         }
         for (Trait trait : ItemRegistry.PROPERTIES.get(binding).traits.get("binding")) {
-            tooltips.add(TRAIT_TEXT.get(trait.traitName));
+            tooltips.add(TRAIT_TEXT.get(trait.traitType));
         }
         for (Trait trait : ItemRegistry.PROPERTIES.get(handle).traits.get("handle")) {
-            tooltips.add(TRAIT_TEXT.get(trait.traitName));
+            tooltips.add(TRAIT_TEXT.get(trait.traitType));
         }
         return tooltips;
     }
 
-    public static HashMap<String, Object> evaluateTraits(ItemStack stack, World world, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, Entity player, String source) {
-        HashMap<String, Object> returns = new HashMap<>();
+    public static boolean hasTrait(ItemStack stack, Trait trait) {
         if (!(stack.getItem() instanceof BaseSmitheeItem) || !stack.hasTag() || !stack.getTag().contains("Parts")) {
-            return returns;
+            return false;
         }
-
         CompoundTag tag = stack.getTag().getCompound("Parts");
 
-        HashMap<String, String> parts = new HashMap<>();
-        parts.put("head", tag.getString("HeadPart"));
-        parts.put("binding", tag.getString("BindingPart"));
-        parts.put("handle", tag.getString("HandlePart"));
-
-        HashSet<Trait> evaluateOnce = new HashSet<>();
-        HashSet<String> evaluateOnceString = new HashSet<>();
-        evaluateOnceString.add("magnetic");
-        for (String part : parts.keySet()) {
-            HashSet<Trait> traits = ItemRegistry.PROPERTIES.get(parts.get(part)).traits.get(part);
-            for (Trait trait : traits) {
-                if (evaluateOnceString.contains(trait.traitName)){
-                    evaluateOnce.add(trait);
-                } else {
-                    returns.putAll(Trait.evaluateTrait(trait, source, stack, state, world, pos, blockEntity, player, returns));
-                }
+        for (String part : tag.getKeys()) {
+            if (ItemRegistry.PROPERTIES.get(tag.getString(part)).traits.get(convertNBTToConfig(part)).contains(trait)) { // FIXME this is *ugly*
+                return true;
             }
         }
-        for (Trait trait : evaluateOnce) {
-            returns.putAll(evaluateTrait(trait, source, stack, state, world, pos, blockEntity, player, returns));
-        }
-        return returns;
+        return false;
     }
 
-    public static HashMap<String, Object> evaluateTrait(Trait trait, String source, ItemStack stack, BlockState state, World world, BlockPos pos, @Nullable BlockEntity blockEntity, Entity player, HashMap<String, Object> variables) {
-        HashMap<String, Object> returns = new HashMap<>();
-        if (stack == ItemStack.EMPTY || trait.chance == 0 || Utils.getRandomDoubleInRange(0, 100) > trait.chance * 100) {
-            return returns;
-        }
-        switch(trait.traitName) {
-            case "midas_touch":
-                if (!"Block#afterBreak".equals(source)) {
-                    break;
-                }
-                returns.put("Cancel Exhaustion", false);
-                returns.put("Cancel Drops", false);
-                if (!world.isClient()) {
-                    List<ItemStack> changedDrops = new ArrayList<>();//Block.getDroppedStacks(state, (ServerWorld) world, pos, blockEntity, player, stack);
-                    changedDrops.add(new ItemStack(Items.GOLD_NUGGET, Utils.getRandomIntInRange(trait.minLevel, trait.maxLevel)));
-                    returns.put("Drops", changedDrops);
-                }
-                break;
-            case "ecological":
-                if (!"ItemStack#inventoryTick".equals(source)) {
-                    break;
-                }
-                Utils.repair(stack, 1);
-                break;
-            case "superheated":
-                if (!"ItemEntity#isFireImmune".equals(source)) {
-                    break;
-                }
-                returns.put("Fire Immunity", true);
-                break;
-            case "brittle":
-                if (!"Block#afterBreak".equals(source)) {
-                    break;
-                }
-                Utils.damage(stack, Utils.getRandomIntInRange(trait.minLevel, trait.maxLevel));
-                break;
-            case "magnetic":
-                if (!"Block#afterBreak".equals(source)) {
-                    break;
-                }
-                returns.put("Cancel Exhaustion", false);
-                returns.put("Cancel Drops", true);
-                for (ItemStack drop : (List<ItemStack>)variables.getOrDefault("Drops", Block.getDroppedStacks(state, (ServerWorld) world, pos, blockEntity, player, stack))) {
-                    ((PlayerEntity)player).inventory.offerOrDrop(world, drop);
-                }
-                break;
-            case "chilling":
-                if (!"LivingEntity#damage".equals(source)) {
-                    break;
-                }
-                returns.put("Damage Entity Effect Type", "frostbite");
-                returns.put("Damage Entity Effect Duration", Utils.getRandomIntInRange(trait.minLevel, trait.maxLevel));
-                break;
-            case "adamant":
-                if (!"ItemStack#damage".equals(source)) {
-                    break;
-                }
-                returns.put("Cancel Item Damage", true);
-                break;
-            case "sharp":
-                if (!"PlayerEntity#attack".equals(source)) {
-                    break;
-                }
-                returns.put("Attack Damage Amount", (float)Utils.getRandomDoubleInRange(trait.minLevel, trait.maxLevel));
-                break;
-            case "aquadynamic":
-                if (!"EnchantmentHelper#hasAquaAffinity".equals(source)) {
-                    break;
-                }
-                returns.put("Has Aqua Affinity", true);
-                break;
+    public static boolean hasTrait(ItemStack stack, String traitType) {
+        return hasTrait(stack, getTraitTypeFromString(traitType));
+    }
 
+    public static boolean hasTrait(ItemStack stack, TraitType trait) {
+        if (!(stack.getItem() instanceof BaseSmitheeItem) || !stack.hasTag() || !stack.getTag().contains("Parts")) {
+            return false;
         }
-        return returns;
+        CompoundTag tag = stack.getTag().getCompound("Parts");
+
+        for (String part : tag.getKeys()) {
+            if (ItemRegistry.PROPERTIES.get(tag.getString(part)).traits.get(convertNBTToConfig(part)).stream().anyMatch(t -> t.traitType == trait)) { // FIXME this is *ugly*
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static int getTraitLevel(ItemStack stack, Trait trait) {
+        if (!hasTrait(stack, trait)) {
+            return 0;
+        }
+        CompoundTag tag = stack.getTag().getCompound("Parts");
+        int traitLevel = 0;
+
+        for (String part : tag.getKeys()) {
+            if (ItemRegistry.PROPERTIES.get(tag.getString(part)).traits.get(convertNBTToConfig(part)).contains(trait)) {
+                traitLevel++;
+            }
+        }
+        return traitLevel;
+    }
+
+    public static ItemStack getMidas(ItemStack stack) {
+        if (!Trait.hasTrait(stack, TraitType.MIDAS_TOUCH)) {
+            return ItemStack.EMPTY;
+        }
+        CompoundTag tag = stack.getTag().getCompound("Parts");
+
+        ItemStack nuggets = new ItemStack(Items.GOLD_NUGGET, 0);
+
+        for (String part : tag.getKeys()) {
+            HashSet<Trait> traits = ItemRegistry.PROPERTIES.get(tag.getString(part)).traits.get(convertNBTToConfig(part));
+            traits.forEach(t -> {
+                if (t.traitType.equals(TraitType.MIDAS_TOUCH)) {
+                    nuggets.setCount(nuggets.getCount() + Utils.getRandomIntInRange(t.minLevel, t.maxLevel));
+                }
+            });
+        }
+        return nuggets;
+    }
+
+    public static float getSharpnessAddition(ItemStack stack) {
+        if (!Trait.hasTrait(stack, TraitType.SHARP)) {
+            return 0;
+        }
+        CompoundTag tag = stack.getTag().getCompound("Parts");
+
+        float[] f = {0};
+        for (String part : tag.getKeys()) {
+            HashSet<Trait> traits = ItemRegistry.PROPERTIES.get(tag.getString(part)).traits.get(convertNBTToConfig(part));
+            traits.forEach(t -> {
+                if (t.traitType.equals(TraitType.SHARP)) {
+                    f[0] += (float) Utils.getRandomDoubleInRange(t.minLevel, t.maxLevel);
+                }
+            });
+        }
+        return f[0];
+        //FIXME IF POSSIBLE janky array shit?
+    }
+    //FIXME this one too
+    public static int getFrostbiteEffectDuration(ItemStack stack) {
+        if (!Trait.hasTrait(stack, TraitType.CHILLING)) {
+            return 0;
+        }
+        CompoundTag tag = stack.getTag().getCompound("Parts");
+
+        int[] dur = {0};
+        for (String part : tag.getKeys()) {
+            HashSet<Trait> traits = ItemRegistry.PROPERTIES.get(tag.getString(part)).traits.get(convertNBTToConfig(part));
+            traits.forEach(t -> {
+                if (t.traitType.equals(TraitType.CHILLING)) {
+                    dur[0] += (float) Utils.getRandomIntInRange(t.minLevel, t.maxLevel);
+                }
+            });
+        }
+        return dur[0];
     }
 
     @Override
@@ -192,13 +194,13 @@ public class Trait {
 
         Trait trait = (Trait) o;
 
-        return trait.traitName.equals(this.traitName) && trait.minLevel == this.minLevel && trait.maxLevel == this.maxLevel && trait.chance == this.chance;
+        return trait.traitType.equals(this.traitType) && trait.minLevel == this.minLevel && trait.maxLevel == this.maxLevel && trait.chance == this.chance;
     }
 
     @Override
     public int hashCode() {
         int result = 17;
-        result = 31 * result + traitName.hashCode();
+        result = 31 * result + traitType.hashCode();
         result = 31 * result + minLevel;
         result = 31 * result + maxLevel;
         result = (int) (31 * result + chance);
