@@ -99,7 +99,17 @@ public class Trait {
     }
 
     public static boolean hasTrait(ItemStack stack, TraitType trait) {
-        return hasTrait(stack, trait.name().toLowerCase());
+        if (!(stack.getItem() instanceof BaseSmitheeItem) || !stack.hasTag() || !stack.getTag().contains("Parts")) {
+            return false;
+        }
+        CompoundTag tag = stack.getTag().getCompound("Parts");
+
+        for (String part : tag.getKeys()) {
+            if (ItemRegistry.PROPERTIES.get(tag.getString(part)).traits.get(convertNBTToConfig(part)).stream().anyMatch(t -> t.traitType == trait)) { // FIXME this is *ugly*
+                return true;
+            }
+        }
+        return false;
     }
 
     public static int getTraitLevel(ItemStack stack, Trait trait) {
