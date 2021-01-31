@@ -118,8 +118,6 @@ public class Trait {
         CompoundTag tag = stack.getTag().getCompound("Parts");
 
         for (String part : tag.getKeys()) {
-            System.out.println(part);
-            System.out.println(ItemRegistry.PROPERTIES.get(tag.getString(part)).traits);
             if (ItemRegistry.PROPERTIES.get(tag.getString(part)).traits.get(convertNBTToConfig(part)).stream().anyMatch(t -> t.traitName.equals(traitName))) { // FIXME this is *ugly*
                 return true;
             }
