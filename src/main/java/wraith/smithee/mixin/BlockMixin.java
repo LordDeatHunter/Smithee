@@ -30,10 +30,11 @@ public class BlockMixin {
         boolean cancelDrops = Trait.hasTrait(handStack, TraitType.MAGNETIC);
 
         List<ItemStack> drops = Block.getDroppedStacks(state, (ServerWorld) world, pos, entity, player, stack);
-        drops = Trait.hasTrait(stack, TraitType.MIDAS_TOUCH) ? Collections.singletonList(Trait.getMidas(handStack)) : drops;
+        if (Trait.hasTrait(stack, TraitType.MIDAS_TOUCH)) {
+            drops.add(Trait.getMidas(handStack));
+        }
 
         if (cancelDrops) {
-            Block.dropStacks(state, world, pos, entity, player, stack);
             for (ItemStack drop : drops) {
                 player.inventory.offerOrDrop(world, drop);
             }
@@ -45,7 +46,6 @@ public class BlockMixin {
             player.addExhaustion(0.005F);
             ci.cancel();
         } else {
-            Block.dropStacks(state, world, pos, entity, player, stack);
             for (ItemStack drop : drops) {
                 Block.dropStack(world, pos, drop);
             }
