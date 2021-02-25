@@ -28,7 +28,7 @@ dependencies {
 
 	modCompileOnly 'curse.maven:mythicmetals-412225:3160648'
 	modCompileOnly 'curse.maven:harvestscythes-412225:3159547'
-	modCompileOnly 'curse.maven:mcdw-407311:3154479'
+	modCompileOnly 'curse.maven:mcdw-407311:3210946'
 
 	modRuntime ("com.github.SuperCoder7979:databreaker:0.2.6") {
 		exclude module: "fabric-loader"

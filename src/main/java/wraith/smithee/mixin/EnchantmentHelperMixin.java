@@ -2,11 +2,13 @@ package wraith.smithee.mixin;
 
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.EntityGroup;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.util.Identifier;
+import org.apache.commons.lang3.mutable.MutableFloat;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -87,6 +89,14 @@ public class EnchantmentHelperMixin {
             }
         }
         return newListTag;
+    }
+
+    @ModifyVariable(method = "getAttackDamage", at = @At("HEAD"), name = "mutableFloat")
+    private static MutableFloat addHolyDamage(MutableFloat mutableFloat, ItemStack stack, EntityGroup group) {
+        if (Trait.hasTrait(stack, TraitType.HOLY) && group == EntityGroup.UNDEAD) {
+            mutableFloat.add(2.5f);
+        }
+        return mutableFloat;
     }
 
 }
