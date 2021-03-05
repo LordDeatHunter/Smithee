@@ -22,8 +22,6 @@ import wraith.smithee.screens.DisassemblyTableScreenHandler;
 
 public class DisassemblyTable extends BlockWithEntity {
 
-    private static final Text TITLE = new TranslatableText("container." + Smithee.MOD_ID + ".disassembly_table");
-
     protected static final VoxelShape vs1 = Block.createCuboidShape(0f, 12f, 0f, 16f, 16f, 16f);
     protected static final VoxelShape vs2 = Block.createCuboidShape(0f, 0f, 0f, 3f, 12f, 3f);
     protected static final VoxelShape vs3 = Block.createCuboidShape(13f, 0f, 0f, 16f, 12f, 3f);
@@ -31,6 +29,7 @@ public class DisassemblyTable extends BlockWithEntity {
     protected static final VoxelShape vs5 = Block.createCuboidShape(13f, 0f, 13f, 16f, 12f, 16f);
     protected static final VoxelShape vs6 = Block.createCuboidShape(1f, 4f, 1f, 15f, 6f, 15f);
     protected static final VoxelShape VOXEL_SHAPE = VoxelShapes.union(vs1, vs2, vs3, vs4, vs5, vs6).simplify();
+    private static final Text TITLE = new TranslatableText("container." + Smithee.MOD_ID + ".disassembly_table");
 
     public DisassemblyTable(AbstractBlock.Settings settings) {
         super(settings);
@@ -45,6 +44,7 @@ public class DisassemblyTable extends BlockWithEntity {
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
         return VOXEL_SHAPE;
     }
+
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (!world.isClient) {
@@ -59,7 +59,7 @@ public class DisassemblyTable extends BlockWithEntity {
 
     @Override
     public NamedScreenHandlerFactory createScreenHandlerFactory(BlockState state, World world, BlockPos pos) {
-        return new SimpleNamedScreenHandlerFactory((i, playerInventory, playerEntity) -> new DisassemblyTableScreenHandler(i, playerInventory, (DisassemblyTableBlockEntity)world.getBlockEntity(pos)), TITLE);
+        return new SimpleNamedScreenHandlerFactory((i, playerInventory, playerEntity) -> new DisassemblyTableScreenHandler(i, playerInventory, (DisassemblyTableBlockEntity) world.getBlockEntity(pos)), TITLE);
     }
 
     @Override
@@ -72,7 +72,7 @@ public class DisassemblyTable extends BlockWithEntity {
         if (state.getBlock() != newState.getBlock()) {
             BlockEntity entity = world.getBlockEntity(pos);
             if (entity instanceof DisassemblyTableBlockEntity) {
-                ItemScatterer.spawn(world, pos, (DisassemblyTableBlockEntity)entity);
+                ItemScatterer.spawn(world, pos, (DisassemblyTableBlockEntity) entity);
                 world.updateComparators(pos, this);
             }
             super.onStateReplaced(state, world, pos, newState, moved);

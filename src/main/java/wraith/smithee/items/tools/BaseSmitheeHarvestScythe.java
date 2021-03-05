@@ -24,6 +24,7 @@ public class BaseSmitheeHarvestScythe extends ScytheTool implements BaseSmitheeI
         super.use(world, user, hand);
         return boostXp(world, user, hand);
     }
+
     @Override
     public String getToolType() {
         return "harvest_scythe";

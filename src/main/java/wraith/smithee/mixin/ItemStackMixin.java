@@ -56,6 +56,9 @@ import java.util.function.Consumer;
 public abstract class ItemStackMixin {
 
     @Shadow
+    private CompoundTag tag;
+
+    @Shadow
     public abstract Item getItem();
 
     @Shadow
@@ -63,15 +66,16 @@ public abstract class ItemStackMixin {
     public abstract CompoundTag getSubTag(String key);
 
     @Shadow
-    private CompoundTag tag;
+    public abstract boolean hasTag();
 
-    @Shadow public abstract boolean hasTag();
+    @Shadow
+    public abstract int getCount();
 
-    @Shadow public abstract int getCount();
+    @Shadow
+    public abstract int getMaxDamage();
 
-    @Shadow public abstract int getMaxDamage();
-
-    @Shadow public abstract int getDamage();
+    @Shadow
+    public abstract int getDamage();
 
     @Inject(method = "setDamage", at = @At("HEAD"), cancellable = true)
     public void setDamage(int damage, CallbackInfo ci) {
@@ -211,11 +215,11 @@ public abstract class ItemStackMixin {
         if (getItem() instanceof BaseSmitheeItem && tag != null && tag.contains("SmitheeProperties") && equipmentSlot == EquipmentSlot.MAINHAND) {
             CompoundTag tag = getSubTag("SmitheeProperties");
             ImmutableMultimap.Builder<EntityAttribute, EntityAttributeModifier> builder = ImmutableMultimap.builder();
-            float attackDamage = tag.getFloat("AttackDamage") + Properties.getExtraDamage(((BaseSmitheeItem)getItem()).getToolType());
+            float attackDamage = tag.getFloat("AttackDamage") + Properties.getExtraDamage(((BaseSmitheeItem) getItem()).getToolType());
             if (tag.contains("isBroken") && tag.getBoolean("isBroken")) {
                 attackDamage = 0.1f;
             }
-            float attackSpeed = -4 + tag.getFloat("AttackSpeed") + Properties.getExtraAttackSpeed(((BaseSmitheeItem)getItem()).getToolType());
+            float attackSpeed = -4 + tag.getFloat("AttackSpeed") + Properties.getExtraAttackSpeed(((BaseSmitheeItem) getItem()).getToolType());
             builder.put(EntityAttributes.GENERIC_ATTACK_DAMAGE, new EntityAttributeModifier(((ItemAccessor) getItem()).getAttackDamageModifierId(), getItem() instanceof BaseSmitheeMeleeWeapon ? "Weapon modifier" : "Tool modifier", attackDamage, EntityAttributeModifier.Operation.ADDITION));
             builder.put(EntityAttributes.GENERIC_ATTACK_SPEED, new EntityAttributeModifier(((ItemAccessor) getItem()).getAttackSpeedModifierId(), getItem() instanceof BaseSmitheeMeleeWeapon ? "Weapon modifier" : "Tool modifier", attackSpeed, EntityAttributeModifier.Operation.ADDITION));
             cir.setReturnValue(builder.build());
@@ -238,16 +242,16 @@ public abstract class ItemStackMixin {
             if (tag != null && tag.contains("SmitheeProperties") && tag.getCompound("SmitheeProperties").contains("CustomName")) {
                 cir.setReturnValue(new LiteralText(tag.getCompound("SmitheeProperties").getString("CustomName")));
             } else if (tag != null && tag.contains("Parts")) {
-                String name = Utils.capitalize(tag.getCompound("Parts").getString("HeadPart").split("_")) + " " + Utils.capitalize(((BaseSmitheeItem)getItem()).getToolType().split("_"));
+                String name = Utils.capitalize(tag.getCompound("Parts").getString("HeadPart").split("_")) + " " + Utils.capitalize(((BaseSmitheeItem) getItem()).getToolType().split("_"));
                 if (tag.getCompound("SmitheeProperties").contains("isBroken") && tag.getCompound("SmitheeProperties").getBoolean("isBroken")) {
                     name = "Broken " + name;
                 }
                 cir.setReturnValue(new LiteralText(name));
             } else {
-                cir.setReturnValue(new LiteralText("Base Smithee " + Utils.capitalize(((BaseSmitheeItem)getItem()).getToolType().split("_"))));
+                cir.setReturnValue(new LiteralText("Base Smithee " + Utils.capitalize(((BaseSmitheeItem) getItem()).getToolType().split("_"))));
             }
         } else if (getItem() instanceof ToolPartItem) {
-            ToolPartItem part = (ToolPartItem)getItem();
+            ToolPartItem part = (ToolPartItem) getItem();
             cir.setReturnValue(new LiteralText(part.toString()));
         } else if (getItem() instanceof Chisel || getItem() instanceof Whetstone || (isSmithee && (Registry.ITEM.getId(getItem()).getPath().endsWith("_embossment") || Registry.ITEM.getId(getItem()).getPath().endsWith("_shard")))) {
             cir.setReturnValue(new LiteralText(Utils.capitalize(Registry.ITEM.getId(getItem()).getPath().split("/")[0].split("_"))));
@@ -282,12 +286,12 @@ public abstract class ItemStackMixin {
                 list.add(new LiteralText("§2Level §a" + tag.getInt("Level") + "."));
                 list.add(new LiteralText("§5Progress " + BaseSmitheeItem.getProgressString(tag.getInt("Experience"), tag.getInt("Level"))));
             }
-            HashSet<Text> traits = Trait.getTooltip(((ItemStack)(Object)this));
+            HashSet<Text> traits = Trait.getTooltip(((ItemStack) (Object) this));
             if (!traits.isEmpty()) {
                 list.add(new LiteralText(""));
                 list.addAll(traits);
             }
-            HashSet<Text> modifiers = Modifier.getTooltip(((ItemStack)(Object)this));
+            HashSet<Text> modifiers = Modifier.getTooltip(((ItemStack) (Object) this));
             if (!modifiers.isEmpty()) {
                 list.add(new LiteralText(""));
                 list.addAll(modifiers);
@@ -302,14 +306,14 @@ public abstract class ItemStackMixin {
 
     @Inject(method = "inventoryTick", at = @At("HEAD"))
     public void inventoryTick(World world, Entity entity, int slot, boolean selected, CallbackInfo ci) {
-        if (Trait.hasTrait((ItemStack)(Object)this, TraitType.ECOLOGICAL)) {
-            Utils.repair((ItemStack)(Object)this, 1);
+        if (Trait.hasTrait((ItemStack) (Object) this, TraitType.ECOLOGICAL)) {
+            Utils.repair((ItemStack) (Object) this, 1);
         }
     }
 
     @Inject(method = "damage(ILnet/minecraft/entity/LivingEntity;Ljava/util/function/Consumer;)V", at = @At("HEAD"), cancellable = true)
     public <T extends LivingEntity> void damage(int amount, T entity, Consumer<T> breakCallback, CallbackInfo ci) {
-        if (Trait.hasTrait((ItemStack)(Object)this, TraitType.ADAMANT)) {
+        if (Trait.hasTrait((ItemStack) (Object) this, TraitType.ADAMANT)) {
             ci.cancel();
         }
         if (getItem() instanceof BaseSmitheeItem && getDamage() + amount >= getMaxDamage()) {

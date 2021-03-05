@@ -7,9 +7,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
-public interface BaseSmitheeItem  {
-
-    String getToolType();
+public interface BaseSmitheeItem {
 
     static int getLevel(int experience) {
         int xp = 100;
@@ -37,7 +35,7 @@ public interface BaseSmitheeItem  {
 
     static String getProgressString(int experience, int level) {
         int xp = getNeededExperience(level);
-        double collected = (double)experience/(double)xp;
+        double collected = (double) experience / (double) xp;
         StringBuilder filled = new StringBuilder();
         for (int i = 0; i < collected * 10; ++i) {
             filled.append("▓");
@@ -48,6 +46,16 @@ public interface BaseSmitheeItem  {
         }
         return "§1[§b" + filled + "§3" + nonfilled + "§1]";
     }
+
+    static int getVanillaExperienceRequirement(int level) {
+        if (level >= 30) {
+            return 112 + (level - 30) * 9;
+        } else {
+            return level >= 15 ? 37 + (level - 15) * 5 : 7 + level * 2;
+        }
+    }
+
+    String getToolType();
 
     default TypedActionResult<ItemStack> boostXp(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);
@@ -92,14 +100,6 @@ public interface BaseSmitheeItem  {
         }
 
         return TypedActionResult.success(stack, world.isClient());
-    }
-
-    static int getVanillaExperienceRequirement(int level) {
-        if (level >= 30) {
-            return 112 + (level - 30) * 9;
-        } else {
-            return level >= 15 ? 37 + (level - 15) * 5 : 7 + level * 2;
-        }
     }
 
     default String getBindingType() {

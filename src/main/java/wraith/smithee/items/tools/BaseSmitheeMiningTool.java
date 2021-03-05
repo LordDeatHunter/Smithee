@@ -1,3 +1,5 @@
 package wraith.smithee.items.tools;
 
-public interface BaseSmitheeMiningTool extends BaseSmitheeItem { }
+public interface BaseSmitheeMiningTool extends BaseSmitheeItem {
+
+}

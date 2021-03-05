@@ -110,7 +110,7 @@ public class JsonParser {
 
     public static void parseCombinations() {
         File[] files = Config.getFiles("config/smithee/combinations/");
-        for (File file : files){
+        for (File file : files) {
             JsonObject json = Config.getJsonObject(Config.readFile(file));
             for (JsonElement combination : json.get("combinations").getAsJsonArray()) {
 

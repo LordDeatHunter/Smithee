@@ -1,6 +1,7 @@
 package wraith.smithee.properties;
 
 public class ChiselingRecipe {
+
     public int level;
     public int durability;
     public String material;

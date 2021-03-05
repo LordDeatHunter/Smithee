@@ -185,7 +185,7 @@ public class Config {
 
     public static JsonObject loadConfig() {
         String defaultConfig =
-                        "{\n" +
+                "{\n" +
                         "  \"disable_vanilla_tools\": false,\n" +
                         "\n" +
                         "  \"regenerate_deleted_stat_files\": true,\n" +

@@ -28,11 +28,11 @@ public class ChiselingTableScreen extends HandledScreen<ScreenHandler> {
     private final int toolRows = 3;
     private final int toolCols = 4;
     private final int partAmount = 4;
-    private int clickPos = -1;
     protected float toolScrollAmount;
     protected float partScrollAmount;
     protected int toolScrollOffset;
     protected int partScrollOffset;
+    private int clickPos = -1;
 
     public ChiselingTableScreen(ScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
@@ -49,9 +49,9 @@ public class ChiselingTableScreen extends HandledScreen<ScreenHandler> {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.client.getTextureManager().bindTexture(TEXTURE);
         this.drawTexture(matrices, x, y, 0, 0, this.backgroundWidth, this.backgroundHeight);
-        int k = (int)(41.0F * this.toolScrollAmount);
+        int k = (int) (41.0F * this.toolScrollAmount);
         this.drawTexture(matrices, x + 123, y + 18 + k, 235 + (this.shouldToolsScroll() ? 0 : 8), 0, 8, 11);
-        k = (int)(41.0F * this.partScrollAmount);
+        k = (int) (41.0F * this.partScrollAmount);
         this.drawTexture(matrices, x + 48 + k, y + 100, 224, (this.shouldPartsScroll() ? 0 : 8), 11, 8);
 
         this.renderButton(matrices, mouseX, mouseY, this.x + 16, this.y + 83, 20, 20, 3);
@@ -127,7 +127,7 @@ public class ChiselingTableScreen extends HandledScreen<ScreenHandler> {
     protected void renderToolsBackground(MatrixStack matrixStack, int mouseX, int mouseY, int x, int y, int amountWithOffset) {
         ArrayList<String> list = new ArrayList<>(ToolPartRecipe.TOOL_ASSEMBLY_RECIPES.keySet());
         Collections.sort(list);
-        for(int n = this.toolScrollOffset; n < amountWithOffset && n < list.size(); ++n) {
+        for (int n = this.toolScrollOffset; n < amountWithOffset && n < list.size(); ++n) {
             int amount = n - this.toolScrollOffset;
             int buttonXOffset = x + amount % toolCols * 18;
             int row = amount / toolCols;
@@ -141,10 +141,11 @@ public class ChiselingTableScreen extends HandledScreen<ScreenHandler> {
             this.drawTexture(matrixStack, buttonXOffset, buttonYOffset, U, 36, 18, 18);
         }
     }
+
     private void renderToolIcons(int x, int y, int scrollOffset) {
         ArrayList<String> list = new ArrayList<>(ToolPartRecipe.TOOL_ASSEMBLY_RECIPES.keySet());
         Collections.sort(list);
-        for(int n = this.toolScrollOffset; n < scrollOffset && n < list.size(); ++n) {
+        for (int n = this.toolScrollOffset; n < scrollOffset && n < list.size(); ++n) {
             int amount = n - this.toolScrollOffset;
             int itemXOffset = x + amount % toolCols * 18;
             int row = amount / toolCols;
@@ -160,7 +161,7 @@ public class ChiselingTableScreen extends HandledScreen<ScreenHandler> {
         String tool = list.get(getSelectedTool());
         ArrayList<String> parts = new ArrayList<>(ToolPartRecipe.TOOL_ASSEMBLY_RECIPES.get(tool));
         Collections.sort(parts);
-        for(int n = this.partScrollOffset; n < amountWithOffset && n < parts.size(); ++n) {
+        for (int n = this.partScrollOffset; n < amountWithOffset && n < parts.size(); ++n) {
             int amount = n - this.partScrollOffset;
             int buttonXOffset = x + amount % 4 * 18;
             int U = this.backgroundWidth;
@@ -172,6 +173,7 @@ public class ChiselingTableScreen extends HandledScreen<ScreenHandler> {
             this.drawTexture(matrixStack, buttonXOffset, y, U, 36, 18, 18);
         }
     }
+
     private void renderPartIcons(int x, int y, int scrollOffset) {
         ArrayList<String> list = new ArrayList<>(ToolPartRecipe.TOOL_ASSEMBLY_RECIPES.keySet());
         Collections.sort(list);
@@ -179,7 +181,7 @@ public class ChiselingTableScreen extends HandledScreen<ScreenHandler> {
         ArrayList<String> parts = new ArrayList<>(ToolPartRecipe.TOOL_ASSEMBLY_RECIPES.get(tool));
         Collections.sort(parts);
 
-        for(int n = this.partScrollOffset; n < scrollOffset && n < parts.size(); ++n) {
+        for (int n = this.partScrollOffset; n < scrollOffset && n < parts.size(); ++n) {
             int amount = n - this.partScrollOffset;
             int itemXOffset = x + amount % 4 * 18;
             Item item = Registry.ITEM.get(Utils.ID("base_smithee_" + parts.get(n)));
@@ -195,10 +197,10 @@ public class ChiselingTableScreen extends HandledScreen<ScreenHandler> {
         ArrayList<String> list = new ArrayList<>(ToolPartRecipe.TOOL_ASSEMBLY_RECIPES.keySet());
         Collections.sort(list);
 
-        for(int l = this.toolScrollOffset; l < k && l - this.toolScrollOffset < list.size(); ++l) {
+        for (int l = this.toolScrollOffset; l < k && l - this.toolScrollOffset < list.size(); ++l) {
             int m = l - this.toolScrollOffset;
-            double buttonWidth = mouseX - (double)(i + m % 4 * 18);
-            double buttonHeight = mouseY - (double)(j + m / 4 * 18);
+            double buttonWidth = mouseX - (double) (i + m % 4 * 18);
+            double buttonHeight = mouseY - (double) (j + m / 4 * 18);
             if (18 >= buttonWidth && 0 < buttonWidth && 18 >= buttonHeight && 0 < buttonHeight) {
                 MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
                 handler.setSelectedTool(l);
@@ -214,9 +216,9 @@ public class ChiselingTableScreen extends HandledScreen<ScreenHandler> {
         String tool = list.get(getSelectedTool());
         ArrayList<String> parts = new ArrayList<>(ToolPartRecipe.TOOL_ASSEMBLY_RECIPES.get(tool));
 
-        for(int l = this.partScrollOffset; l < k && l - this.partScrollOffset < parts.size(); ++l) {
+        for (int l = this.partScrollOffset; l < k && l - this.partScrollOffset < parts.size(); ++l) {
             int m = l - this.partScrollOffset;
-            double buttonWidth = mouseX - (double)(i + m % 4 * 18);
+            double buttonWidth = mouseX - (double) (i + m % 4 * 18);
             double buttonHeight = mouseY - j;
             if (18 >= buttonWidth && 0 < buttonWidth && 18 >= buttonHeight && 0 < buttonHeight) {
                 MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
@@ -254,9 +256,9 @@ public class ChiselingTableScreen extends HandledScreen<ScreenHandler> {
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
         if (this.shouldToolsScroll()) {
             int i = this.getMaxToolsScroll();
-            this.toolScrollAmount = (float)((double)this.toolScrollAmount - amount / (double)i);
+            this.toolScrollAmount = (float) ((double) this.toolScrollAmount - amount / (double) i);
             this.toolScrollAmount = MathHelper.clamp(this.toolScrollAmount, 0.0F, 1.0F);
-            this.toolScrollOffset = (int)((double)(this.toolScrollAmount * (float)i) + 0.5D) * 4;
+            this.toolScrollOffset = (int) ((double) (this.toolScrollAmount * (float) i) + 0.5D) * 4;
         }
         return true;
     }
@@ -272,16 +274,16 @@ public class ChiselingTableScreen extends HandledScreen<ScreenHandler> {
         if (this.clickPos == 1 && this.shouldToolsScroll()) {
             int i = this.y + 18;
             int j = i + 54;
-            this.toolScrollAmount = ((float)mouseY - (float)i - 5.5F) / ((float)(j - i) - 11.0F);
+            this.toolScrollAmount = ((float) mouseY - (float) i - 5.5F) / ((float) (j - i) - 11.0F);
             this.toolScrollAmount = MathHelper.clamp(this.toolScrollAmount, 0.0F, 1.0F);
-            this.toolScrollOffset = (int)((double)(this.toolScrollAmount * (float)this.getMaxToolsScroll()) + 0.5D) * this.toolCols;
+            this.toolScrollOffset = (int) ((double) (this.toolScrollAmount * (float) this.getMaxToolsScroll()) + 0.5D) * this.toolCols;
             return true;
         } else if (this.clickPos == 2 && this.shouldPartsScroll()) {
             int i = this.x + 48;
             int j = i + 80;
-            this.partScrollAmount = ((float)mouseX - (float)i - 5.5F) / ((float)(j - i) - 11.0F);
+            this.partScrollAmount = ((float) mouseX - (float) i - 5.5F) / ((float) (j - i) - 11.0F);
             this.partScrollAmount = MathHelper.clamp(this.partScrollAmount, 0.0F, 1.0F);
-            this.partScrollOffset = (int)((double)(this.partScrollAmount * (float)this.getMaxPartsScroll()) + 0.5D) * this.partAmount;
+            this.partScrollOffset = (int) ((double) (this.partScrollAmount * (float) this.getMaxPartsScroll()) + 0.5D) * this.partAmount;
             return true;
         } else {
             return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
@@ -291,6 +293,7 @@ public class ChiselingTableScreen extends HandledScreen<ScreenHandler> {
     private int getSelectedTool() {
         return handler.getSelectedTool();
     }
+
     private int getSelectedPart() {
         return handler.getSelectedPart();
     }

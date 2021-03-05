@@ -15,7 +15,7 @@ public class HarvestScythes {
         CompoundTag subtag = tag.getCompound("SmitheeProperties");
         int mineLevel = subtag.getInt("MiningLevel");
         boolean circleHarvest = mineLevel % 2 == 0;
-        int harvestRange = (int) (Math.floor(mineLevel/2.0f)+1);
+        int harvestRange = (int) (Math.floor(mineLevel / 2.0f) + 1);
 
         CompoundTag scytheTag = new CompoundTag();
         scytheTag.putInt("HarvestRadius", harvestRange);

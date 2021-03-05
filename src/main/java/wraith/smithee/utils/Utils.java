@@ -3,14 +3,13 @@ package wraith.smithee.utils;
 import com.udojava.evalex.Expression;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.util.ModelIdentifier;
-import net.minecraft.item.*;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import org.apache.commons.io.FileUtils;
 import wraith.smithee.Config;
 import wraith.smithee.Smithee;
 import wraith.smithee.SmitheeClient;
-import wraith.smithee.items.tools.*;
+import wraith.smithee.items.tools.BaseSmitheeItem;
 import wraith.smithee.registry.ItemRegistry;
 
 import javax.imageio.ImageIO;
@@ -26,12 +25,7 @@ import java.util.jar.JarFile;
 public class Utils {
 
     public static final Random random = new Random(Calendar.getInstance().getTimeInMillis());
-
-    public static Identifier ID(String id) {
-        return new Identifier(Smithee.MOD_ID, id);
-    }
-
-    private final static TreeMap<Integer, String> romanNumeralEncoding = new TreeMap<Integer, String>(){{
+    private final static TreeMap<Integer, String> romanNumeralEncoding = new TreeMap<Integer, String>() {{
         put(1000, "M");
         put(900, "CM");
         put(500, "D");
@@ -47,12 +41,16 @@ public class Utils {
         put(1, "I");
     }};
 
+    public static Identifier ID(String id) {
+        return new Identifier(Smithee.MOD_ID, id);
+    }
+
     public static String toRoman(int number) {
-        int l =  romanNumeralEncoding.floorKey(number);
-        if ( number == l ) {
+        int l = romanNumeralEncoding.floorKey(number);
+        if (number == l) {
             return romanNumeralEncoding.get(number);
         }
-        return romanNumeralEncoding.get(l) + toRoman(number-l);
+        return romanNumeralEncoding.get(l) + toRoman(number - l);
     }
 
     public static ModelIdentifier inventoryModelID(String id) {
@@ -69,56 +67,17 @@ public class Utils {
                 "  }\n" +
                 "}";
     }
-    /*
-    public static String createModelJson(Identifier id) {
-
-        String path = id.getPath();
-        String[] split = id.getPath().split("/");
-        String itemString;
-        if (split.length < 2){
-            split = path.split("_");
-            itemString = path;
-        } else {
-            itemString = split[1];
-            split = split[1].split("_");
-        }
-
-        if (id.getNamespace().equals(Smithee.MOD_ID) && split.length >= 3) {
-            Item item = ItemRegistry.ITEMS.get(itemString);
-            if (item instanceof ToolPartItem) {
-                //Tool Part
-                if (ItemRegistry.MATERIALS.contains(((ToolPartItem)item).part.materialName) && ItemRegistry.TOOL_TYPES.contains(split[split.length - 2])) {
-                    return "{\n" +
-                            "  \"parent\": \"item/generated\",\n" +
-                            "  \"textures\": {\n" +
-                            "    \"layer0\": \"" + id + "\"\n" +
-                            "  }\n" +
-                            "}";
-                }
-            }
-            //Tool
-            //else if ((split[0] + "_" + split[1]).equals("base_" + Smithee.MOD_ID) && ItemRegistry.TOOL_TYPES.contains(split[2])) {
-            //    return "{\n" +
-            //            "  \"parent\": \"item/handheld\",\n" +
-            //            "  \"textures\": {\n" +
-            //            "    \"layer0\": \"" + id + "\"\n" +
-            //            "  }\n" +
-            //            "}";
-            //}
-        }
-        return "";
-    }
-     */
 
     public static void saveFilesFromJar(String dir, String outputDir, boolean overwrite) {
         JarFile jar = null;
         try {
             jar = new JarFile(Utils.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath());
-        } catch (IOException | URISyntaxException ignored) {}
+        } catch (IOException | URISyntaxException ignored) {
+        }
 
         if (jar != null) {
             Enumeration<JarEntry> entries = jar.entries();
-            while(entries.hasMoreElements()) {
+            while (entries.hasMoreElements()) {
                 JarEntry entry = entries.nextElement();
                 if (!entry.getName().startsWith(dir) || (!entry.getName().endsWith(".json") && !entry.getName().endsWith(".png") && !entry.getName().endsWith(".mcmeta"))) {
                     continue;
@@ -157,7 +116,7 @@ public class Utils {
         } else {
             System.out.println("Launched from IDE.");
             File[] files = FabricLoader.getInstance().getModContainer(Smithee.MOD_ID).get().getPath(dir).toFile().listFiles();
-            for(File file : files) {
+            for (File file : files) {
                 if (file.isDirectory()) {
                     continue;
                 }
@@ -195,11 +154,12 @@ public class Utils {
         }
     }
 
-    private static void inputStreamToFile(InputStream inputStream, File file, boolean overwrite) throws IOException{
+    private static void inputStreamToFile(InputStream inputStream, File file, boolean overwrite) throws IOException {
         if (!file.exists() || overwrite) {
             FileUtils.copyInputStreamToFile(inputStream, file);
         }
     }
+
     public static double evaluateExpression(String stringExpression) {
         return new Expression(stringExpression).eval().doubleValue();
     }
@@ -254,14 +214,6 @@ public class Utils {
     }
 
     public static boolean isToolPart(String path) {
-        /*
-        for (String part : ItemRegistry.BASE_RECIPE_VALUES.keySet()) {
-            if (path.endsWith("_" + part)) {
-                return true;
-            }
-        }
-        return false;
-        */
         String[] segments = path.split("/");
         path = segments[segments.length - 1];
         int maxI = Utils.getMaterialFromPathIndex(path);
@@ -281,7 +233,9 @@ public class Utils {
         return path.length() > "base_smithee_".length() && ItemRegistry.TOOL_TYPES.contains(path.substring("base_smithee_".length()));
     }
 
+
     public static InputStream recolor(File template, File templatePalette, File palette, String textureName) {
+        ImageIO.setUseCache(false);
         BufferedImage templateImage;
         BufferedImage paletteImage;
         BufferedImage templatePaletteImage;
@@ -290,8 +244,6 @@ public class Utils {
             paletteImage = ImageIO.read(palette);
             templatePaletteImage = ImageIO.read(templatePalette);
         } catch (IOException e) {
-            Smithee.LOGGER.warn("Error while creating texture " + textureName);
-            e.printStackTrace();
             return null;
         }
         ArrayList<Integer> templateColors = new ArrayList<>();
@@ -303,8 +255,8 @@ public class Utils {
             paletteColors.add(paletteImage.getRGB(x, 0));
         }
 
-        for (int y = 0; y < templateImage.getHeight(); ++y){
-            for (int x = 0; x < templateImage.getWidth(); ++x){
+        for (int y = 0; y < templateImage.getHeight(); ++y) {
+            for (int x = 0; x < templateImage.getWidth(); ++x) {
                 for (int i = 0; i < templateColors.size(); ++i) {
                     if (templateImage.getRGB(x, y) == templateColors.get(i)) {
                         templateImage.setRGB(x, y, paletteColors.get(i));
@@ -313,14 +265,18 @@ public class Utils {
                 }
             }
         }
-
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        ByteArrayOutputStream os = new ByteArrayOutputStream() {
+            @Override
+            public synchronized byte[] toByteArray() {
+                return buf;
+            }
+        };
         try {
+
             ImageIO.write(templateImage, "PNG", os);
             return new ByteArrayInputStream(os.toByteArray());
         } catch (IOException e) {
             Smithee.LOGGER.warn("Error while creating texture " + textureName);
-            e.printStackTrace();
         }
         return null;
     }

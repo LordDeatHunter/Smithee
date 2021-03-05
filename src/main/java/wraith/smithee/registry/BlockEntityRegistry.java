@@ -5,18 +5,17 @@ import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.util.registry.Registry;
-import wraith.smithee.blocks.ChiselingTableBlockEntity;
-import wraith.smithee.utils.Utils;
 import wraith.smithee.blocks.AassemblyTableBlockEntity;
+import wraith.smithee.blocks.ChiselingTableBlockEntity;
 import wraith.smithee.blocks.DisassemblyTableBlockEntity;
+import wraith.smithee.utils.Utils;
 
 import java.util.HashMap;
-import java.util.HashSet;
 
 public class BlockEntityRegistry {
 
-    public static HashMap<String, BlockEntityType<? extends BlockEntity>> BLOCK_ENTITIES = new HashMap<>();
     public static final HashMap<String, Block> assemblyTableMap = new HashMap<>();
+    public static HashMap<String, BlockEntityType<? extends BlockEntity>> BLOCK_ENTITIES = new HashMap<>();
 
     public static void createAssemblyTables() {
         assemblyTableMap.put("oak_assembly_table", BlockRegistry.BLOCKS.get("oak_assembly_table"));

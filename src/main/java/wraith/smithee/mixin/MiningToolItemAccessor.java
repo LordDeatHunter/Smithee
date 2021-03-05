@@ -9,6 +9,7 @@ import java.util.Set;
 
 @Mixin(MiningToolItem.class)
 public interface MiningToolItemAccessor {
+
     @Accessor("effectiveBlocks")
     Set<Block> getEffectiveBlocks();
 }

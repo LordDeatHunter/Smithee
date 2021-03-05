@@ -28,10 +28,12 @@ public class BaseSmitheeSpear extends McdwSpear implements BaseSmitheeMeleeWeapo
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         return boostXp(world, user, hand);
     }
+
     @Override
     public String getToolType() {
         return "spear";
     }
+
     @Override
     public String getBindingType() {
         return "binding";

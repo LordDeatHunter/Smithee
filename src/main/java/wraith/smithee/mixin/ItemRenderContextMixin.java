@@ -16,13 +16,15 @@ import wraith.smithee.items.tools.BaseSmitheeItem;
 @Mixin(ItemRenderContext.class)
 public class ItemRenderContextMixin {
 
-    @Shadow private MatrixStack matrixStack;
+    @Shadow
+    private MatrixStack matrixStack;
 
-    @Shadow private ModelTransformation.Mode transformMode;
+    @Shadow
+    private ModelTransformation.Mode transformMode;
 
     @Inject(method = "renderModel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;translate(DDD)V"))
     public void renderModel(ItemStack itemStack, ModelTransformation.Mode transformMode, boolean invert, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int lightmap, int overlay, FabricBakedModel model, ItemRenderContext.VanillaQuadHandler vanillaHandler, CallbackInfo ci) {
-        if (itemStack.getItem() instanceof BaseSmitheeItem && this.transformMode == ModelTransformation.Mode.GROUND){
+        if (itemStack.getItem() instanceof BaseSmitheeItem && this.transformMode == ModelTransformation.Mode.GROUND) {
             this.matrixStack.scale(0.5f, 0.5f, 0.5f);
         }
     }

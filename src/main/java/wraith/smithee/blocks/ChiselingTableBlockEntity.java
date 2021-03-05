@@ -23,11 +23,6 @@ public class ChiselingTableBlockEntity extends LockableContainerBlockEntity impl
     private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(3, ItemStack.EMPTY);
     private int tool = 0;
     private int part = 0;
-
-    public ChiselingTableBlockEntity() {
-        super(BlockEntityRegistry.BLOCK_ENTITIES.get("chiseling_table"));
-    }
-
     private final PropertyDelegate propertyDelegate = new PropertyDelegate() {
         @Override
         public int get(int index) {
@@ -52,6 +47,10 @@ public class ChiselingTableBlockEntity extends LockableContainerBlockEntity impl
             return 2;
         }
     };
+
+    public ChiselingTableBlockEntity() {
+        super(BlockEntityRegistry.BLOCK_ENTITIES.get("chiseling_table"));
+    }
 
     @Override
     public int size() {
@@ -105,7 +104,7 @@ public class ChiselingTableBlockEntity extends LockableContainerBlockEntity impl
         if (this.world.getBlockEntity(this.pos) != this) {
             return false;
         } else {
-            return player.squaredDistanceTo((double)this.pos.getX() + 0.5D, (double)this.pos.getY() + 0.5D, (double)this.pos.getZ() + 0.5D) <= 64.0D;
+            return player.squaredDistanceTo((double) this.pos.getX() + 0.5D, (double) this.pos.getY() + 0.5D, (double) this.pos.getZ() + 0.5D) <= 64.0D;
         }
     }
 

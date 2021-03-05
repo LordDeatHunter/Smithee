@@ -34,13 +34,13 @@ public class Properties {
         PartCombination partCombination = null;
         for (PartCombination combination : PartCombination.COMBINATIONS) {
             if ((combination.includes.get("head").isEmpty() || combination.includes.get("head").contains(headPart)) &&
-                (combination.includes.get("binding").isEmpty() || combination.includes.get("binding").contains(bindingPart)) &&
-                (combination.includes.get("handle").isEmpty() || combination.includes.get("handle").contains(handlePart)) &&
-                (!combination.excludes.get("head").contains(headPart)) &&
-                (!combination.excludes.get("binding").contains(bindingPart)) &&
-                (!combination.excludes.get("handle").contains(handlePart))) {
-                    partCombination = combination;
-                    break;
+                    (combination.includes.get("binding").isEmpty() || combination.includes.get("binding").contains(bindingPart)) &&
+                    (combination.includes.get("handle").isEmpty() || combination.includes.get("handle").contains(handlePart)) &&
+                    (!combination.excludes.get("head").contains(headPart)) &&
+                    (!combination.excludes.get("binding").contains(bindingPart)) &&
+                    (!combination.excludes.get("handle").contains(handlePart))) {
+                partCombination = combination;
+                break;
             }
         }
         if (partCombination != null) {
