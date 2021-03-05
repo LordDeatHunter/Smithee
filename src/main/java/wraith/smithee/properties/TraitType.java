@@ -10,4 +10,5 @@ public enum TraitType {
     CHILLING,
     ADAMANT,
     AQUADYNAMIC,
+    HOLY,
 }
