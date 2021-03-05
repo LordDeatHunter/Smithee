@@ -22,7 +22,10 @@ import wraith.smithee.screens.slots.ToolOutputSlot;
 import wraith.smithee.screens.slots.ToolSlot;
 import wraith.smithee.utils.Utils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ChiselingTableScreenHandler extends ScreenHandler {
 
@@ -52,6 +55,7 @@ public class ChiselingTableScreenHandler extends ScreenHandler {
             this.addSlot(new Slot(playerInventory, x, 8 + x * 18, 195));
         }
     }
+
     @Override
     public ItemStack transferSlot(PlayerEntity player, int invSlot) {
         ItemStack newStack = ItemStack.EMPTY;
@@ -212,12 +216,12 @@ public class ChiselingTableScreenHandler extends ScreenHandler {
         return this.delegate.get(0);
     }
 
-    public int getSelectedPart() {
-        return this.delegate.get(1);
-    }
-
     public void setSelectedTool(int n) {
         this.delegate.set(0, n);
+    }
+
+    public int getSelectedPart() {
+        return this.delegate.get(1);
     }
 
     public void setSelectedPart(int n) {

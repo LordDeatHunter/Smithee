@@ -16,7 +16,8 @@ import wraith.smithee.registry.StatusEffectRegistry;
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin {
 
-    @Shadow public abstract boolean addStatusEffect(StatusEffectInstance effect);
+    @Shadow
+    public abstract boolean addStatusEffect(StatusEffectInstance effect);
 
     @ModifyArgs(method = "damage", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;applyDamage(Lnet/minecraft/entity/damage/DamageSource;F)V"))
     private void applyDamage(Args args, DamageSource source, float amount) {

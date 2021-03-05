@@ -11,28 +11,28 @@ import wraith.smithee.mixin.TextColorInvoker;
 import wraith.smithee.registry.ItemRegistry;
 import wraith.smithee.utils.Utils;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
 
 public class Trait {
 
+    public static final HashMap<TraitType, Text> TRAIT_TEXT = new HashMap<TraitType, Text>() {{
+        put(TraitType.ECOLOGICAL, new LiteralText("Ecological").setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0x866526))));
+        put(TraitType.MIDAS_TOUCH, new LiteralText("Midas Touch").setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0xe9b115))));
+        put(TraitType.BRITTLE, new LiteralText("Brittle").setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0x6c6c6c))));
+        put(TraitType.MAGNETIC, new LiteralText("Magnetic").setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0x33ebcb))));
+        put(TraitType.SUPERHEATED, new LiteralText("SuperHeated").setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0x6A040F))));//0x652828))));
+        put(TraitType.SHARP, new LiteralText("Sharp").setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0x87EFCC))));
+        put(TraitType.CHILLING, new LiteralText("Chilling").setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0x08CDFD))));
+        put(TraitType.ADAMANT, new LiteralText("Adamant").setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0xBF0026))));
+        put(TraitType.AQUADYNAMIC, new LiteralText("Aquadynamic").setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0xA2D2FF))));
+    }};
     public TraitType traitType;
     public int minLevel;
     public int maxLevel;
-    public double chance;
 
     // TODO: ItemRegistry.PROPERTIES get is used often. Make it a private function called getTraitsOf
-
-    public static final HashMap<TraitType, Text> TRAIT_TEXT = new HashMap<TraitType, Text>(){{
-        put(TraitType.ECOLOGICAL,  new LiteralText("Ecological") .setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0x866526))));
-        put(TraitType.MIDAS_TOUCH, new LiteralText("Midas Touch").setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0xe9b115))));
-        put(TraitType.BRITTLE,     new LiteralText("Brittle")    .setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0x6c6c6c))));
-        put(TraitType.MAGNETIC,    new LiteralText("Magnetic")   .setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0x33ebcb))));
-        put(TraitType.SUPERHEATED, new LiteralText("SuperHeated").setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0x6A040F))));//0x652828))));
-        put(TraitType.SHARP,       new LiteralText("Sharp")      .setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0x87EFCC))));
-        put(TraitType.CHILLING,    new LiteralText("Chilling")   .setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0x08CDFD))));
-        put(TraitType.ADAMANT,     new LiteralText("Adamant")    .setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0xBF0026))));
-        put(TraitType.AQUADYNAMIC, new LiteralText("Aquadynamic").setStyle(Style.EMPTY.withColor(TextColorInvoker.init(0xA2D2FF))));
-    }};
+    public double chance;
 
     public Trait(TraitType traitType, int minLevel, int maxLevel, double chance) {
         this.traitType = traitType;
@@ -164,6 +164,7 @@ public class Trait {
         return f[0];
         //FIXME IF POSSIBLE janky array shit?
     }
+
     //FIXME this one too
     public static int getFrostbiteEffectDuration(ItemStack stack) {
         if (!Trait.hasTrait(stack, TraitType.CHILLING)) {

@@ -82,7 +82,7 @@ public class SmitheeClient implements ClientModInitializer {
 
             ItemRegistry.DISABLED_ITEMS.clear();
             Smithee.DISABLE_TOOLS = tag.getBoolean("disable_tools");
-            if (Smithee.DISABLE_TOOLS){
+            if (Smithee.DISABLE_TOOLS) {
                 ItemRegistry.setDisabledItems();
             }
             CompoundTag subtag;

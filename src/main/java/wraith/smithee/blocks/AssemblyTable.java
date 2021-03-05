@@ -22,8 +22,6 @@ import wraith.smithee.screens.AssemblyTableScreenHandler;
 
 public class AssemblyTable extends BlockWithEntity {
 
-    private static final Text TITLE = new TranslatableText("container." + Smithee.MOD_ID + ".assembly_table");
-
     protected static final VoxelShape vs1 = Block.createCuboidShape(0f, 12f, 0f, 16f, 16f, 16f);
     protected static final VoxelShape vs2 = Block.createCuboidShape(1f, 0f, 1f, 4f, 12f, 4f);
     protected static final VoxelShape vs3 = Block.createCuboidShape(12f, 0f, 1f, 15f, 12f, 4f);
@@ -31,6 +29,7 @@ public class AssemblyTable extends BlockWithEntity {
     protected static final VoxelShape vs5 = Block.createCuboidShape(12f, 0f, 12f, 15f, 12f, 15f);
     protected static final VoxelShape vs6 = Block.createCuboidShape(2f, 5f, 2f, 14f, 7f, 14f);
     protected static final VoxelShape VOXEL_SHAPE = VoxelShapes.union(vs1, vs2, vs3, vs4, vs5, vs6).simplify();
+    private static final Text TITLE = new TranslatableText("container." + Smithee.MOD_ID + ".assembly_table");
 
     public AssemblyTable(Settings settings) {
         super(settings);
@@ -50,7 +49,7 @@ public class AssemblyTable extends BlockWithEntity {
 
     @Override
     public NamedScreenHandlerFactory createScreenHandlerFactory(BlockState state, World world, BlockPos pos) {
-        return new SimpleNamedScreenHandlerFactory((i, playerInventory, playerEntity) -> new AssemblyTableScreenHandler(i, playerInventory, (AassemblyTableBlockEntity)world.getBlockEntity(pos)), TITLE);
+        return new SimpleNamedScreenHandlerFactory((i, playerInventory, playerEntity) -> new AssemblyTableScreenHandler(i, playerInventory, (AassemblyTableBlockEntity) world.getBlockEntity(pos)), TITLE);
     }
 
     @Override
@@ -63,7 +62,7 @@ public class AssemblyTable extends BlockWithEntity {
         if (state.getBlock() != newState.getBlock()) {
             BlockEntity entity = world.getBlockEntity(pos);
             if (entity instanceof AassemblyTableBlockEntity) {
-                ItemScatterer.spawn(world, pos, (AassemblyTableBlockEntity)entity);
+                ItemScatterer.spawn(world, pos, (AassemblyTableBlockEntity) entity);
                 world.updateComparators(pos, this);
             }
             super.onStateReplaced(state, world, pos, newState, moved);

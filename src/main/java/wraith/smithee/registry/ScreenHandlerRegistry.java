@@ -2,10 +2,10 @@ package wraith.smithee.registry;
 
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
-import wraith.smithee.screens.ChiselingTableScreenHandler;
-import wraith.smithee.utils.Utils;
 import wraith.smithee.screens.AssemblyTableScreenHandler;
+import wraith.smithee.screens.ChiselingTableScreenHandler;
 import wraith.smithee.screens.DisassemblyTableScreenHandler;
+import wraith.smithee.utils.Utils;
 
 import java.util.HashMap;
 

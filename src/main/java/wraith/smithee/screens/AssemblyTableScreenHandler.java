@@ -40,7 +40,7 @@ public class AssemblyTableScreenHandler extends ScreenHandler {
         super(ScreenHandlerRegistry.SCREEN_HANDLERS.get("assembly_table"), syncId);
         this.inventory = inventory;
         if (inventory instanceof AassemblyTableBlockEntity) {
-            ((AassemblyTableBlockEntity)inventory).setHandler(this);
+            ((AassemblyTableBlockEntity) inventory).setHandler(this);
         }
         this.addSlot(new PartSlot(inventory, 0, 35, 57, ItemRegistry.HANDLE_TYPES)); //Handle
         this.addSlot(new PartSlot(inventory, 1, 47, 37, ItemRegistry.BINDING_TYPES)); //Binding
@@ -83,16 +83,16 @@ public class AssemblyTableScreenHandler extends ScreenHandler {
             } else if (originalStack.getItem() instanceof ToolPartItem) {
                 ToolPartItem tool = (ToolPartItem) originalStack.getItem();
                 if ((ItemRegistry.HANDLE_TYPES.contains(tool.part.partType) && !this.insertItem(originalStack, 0, 1, false)) ||
-                    (ItemRegistry.BINDING_TYPES.contains(tool.part.partType) && !this.insertItem(originalStack, 1, 2, false)) ||
-                    ("head".equals(tool.part.partType) && !this.insertItem(originalStack, 2, 3, false))) {
+                        (ItemRegistry.BINDING_TYPES.contains(tool.part.partType) && !this.insertItem(originalStack, 1, 2, false)) ||
+                        ("head".equals(tool.part.partType) && !this.insertItem(originalStack, 2, 3, false))) {
                     return ItemStack.EMPTY;
                 }
             } else if (originalStack.getItem() instanceof BaseSmitheeItem) {
-                if(!this.insertItem(originalStack, 3, 4, false)) {
+                if (!this.insertItem(originalStack, 3, 4, false)) {
                     return ItemStack.EMPTY;
                 }
             } else if (Registry.ITEM.getId(originalStack.getItem()).getPath().endsWith("_embossment")) {
-                if(!this.insertItem(originalStack, 4, 5, false)) {
+                if (!this.insertItem(originalStack, 4, 5, false)) {
                     return ItemStack.EMPTY;
                 }
             } else if (invSlot < this.slots.size() - 9) {
@@ -149,7 +149,7 @@ public class AssemblyTableScreenHandler extends ScreenHandler {
             EmbossRecipe recipe = ItemRegistry.EMBOSS_RECIPES.get(material.toString());
             boolean canEmboss = false;
             for (EmbossModifiers modifier : recipe.modifiers) {
-                if (modifier.givesTo.contains(((BaseSmitheeItem)tool.getItem()).getToolType())) {
+                if (modifier.givesTo.contains(((BaseSmitheeItem) tool.getItem()).getToolType())) {
                     canEmboss = true;
                     break;
                 }
@@ -211,13 +211,13 @@ public class AssemblyTableScreenHandler extends ScreenHandler {
 
             HashSet<String> recipe = new HashSet<>();
             if (!handleEmpty) {
-                recipe.add(((ToolPartItem)handle.getItem()).part.recipeString());
+                recipe.add(((ToolPartItem) handle.getItem()).part.recipeString());
             }
             if (!bindingEmpty) {
-                recipe.add(((ToolPartItem)binding.getItem()).part.recipeString());
+                recipe.add(((ToolPartItem) binding.getItem()).part.recipeString());
             }
             if (!headEmpty) {
-                recipe.add(((ToolPartItem)head.getItem()).part.recipeString());
+                recipe.add(((ToolPartItem) head.getItem()).part.recipeString());
             }
 
             if (!ToolPartRecipe.TOOL_ASSEMBLY_RECIPES.containsValue(recipe) && slotEmpty) {
@@ -244,11 +244,11 @@ public class AssemblyTableScreenHandler extends ScreenHandler {
                 bindingDurability = ItemRegistry.PROPERTIES.get(tag.getString("BindingPart")).partProperties.get("binding").durability;
                 handleDurability = ItemRegistry.PROPERTIES.get(tag.getString("HandlePart")).partProperties.get("handle").durability;
                 summedDurability = headDurability + bindingDurability + handleDurability;
-                headDamage = ((double)(headDurability * maxDurability) / (double)summedDurability) * ((double)currentDamage / (double)maxDurability);
-                bindingDamage = ((double)(bindingDurability * maxDurability) / (double)summedDurability) * ((double)currentDamage / (double)maxDurability);
-                handleDamage = ((double)(handleDurability * maxDurability) / (double)summedDurability) * ((double)currentDamage / (double)maxDurability);
+                headDamage = ((double) (headDurability * maxDurability) / (double) summedDurability) * ((double) currentDamage / (double) maxDurability);
+                bindingDamage = ((double) (bindingDurability * maxDurability) / (double) summedDurability) * ((double) currentDamage / (double) maxDurability);
+                handleDamage = ((double) (handleDurability * maxDurability) / (double) summedDurability) * ((double) currentDamage / (double) maxDurability);
             }
-            String toolType = ((BaseSmitheeItem)itemStack.getItem()).getToolType();
+            String toolType = ((BaseSmitheeItem) itemStack.getItem()).getToolType();
             if (!headEmpty) {
                 if (head.hasTag() && head.getTag().contains("PartDamage")) {
                     headDamage = head.getTag().getDouble("PartDamage");
@@ -257,8 +257,8 @@ public class AssemblyTableScreenHandler extends ScreenHandler {
                     String material = tag.getString("HeadPart");
                     ItemStack oldPart = new ItemStack(ItemRegistry.ITEMS.get(material + "_" + toolType + "_head"));
 
-                    double adjustedHeadDurability = (double)(headDurability * maxDurability) / (double)summedDurability;
-                    double damagePercent = ((double)currentDamage / (double)maxDurability) * adjustedHeadDurability;
+                    double adjustedHeadDurability = (double) (headDurability * maxDurability) / (double) summedDurability;
+                    double damagePercent = ((double) currentDamage / (double) maxDurability) * adjustedHeadDurability;
                     oldPart.getTag().putDouble("PartDamage", damagePercent);
                     Utils.setDamage(oldPart, (int) (damagePercent));
 
@@ -271,13 +271,13 @@ public class AssemblyTableScreenHandler extends ScreenHandler {
                 if (binding.hasTag() && binding.getTag().contains("PartDamage")) {
                     bindingDamage = binding.getTag().getDouble("PartDamage");
                 }
-                if (!slotEmpty && ((ToolPartItem)inventory.getStack(1).getItem()).part.partType.equals(((BaseSmitheeItem)inventory.getStack(3).getItem()).getBindingType())) {
+                if (!slotEmpty && ((ToolPartItem) inventory.getStack(1).getItem()).part.partType.equals(((BaseSmitheeItem) inventory.getStack(3).getItem()).getBindingType())) {
                     String material = tag.getString("BindingPart");
                     String type = "sword".equals(toolType) ? "_sword_guard" : "_binding";
                     ItemStack oldPart = new ItemStack(ItemRegistry.ITEMS.get(material + type));
 
-                    double adjustedBindingDurability = (double)(bindingDurability * maxDurability) / (double)summedDurability;
-                    double damagePercent = ((double)currentDamage / (double)maxDurability) * adjustedBindingDurability;
+                    double adjustedBindingDurability = (double) (bindingDurability * maxDurability) / (double) summedDurability;
+                    double damagePercent = ((double) currentDamage / (double) maxDurability) * adjustedBindingDurability;
                     oldPart.getTag().putDouble("PartDamage", damagePercent);
                     Utils.setDamage(oldPart, (int) (damagePercent));
 
@@ -297,8 +297,8 @@ public class AssemblyTableScreenHandler extends ScreenHandler {
                     String material = tag.getString("HandlePart");
                     ItemStack oldPart = new ItemStack(ItemRegistry.ITEMS.get(material + "_handle"));
 
-                    double adjustedHandleDurability = (double)(handleDurability * maxDurability) / (double)summedDurability;
-                    double damagePercent = ((double)currentDamage / (double)maxDurability) * adjustedHandleDurability;
+                    double adjustedHandleDurability = (double) (handleDurability * maxDurability) / (double) summedDurability;
+                    double damagePercent = ((double) currentDamage / (double) maxDurability) * adjustedHandleDurability;
                     oldPart.getTag().putDouble("PartDamage", damagePercent);
                     Utils.setDamage(oldPart, (int) (damagePercent));
 

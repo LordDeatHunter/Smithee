@@ -4,7 +4,6 @@ import com.google.common.base.Charsets;
 import com.mojang.datafixers.util.Pair;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.model.*;
@@ -44,9 +43,29 @@ public class ItemBakedModel implements FabricBakedModel, BakedModel, UnbakedMode
         this.modelIdentifier = modelIdentifier;
     }
 
+    public static ModelTransformation loadTransformFromJson(Identifier location) {
+        try {
+            return JsonUnbakedModel.deserialize(getReaderForResource(location)).getTransformations();
+        } catch (IOException exception) {
+            Smithee.LOGGER.warn("Can't load resource " + location);
+            exception.printStackTrace();
+            return null;
+        }
+    }
+
+    public static ModelTransformation loadTransformFromJsonString(String json) {
+        return JsonUnbakedModel.deserialize(json).getTransformations();
+    }
+
+    public static Reader getReaderForResource(Identifier location) throws IOException {
+        Identifier file = new Identifier(location.getNamespace(), location.getPath() + ".json");
+        Resource resource = MinecraftClient.getInstance().getResourceManager().getResource(file);
+        return new BufferedReader(new InputStreamReader(resource.getInputStream(), Charsets.UTF_8));
+    }
+
     @Override
     public void emitItemQuads(ItemStack itemStack, Supplier<Random> supplier, RenderContext context) {
-        String tool = ((BaseSmitheeItem)itemStack.getItem()).getToolType();
+        String tool = ((BaseSmitheeItem) itemStack.getItem()).getToolType();
 
         String head = "iron_" + tool + "_head";
         String binding = "iron_" + tool + "_binding";
@@ -72,29 +91,10 @@ public class ItemBakedModel implements FabricBakedModel, BakedModel, UnbakedMode
         PART_MODELS.get(handle).emitItemQuads(null, null, context);
     }
 
-    public static ModelTransformation loadTransformFromJson(Identifier location) {
-        try {
-            return JsonUnbakedModel.deserialize(getReaderForResource(location)).getTransformations();
-        } catch (IOException exception) {
-            Smithee.LOGGER.warn("Can't load resource " + location);
-            exception.printStackTrace();
-            return null;
-        }
-    }
-    public static ModelTransformation loadTransformFromJsonString(String json) {
-        return JsonUnbakedModel.deserialize(json).getTransformations();
-    }
-
-    public static Reader getReaderForResource(Identifier location) throws IOException {
-        Identifier file = new Identifier(location.getNamespace(), location.getPath() + ".json");
-        Resource resource = MinecraftClient.getInstance().getResourceManager().getResource(file);
-        return new BufferedReader(new InputStreamReader(resource.getInputStream(), Charsets.UTF_8));
-    }
-
     @Override
     public @Nullable BakedModel bake(ModelLoader loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId) {
         if (PART_MODELS.isEmpty()) {
-            for(String id : SmitheeClient.RENDERING_TOOL_PARTS) {
+            for (String id : SmitheeClient.RENDERING_TOOL_PARTS) {
                 PART_MODELS.put(id, (FabricBakedModel) loader.bake(Utils.inventoryModelID(id), ModelRotation.X0_Y0));
             }
         }
@@ -112,7 +112,8 @@ public class ItemBakedModel implements FabricBakedModel, BakedModel, UnbakedMode
     }
 
     @Override
-    public void emitBlockQuads(BlockRenderView blockRenderView, BlockState blockState, BlockPos blockPos, Supplier<Random> supplier, RenderContext renderContext) {}
+    public void emitBlockQuads(BlockRenderView blockRenderView, BlockState blockState, BlockPos blockPos, Supplier<Random> supplier, RenderContext renderContext) {
+    }
 
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction face, Random random) {

@@ -21,9 +21,12 @@ import java.util.List;
 @Mixin(ScreenHandler.class)
 public abstract class ScreenHandlerMixin {
 
-    @Shadow @Final public List<Slot> slots;
+    @Shadow
+    @Final
+    public List<Slot> slots;
 
-    @Shadow public abstract void sendContentUpdates();
+    @Shadow
+    public abstract void sendContentUpdates();
 
     @Inject(method = "onSlotClick", at = @At("HEAD"), cancellable = true)
     public void onSlotClick(int screenStackIndex, int playerStackIndex, SlotActionType actionType, PlayerEntity player, CallbackInfoReturnable<ItemStack> cir) {
@@ -40,7 +43,7 @@ public abstract class ScreenHandlerMixin {
             return;
         }
         String material = tag.getCompound("Parts").getString("HeadPart");
-        if (actionType == SlotActionType.PICKUP && !slots.get(screenStackIndex).getStack().isEmpty() && slots.get(screenStackIndex).getStack().getItem() instanceof Whetstone && ((Whetstone)slots.get(screenStackIndex).getStack().getItem()).getMaterial().equals(material)) {
+        if (actionType == SlotActionType.PICKUP && !slots.get(screenStackIndex).getStack().isEmpty() && slots.get(screenStackIndex).getStack().getItem() instanceof Whetstone && ((Whetstone) slots.get(screenStackIndex).getStack().getItem()).getMaterial().equals(material)) {
             ItemStack whetstoneStack = slots.get(screenStackIndex).getStack();
             int toolDamage = player.inventory.getCursorStack().getDamage();
             if (smitheeTag.contains("isBroken") && smitheeTag.getBoolean("isBroken")) {

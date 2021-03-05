@@ -16,11 +16,11 @@ public class Part {
 
     @Override
     public String toString() {
-        return materialName + "_" + ("any".equals(toolType)?"":toolType+"_") + partType;
+        return materialName + "_" + ("any".equals(toolType) ? "" : toolType + "_") + partType;
     }
 
     public String recipeString() {
-        return ("any".equals(toolType)?"":toolType+"_") + partType;
+        return ("any".equals(toolType) ? "" : toolType + "_") + partType;
     }
 
 }

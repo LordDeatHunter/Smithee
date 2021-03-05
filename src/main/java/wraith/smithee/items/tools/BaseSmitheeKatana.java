@@ -28,6 +28,7 @@ public class BaseSmitheeKatana extends McdwSword implements BaseSmitheeMeleeWeap
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         return boostXp(world, user, hand);
     }
+
     @Override
     public String getToolType() {
         return "katana";

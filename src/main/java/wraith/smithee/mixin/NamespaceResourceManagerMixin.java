@@ -43,7 +43,7 @@ public class NamespaceResourceManagerMixin {
             material.append(segments[i]);
         }
         StringBuilder part = new StringBuilder();
-        for(; i < segments.length; ++i) {
+        for (; i < segments.length; ++i) {
             part.append("_").append(segments[i]);
         }
         part = new StringBuilder(part.substring(1));

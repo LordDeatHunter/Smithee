@@ -24,6 +24,7 @@ public class BaseSmitheeClaymore extends McdwSword implements BaseSmitheeMeleeWe
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         return boostXp(world, user, hand);
     }
+
     @Override
     public String getToolType() {
         return "claymore";

@@ -42,6 +42,7 @@ public class ChiselingTable extends BlockWithEntity {
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
         return VOXEL_SHAPE;
     }
+
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (!world.isClient) {
@@ -64,7 +65,7 @@ public class ChiselingTable extends BlockWithEntity {
         if (state.getBlock() != newState.getBlock()) {
             BlockEntity entity = world.getBlockEntity(pos);
             if (entity instanceof ChiselingTableBlockEntity) {
-                ItemScatterer.spawn(world, pos, (ChiselingTableBlockEntity)entity);
+                ItemScatterer.spawn(world, pos, (ChiselingTableBlockEntity) entity);
                 world.updateComparators(pos, this);
             }
             super.onStateReplaced(state, world, pos, newState, moved);

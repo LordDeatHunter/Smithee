@@ -11,7 +11,7 @@ public class ItemModelProvider implements ModelVariantProvider {
 
     @Override
     public @Nullable UnbakedModel loadModelVariant(ModelIdentifier modelIdentifier, ModelProviderContext modelProviderContext) {
-        if(modelIdentifier.getNamespace().equals(Smithee.MOD_ID)) {
+        if (modelIdentifier.getNamespace().equals(Smithee.MOD_ID)) {
             if (Utils.isSmitheeTool(modelIdentifier.getPath())) {
                 return new ItemBakedModel(modelIdentifier);
             }

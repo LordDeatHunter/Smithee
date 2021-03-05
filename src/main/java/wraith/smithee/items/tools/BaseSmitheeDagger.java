@@ -24,6 +24,7 @@ public class BaseSmitheeDagger extends McdwDagger implements BaseSmitheeMeleeWea
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         return boostXp(world, user, hand);
     }
+
     @Override
     public boolean canRepair(ItemStack stack, ItemStack ingredient) {
         return false;

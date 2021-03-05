@@ -4,7 +4,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
@@ -34,12 +33,18 @@ public class ItemRegistry {
     public static final HashMap<String, String> MODELS = new HashMap<>();
 
     public static final HashSet<Item> DISABLED_ITEMS = new HashSet<>();
-    public static HashMap<String, Item> ITEMS = new HashMap<>();
-    public static HashSet<String> MATERIALS = new HashSet<>();
     public static final HashSet<String> EMBOSS_MATERIALS = new HashSet<>();
     public static final HashMap<String, Identifier> SHARDS = new HashMap<>();
     public static final ArrayList<ChiselingRecipe> CHISELING_RECIPES = new ArrayList<>();
-
+    //Material -> Properties
+    public static final HashMap<String, Properties> PROPERTIES = new HashMap<>();
+    //Material -> [Tool_Type__Part_Type] -> Recipe
+    public static final HashMap<Item, HashMap<String, ToolPartRecipe>> TOOL_PART_RECIPES = new HashMap<>();
+    public static final HashMap<String, EmbossRecipe> EMBOSS_RECIPES = new HashMap<>();
+    //InputMaterial -> OutputItem -> Cost
+    public static final HashMap<String, HashMap<Identifier, Integer>> REMAINS = new HashMap<>();
+    public static HashMap<String, Item> ITEMS = new HashMap<>();
+    public static HashSet<String> MATERIALS = new HashSet<>();
     public static HashSet<String> TOOL_TYPES = new HashSet<String>() {{
         add("pickaxe");
         add("axe");
@@ -54,19 +59,7 @@ public class ItemRegistry {
     public static HashSet<String> HANDLE_TYPES = new HashSet<String>() {{
         add("handle");
     }};
-
-    //Material -> Properties
-    public static final HashMap<String, Properties> PROPERTIES = new HashMap<>();
-
-    //Material -> [Tool_Type__Part_Type] -> Recipe
-    public static final HashMap<Item, HashMap<String, ToolPartRecipe>> TOOL_PART_RECIPES = new HashMap<>();
-
-    public static final HashMap<String, EmbossRecipe> EMBOSS_RECIPES = new HashMap<>();
-
-    //InputMaterial -> OutputItem -> Cost
-    public static final HashMap<String, HashMap<Identifier, Integer>> REMAINS = new HashMap<>();
-
-    public static HashMap<String, Integer> BASE_RECIPE_VALUES = new HashMap<String, Integer>(){{
+    public static HashMap<String, Integer> BASE_RECIPE_VALUES = new HashMap<String, Integer>() {{
         put("pickaxe_head", 27);
         put("hoe_head", 18);
         put("axe_head", 27);
@@ -114,7 +107,7 @@ public class ItemRegistry {
         ITEMS.put("silky_jewel", new Item(new Item.Settings().group(ItemGroups.SMITHEE_ITEMS)));
         ITEMS.put("silky_cloth", new Item(new Item.Settings().group(ItemGroups.SMITHEE_ITEMS)));
 
-        HashSet<String> woods = new HashSet<String>(){{
+        HashSet<String> woods = new HashSet<String>() {{
             add("oak");
             add("dark_oak");
             add("spruce");
@@ -208,6 +201,7 @@ public class ItemRegistry {
             EMBOSS_MATERIALS.add(element.getAsString());
         }
     }
+
     public static void addMaterials(String materials, String emboss) {
         JsonArray array = Config.getJsonObject(materials).get("materials").getAsJsonArray();
         for (JsonElement element : array) {
@@ -222,9 +216,9 @@ public class ItemRegistry {
     public static void generateProperties() {
         File[] files = Config.getFiles("config/smithee/stats/");
         if (files == null) {
-            return ;
+            return;
         }
-        for(File file : files) {
+        for (File file : files) {
             JsonObject json = Config.getJsonObject(Config.readFile(file));
             try {
                 String[] segments = file.getName().split("/");
@@ -240,17 +234,17 @@ public class ItemRegistry {
                 JsonParser.parseIndividualPart(parts.get("binding").getAsJsonObject(), PROPERTIES.get(filename), "binding");
                 JsonParser.parseIndividualPart(parts.get("handle").getAsJsonObject(), PROPERTIES.get(filename), "handle");
 
-            }
-            catch(Exception e) {
+            } catch (Exception e) {
                 Smithee.LOGGER.error("Found error with stats file '" + file.getName() + "'");
             }
         }
     }
+
     public static void generateProperties(HashMap<String, String> contents) {
         if (contents == null || contents.size() == 0) {
             return;
         }
-        for(Map.Entry<String, String> content : contents.entrySet()) {
+        for (Map.Entry<String, String> content : contents.entrySet()) {
             JsonObject json = Config.getJsonObject(content.getValue());
 
             String name = content.getKey();
@@ -271,7 +265,7 @@ public class ItemRegistry {
         if (files == null) {
             return;
         }
-        for(File file : files) {
+        for (File file : files) {
             JsonObject obj = Config.getJsonObject(Config.readFile(file));
             if (obj.has("requires_mod") && !FabricLoader.getInstance().isModLoaded(obj.get("requires_mod").getAsString())) {
                 continue;
@@ -279,12 +273,12 @@ public class ItemRegistry {
             JsonArray json = obj.get("chisels").getAsJsonArray();
             try {
                 JsonParser.parseChiselingStats(json, CHISELING_RECIPES);
-            }
-            catch(Exception e) {
+            } catch (Exception e) {
                 Smithee.LOGGER.warn("Found error with chiseling file '" + file.getName() + "'");
             }
         }
     }
+
     public static void generateChiselingStats(String[] contents) {
         if (contents == null || contents.length == 0) {
             return;
@@ -306,17 +300,17 @@ public class ItemRegistry {
         }
         TOOL_PART_RECIPES.clear();
         REMAINS.clear();
-        for(File file : files) {
+        for (File file : files) {
             JsonObject json = Config.getJsonObject(Config.readFile(file));
             try {
                 Set<Map.Entry<String, JsonElement>> recipes = json.entrySet();
                 JsonParser.parseRecipes(recipes, TOOL_PART_RECIPES, REMAINS);
-            }
-            catch(Exception e) {
+            } catch (Exception e) {
                 Smithee.LOGGER.warn("Found error with recipes file '" + file.getName() + "'");
             }
         }
     }
+
     public static void generateRecipes(String[] contents) {
         if (contents == null || contents.length == 0) {
             return;
@@ -338,6 +332,7 @@ public class ItemRegistry {
             JsonParser.parseModifiers(Config.getJsonObject(Config.readFile(file)), EMBOSS_RECIPES);
         }
     }
+
     public static void generateModifiers(String[] contents) {
         if (contents == null || contents.length == 0) {
             return;
@@ -362,6 +357,7 @@ public class ItemRegistry {
             JsonParser.parseShards(obj, SHARDS);
         }
     }
+
     public static void generateShards(String[] contents) {
         if (contents == null || contents.length == 0) {
             return;

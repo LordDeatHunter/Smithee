@@ -5,10 +5,10 @@ import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.Material;
 import net.minecraft.util.registry.Registry;
-import wraith.smithee.blocks.ChiselingTable;
-import wraith.smithee.utils.Utils;
 import wraith.smithee.blocks.AssemblyTable;
+import wraith.smithee.blocks.ChiselingTable;
 import wraith.smithee.blocks.DisassemblyTable;
+import wraith.smithee.utils.Utils;
 
 import java.util.HashMap;
 
@@ -71,7 +71,7 @@ public class BlockRegistry {
     }
 
     public static void registerBlocks() {
-        for(String id : BLOCKS.keySet()) {
+        for (String id : BLOCKS.keySet()) {
             Registry.register(Registry.BLOCK, Utils.ID(id), BLOCKS.get(id));
         }
     }

@@ -17,7 +17,7 @@ import wraith.smithee.items.tools.BaseSmitheeItem;
 public class ItemMixin {
 
     @Inject(method = "use", at = @At("HEAD"), cancellable = true)
-    void use(World world, PlayerEntity user, Hand hand, CallbackInfoReturnable<TypedActionResult<ItemStack>> cir){
+    void use(World world, PlayerEntity user, Hand hand, CallbackInfoReturnable<TypedActionResult<ItemStack>> cir) {
         ItemStack stack = user.getStackInHand(hand);
         CompoundTag tag = stack.getSubTag("SmitheeProperties");
         if (this instanceof BaseSmitheeItem && tag != null && tag.contains("isBroken") && tag.getBoolean("isBroken")) {

@@ -3,11 +3,9 @@ package wraith.smithee.screens;
 import com.mojang.blaze3d.systems.RenderSystem;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.math.MatrixStack;
@@ -22,7 +20,6 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
-import wraith.smithee.Smithee;
 import wraith.smithee.utils.Utils;
 
 import java.util.Objects;
@@ -105,6 +102,7 @@ public class AssemblyTableScreen extends HandledScreen<ScreenHandler> {
         this.ignoreTypedCharacter = false;
         return super.keyReleased(keyCode, scanCode, modifiers);
     }
+
     @Override
     protected void onMouseClick(Slot slot, int invSlot, int clickData, SlotActionType actionType) {
         super.onMouseClick(slot, invSlot, clickData, actionType);
@@ -148,6 +146,7 @@ public class AssemblyTableScreen extends HandledScreen<ScreenHandler> {
             }
         }
     }
+
     @Override
     public void resize(MinecraftClient client, int width, int height) {
         String string = this.nameInputField.getText();

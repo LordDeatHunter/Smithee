@@ -29,10 +29,12 @@ public class BaseSmitheeSickle extends McdwSickle implements BaseSmitheeMeleeWea
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         return boostXp(world, user, hand);
     }
+
     @Override
     public String getToolType() {
         return "sickle";
     }
+
     @Override
     public String getBindingType() {
         return "binding";
