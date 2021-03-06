@@ -1,25 +1,43 @@
 {
-  "individual_parts": {
-    "head": {
-      "mining_level": 1,
-      "durability": 107,
-      "mining_speed": 12.0,
-      "attack_damage": 1.0,
-      "attack_speed": 0.6
-    },
-    "binding": {
-      "mining_level": 0,
-      "durability": 53,
-      "mining_speed": 0.0,
-      "attack_damage": 0.0,
-      "attack_speed": 0.1
-    },
-    "handle": {
-      "mining_level": 0,
-      "durability": 32,
-      "mining_speed": 1.0,
-      "attack_damage": 0.0,
-      "attack_speed": 0.3
-    }
-  }
+	"individual_parts": {
+		"head": {
+			"mining_level": 1,
+			"durability": 107,
+			"mining_speed": 12.0,
+			"attack_damage": 1.0,
+			"attack_speed": 0.6,
+			"traits": [{
+				"trait": "midas_touch",
+				"min_level": 1,
+				"max_level": 1,
+				"chance": 0.05
+			}]
+		},
+		"binding": {
+			"mining_level": 0,
+			"durability": 53,
+			"mining_speed": 0.0,
+			"attack_damage": 0.0,
+			"attack_speed": 0.1,
+			"traits": [{
+				"trait": "midas_touch",
+				"min_level": 1,
+				"max_level": 1,
+				"chance": 0.05
+			}]
+		},
+		"handle": {
+			"mining_level": 0,
+			"durability": 32,
+			"mining_speed": 1.0,
+			"attack_damage": 0.0,
+			"attack_speed": 0.3,
+			"traits": [{
+				"trait": "midas_touch",
+				"min_level": 1,
+				"max_level": 1,
+				"chance": 0.05
+			}]
+		}
+	}
 }

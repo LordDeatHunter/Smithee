@@ -2,21 +2,21 @@
   "individual_parts": {
     "head": {
       "mining_level": 2,
-      "durability": 991,
+      "durability": 871,
       "mining_speed": 13.0,
-      "attack_damage": 2.5,
+      "attack_damage": 3.5,
       "attack_speed": 0.6
     },
     "binding": {
       "mining_level": 0,
-      "durability": 496,
+      "durability": 436,
       "mining_speed": 0.0,
       "attack_damage": 0.0,
       "attack_speed": 0.1
     },
     "handle": {
       "mining_level": 0,
-      "durability": 297,
+      "durability": 261,
       "mining_speed": 1.0,
       "attack_damage": 0.0,
       "attack_speed": 0.3

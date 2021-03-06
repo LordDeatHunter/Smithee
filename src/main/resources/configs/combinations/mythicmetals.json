@@ -1,0 +1,21 @@
+{
+  "combinations": [
+    {
+      "includes": [
+        "silver_handle",
+        "silver_binding",
+        "silver_head",
+        "truesilver_handle",
+        "truesilver_binding",
+        "truesilver_head",
+        "slowsilver_handle",
+        "slowsilver_binding",
+        "slowsilver_head"
+      ],
+      "excludes": [],
+      "durability": "base + 50",
+      "attack_speed": "base + 0.2",
+	  "attack_damage": "base + 0.2"
+    }
+  ]
+}

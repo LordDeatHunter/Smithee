@@ -56,7 +56,11 @@
     },
     {
       "material": "etherite",
-      "item": "mythicmetals:aetherium_nugget"
+      "item": "mythicmetals:etherite_nugget"
+    },
+	{
+      "material": "hallowed",
+      "item": "mythicmetals:hallowed_nugget"
     },
     {
       "material": "kyber",

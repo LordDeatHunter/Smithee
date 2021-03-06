@@ -1,0 +1,6 @@
+{
+  "input_material": "netherite",
+  "addition_item": "mythicmetals:metallurgium_ingot",
+  "addition_mount": 1,
+  "output_material": "metallurgium"
+}
