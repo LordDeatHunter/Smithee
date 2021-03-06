@@ -175,7 +175,7 @@ public class AssemblyTableScreen extends HandledScreen<ScreenHandler> {
         super.init();
         this.nameInputField = new TextFieldWidget(this.textRenderer, this.x + 31, this.y + 80, 115, 9, new TranslatableText("smithee.assembly.rename"));
         this.nameInputField.setMaxLength(32);
-        this.nameInputField.setHasBorder(false);
+        this.nameInputField.setDrawsBackground(false);
         this.nameInputField.setEditableColor(0xffffff);
         this.nameInputField.setVisible(true);
         this.nameInputField.setFocusUnlocked(true);

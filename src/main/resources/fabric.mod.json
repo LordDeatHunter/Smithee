@@ -12,7 +12,8 @@
   "icon": "assets/smithee/Smithee.png",
   "contact": {
     "homepage": "https://www.curseforge.com/minecraft/mc-mods/smithee/",
-    "sources": "https://github.com/LordDeatHunter/Smithee/"
+    "sources": "https://github.com/LordDeatHunter/Smithee/",
+    "issues": "https://github.com/LordDeatHunter/Smithee/issues"
   },
 
   "environment": "*",

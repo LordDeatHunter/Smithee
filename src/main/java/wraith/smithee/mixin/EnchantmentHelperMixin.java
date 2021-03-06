@@ -91,12 +91,10 @@ public class EnchantmentHelperMixin {
         return newListTag;
     }
 
-    @ModifyVariable(method = "getAttackDamage", at = @At("HEAD"), name = "mutableFloat")
-    private static MutableFloat addHolyDamage(MutableFloat mutableFloat, ItemStack stack, EntityGroup group) {
+    @Inject(method = "getAttackDamage", at = @At("RETURN"), cancellable = true)
+    private static void addHolyDamage(ItemStack stack, EntityGroup group, CallbackInfoReturnable<Float> cir) {
         if (Trait.hasTrait(stack, TraitType.HOLY) && group == EntityGroup.UNDEAD) {
-            mutableFloat.add(2.5f);
+            cir.setReturnValue(cir.getReturnValue() + 2.5f);
         }
-        return mutableFloat;
     }
-
 }
