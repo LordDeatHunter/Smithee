@@ -234,11 +234,11 @@ public class Utils {
     }
 
 
-    public static InputStream recolor(File template, File templatePalette, File palette, String textureName) {
-        ImageIO.setUseCache(false);
+    public static InputStream recolor(BufferedInputStream template, BufferedInputStream templatePalette, BufferedInputStream palette, String textureName, File newFile) {
         BufferedImage templateImage;
         BufferedImage paletteImage;
         BufferedImage templatePaletteImage;
+        ImageIO.setUseCache(false);
         try {
             templateImage = ImageIO.read(template);
             paletteImage = ImageIO.read(palette);
@@ -246,15 +246,22 @@ public class Utils {
         } catch (IOException e) {
             return null;
         }
+        try {
+            template.close();
+            palette.close();
+            templatePalette.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         ArrayList<Integer> templateColors = new ArrayList<>();
+        ArrayList<Integer> paletteColors = new ArrayList<>();
         for (int x = 0; x < templatePaletteImage.getWidth(); ++x) {
             templateColors.add(templatePaletteImage.getRGB(x, 0));
         }
-        ArrayList<Integer> paletteColors = new ArrayList<>();
         for (int x = 0; x < paletteImage.getWidth(); ++x) {
             paletteColors.add(paletteImage.getRGB(x, 0));
         }
-
         for (int y = 0; y < templateImage.getHeight(); ++y) {
             for (int x = 0; x < templateImage.getWidth(); ++x) {
                 for (int i = 0; i < templateColors.size(); ++i) {
@@ -265,16 +272,22 @@ public class Utils {
                 }
             }
         }
-        ByteArrayOutputStream os = new ByteArrayOutputStream() {
-            @Override
-            public synchronized byte[] toByteArray() {
-                return buf;
-            }
-        };
-        try {
 
-            ImageIO.write(templateImage, "PNG", os);
-            return new ByteArrayInputStream(os.toByteArray());
+        try {
+            if(!newFile.createNewFile()){
+                System.out.println("Failed to create new file");
+                ByteArrayOutputStream os = new ByteArrayOutputStream() {
+                    @Override
+                    public synchronized byte[] toByteArray() {
+                        return buf;
+                    }
+                };
+                ImageIO.write(templateImage, "PNG", os);
+                return new ByteArrayInputStream(os.toByteArray());
+            } else {
+                ImageIO.write(templateImage, "PNG", newFile);
+                return new FileInputStream(newFile);
+            }
         } catch (IOException e) {
             Smithee.LOGGER.warn("Error while creating texture " + textureName);
         }

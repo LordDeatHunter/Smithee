@@ -13,6 +13,7 @@ import wraith.smithee.SmitheeClient;
 import wraith.smithee.registry.ItemRegistry;
 import wraith.smithee.utils.Utils;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -54,16 +55,23 @@ public class NamespaceResourceManagerMixin {
         File metadata = new File("config/smithee/textures/" + path + ".mcmeta");
         if (texture.exists()) {
             try {
-                cir.setReturnValue(new ResourceImpl(Smithee.MOD_ID, id, new FileInputStream(texture), metadata.exists() ? new FileInputStream(metadata) : null));
+                BufferedInputStream bis = new BufferedInputStream(new FileInputStream(texture));
+                cir.setReturnValue(new ResourceImpl(Smithee.MOD_ID, id, bis, metadata.exists() ? new FileInputStream(metadata) : null));
                 cir.cancel();
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
         } else {
-            File templatePalette = new File("config/smithee/templates/template_palette.png");
-            File palette = new File("config/smithee/palettes/" + material + ".png");
-            File template = new File("config/smithee/templates/" + part + ".png");
-            cir.setReturnValue(new ResourceImpl(Smithee.MOD_ID, id, Utils.recolor(template, templatePalette, palette, pathWithoutExtension), null));
+            System.out.println("Generating new texture: " + id);
+            try {
+                BufferedInputStream templatePalette = new BufferedInputStream(new FileInputStream("config/smithee/templates/template_palette.png"));
+                BufferedInputStream palette = new BufferedInputStream(new FileInputStream("config/smithee/palettes/" + material + ".png"));
+                BufferedInputStream template = new BufferedInputStream(new FileInputStream("config/smithee/templates/" + part + ".png"));
+                cir.setReturnValue(new ResourceImpl(Smithee.MOD_ID, id, Utils.recolor(template, templatePalette, palette, pathWithoutExtension, texture), null));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
             cir.cancel();
         }
     }
