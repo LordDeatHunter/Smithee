@@ -7,7 +7,6 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
@@ -18,7 +17,7 @@ import wraith.smithee.registry.BlockEntityRegistry;
 import wraith.smithee.screens.ChiselingTableScreenHandler;
 import wraith.smithee.screens.ImplementedInventory;
 
-public class ChiselingTableBlockEntity extends LockableContainerBlockEntity implements NamedScreenHandlerFactory, ImplementedInventory {
+public class ChiselingTableBlockEntity extends LockableContainerBlockEntity implements ImplementedInventory {
 
     private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(3, ItemStack.EMPTY);
     private int tool = 0;
