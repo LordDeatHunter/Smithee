@@ -7,7 +7,6 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -17,7 +16,7 @@ import wraith.smithee.registry.BlockEntityRegistry;
 import wraith.smithee.screens.DisassemblyTableScreenHandler;
 import wraith.smithee.screens.ImplementedInventory;
 
-public class DisassemblyTableBlockEntity extends LockableContainerBlockEntity implements NamedScreenHandlerFactory, ImplementedInventory {
+public class DisassemblyTableBlockEntity extends LockableContainerBlockEntity implements ImplementedInventory {
 
     private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(4, ItemStack.EMPTY);
     private DisassemblyTableScreenHandler handler;

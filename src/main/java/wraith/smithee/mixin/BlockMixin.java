@@ -16,7 +16,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import wraith.smithee.properties.Trait;
 import wraith.smithee.properties.TraitType;
 
-import java.util.Collections;
 import java.util.List;
 
 @Mixin(Block.class)

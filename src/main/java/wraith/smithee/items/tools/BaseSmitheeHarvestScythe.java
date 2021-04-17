@@ -8,7 +8,7 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 import wraith.harvest_scythes.ScytheTool;
 
-public class BaseSmitheeHarvestScythe extends ScytheTool implements BaseSmitheeItem, BaseSmitheeMeleeWeapon {
+public class BaseSmitheeHarvestScythe extends ScytheTool implements BaseSmitheeMeleeWeapon {
 
     public BaseSmitheeHarvestScythe(Settings settings) {
         super(ToolMaterials.WOOD, 0, 0, 0, false, settings);
